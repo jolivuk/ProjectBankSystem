@@ -1,0 +1,91 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+entity User{
+    + PK user_id : int
+    + username : varchar(64)
+    + password : varchar(64)
+}
+
+entity Client{
+    + PK client_id: INT
+    + firstname : varchar(64)
+    + lastname : varchar(64)
+    + dateOfRegistration : date
+    + dateOfBirth : date
+    + address_id : INT
+    + phone : varchar(15)
+    + user_id : int
+    + email : varchar(64)
+    + admin_id : INT
+}
+
+entity Admin{
+    + admin_id: INT
+    + firstname : varchar(64)
+    + lastname : varchar(64)
+    + dateOfRegistration : date
+    + dateOfBirth : date
+    + address_id : INT
+    + phone : varchar(15)
+    + user_id : id
+    + email : varchar(64)
+}
+
+entity Address{
+    + PK address_id : INT
+    + country : varchar(64)
+    + city : varchar(64)
+    + postcode : varchar(6)
+    + street : varchar(64)
+    + houseNumber : INT
+    + info : varchar(64)
+}
+
+entity AdminPermission{
+    + admin_id : INT
+    + role_id : INT
+}
+
+entity Permissions{
+    + PK role_id : INT
+    + permission : INT
+    + description : INT
+}
+
+entity Account {
+    + PK account_id : INT
+    + client_id : INT
+    + balance : DECIMAL(10,2)
+    + created_at : DATETIME
+}
+
+entity Transaction {
+    + PK transaction_id : INT
+    + account_receiver_id : INT
+    + account_sender_id : INT
+    + amount : DECIMAL(10,2)
+    + transaction_date : DATETIME
+    + transaction_type : ENUM('deposit', 'withdrawal', 'transfer')
+    + transaction_status : INT
+}
+
+entity TransactionStatus{
+    + PR transaction_status : INT
+    + transaction_description : varchar(64)
+}
+
+
+Client ||--|| Address : address_id
+Client ||--|| User : user_id
+Client ||--|{ Account : client_id
+Admin ||--|| User : user_id
+Admin ||--|| AdminPermission : admin_id
+Permissions ||--|| AdminPermission : role_id
+Account ||--o{ Transaction : account_sender_id
+Account ||--o{ Transaction : account_receiver_id
+Admin }o--|| Client : admin_id
+Transaction ||--|| TransactionStatus : transaction_status
+
+
+@enduml
