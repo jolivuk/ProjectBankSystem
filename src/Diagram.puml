@@ -7,8 +7,8 @@ entity User{
     + password : varchar(64)
 }
 
-entity Client{
-    + PK client_id: INT
+entity Customer{
+    + PK customer_id: INT
     + firstname : varchar(64)
     + lastname : varchar(64)
     + dateOfRegistration : date
@@ -65,6 +65,7 @@ entity Transaction {
     + account_receiver_id : INT
     + account_sender_id : INT
     + amount : DECIMAL(10,2)
+    + comment : varchar(256)
     + transaction_date : DATETIME
     + transaction_type : ENUM('deposit', 'withdrawal', 'transfer')
     + transaction_status : INT
@@ -75,17 +76,26 @@ entity TransactionStatus{
     + transaction_description : varchar(64)
 }
 
+class Card {
+    +int card_id
+    +int account_id
+    +String card_number
+    +String card_type
+    +Date expiration_date
+    +String security_code
+}
 
-Client ||--|| Address : address_id
-Client ||--|| User : user_id
-Client ||--|{ Account : client_id
+
+Customer ||--|| Address : address_id
+Customer ||--|| User : user_id
+Customer ||--|{ Account : customer_id
 Admin ||--|| User : user_id
 Admin ||--|| AdminPermission : admin_id
 Permissions ||--|| AdminPermission : role_id
 Account ||--o{ Transaction : account_sender_id
 Account ||--o{ Transaction : account_receiver_id
-Admin }o--|| Client : admin_id
+Admin }o--|| Customer : admin_id
 Transaction ||--|| TransactionStatus : transaction_status
-
+Account ||--o{ Card
 
 @enduml
