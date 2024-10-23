@@ -2,7 +2,7 @@
 'https://plantuml.com/sequence-diagram
 
 entity User{
-    + PK user_id : int
+    + PK user_id : INT
     + username : varchar(64)
     + password : varchar(64)
 }
@@ -15,21 +15,25 @@ entity Customer{
     + dateOfBirth : date
     + address_id : INT
     + phone : varchar(15)
-    + user_id : int
+    + user_id : INT
     + email : varchar(64)
     + admin_id : INT
+    + comment: varchar(255)
+    + created_at : timestamp
 }
 
 entity Admin{
-    + admin_id: INT
+    + PK admin_id: INT
     + firstname : varchar(64)
     + lastname : varchar(64)
     + dateOfRegistration : date
     + dateOfBirth : date
     + address_id : INT
     + phone : varchar(15)
-    + user_id : id
+    + user_id : INT
+    + role_id : INT
     + email : varchar(64)
+    + created_at : timestamp
 }
 
 entity Address{
@@ -42,47 +46,58 @@ entity Address{
     + info : varchar(64)
 }
 
-entity AdminPermission{
-    + admin_id : INT
-    + role_id : INT
-}
-
 entity Permissions{
     + PK role_id : INT
-    + permission : INT
     + description : INT
 }
 
 entity Account {
     + PK account_id : INT
-    + client_id : INT
+    + customer_id : INT
+    + account_type_id: INT
     + balance : DECIMAL(10,2)
     + created_at : DATETIME
 }
 
-entity Transaction {
-    + PK transaction_id : INT
-    + account_receiver_id : INT
-    + account_sender_id : INT
-    + amount : DECIMAL(10,2)
-    + comment : varchar(256)
-    + transaction_date : DATETIME
-    + transaction_type : ENUM('deposit', 'withdrawal', 'transfer')
-    + transaction_status : INT
+entity account_type{
+    + account_type_id: INT
+    + account_type_name : varchar(64)
+    + maintenance_fee : DECIMAL(15, 2)
+    + description: varchar(255)
 }
 
-entity TransactionStatus{
+entity Transaction {
+    + PK transaction_id : INT
+    + account_from_id : INT
+    + account_to_id : INT
+    + amount : DECIMAL(10,2)
+    + description : varchar(255)
+    + transaction_date : DATETIME
+    + transaction_type : transaction_type_id
+    + transaction_status : INT
+    + created_at : timestamp
+}
+
+entity transaction_status{
     + PR transaction_status : INT
     + transaction_description : varchar(64)
 }
 
+entity transaction_types{
+    + PK transaction_type_id : INT
+    + transaction_type_name : varchar(64)
+    + transaction_fee: DECIMAL(15, 2)
+    + description: varchar(255)
+}
+
 class Card {
-    +int card_id
-    +int account_id
-    +String card_number
-    +String card_type
-    +Date expiration_date
-    +String security_code
+    + PK card_id : int
+    + account_id : int
+    + card_number : varchar(16)
+    + card_type : varchar(32)
+    + Expiration_date : date
+    + security_code : varchar(3)
+    + created_at : timestamp
 }
 
 
@@ -90,12 +105,12 @@ Customer ||--|| Address : address_id
 Customer ||--|| User : user_id
 Customer ||--|{ Account : customer_id
 Admin ||--|| User : user_id
-Admin ||--|| AdminPermission : admin_id
-Permissions ||--|| AdminPermission : role_id
+Admin ||--|| Permissions : role_id
 Account ||--o{ Transaction : account_sender_id
 Account ||--o{ Transaction : account_receiver_id
 Admin }o--|| Customer : admin_id
-Transaction ||--|| TransactionStatus : transaction_status
+Transaction ||--|| transaction_status : transaction_status
 Account ||--o{ Card
-
+Transaction }o--|| transaction_types : transaction_type_id
+Account }o--|| account_type : account_type_id
 @enduml
