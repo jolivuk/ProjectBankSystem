@@ -3,36 +3,25 @@
 
 entity User{
     + PK user_id : INT
+    + private_info : PrivateInfo
     + username : varchar(64)
     + password : varchar(64)
-}
-
-entity Customer{
-    + PK customer_id: INT
-    + firstname : varchar(64)
-    + lastname : varchar(64)
-    + dateOfRegistration : date
-    + dateOfBirth : date
-    + address_id : INT
-    + phone : varchar(15)
-    + user_id : INT
-    + email : varchar(64)
-    + admin_id : INT
-    + comment: varchar(255)
+    + role : Role
+    + manager : User
     + created_at : timestamp
 }
 
-entity Admin{
-    + PK admin_id: INT
+
+entity PrivateInfo{
+    + PK private_info_id: INT
     + firstname : varchar(64)
     + lastname : varchar(64)
     + dateOfRegistration : date
     + dateOfBirth : date
-    + address_id : INT
+    + address : Address
     + phone : varchar(15)
-    + user_id : INT
-    + role_id : INT
     + email : varchar(64)
+    + comment: varchar(255)
     + created_at : timestamp
 }
 
@@ -46,71 +35,105 @@ entity Address{
     + info : varchar(64)
 }
 
-entity Permissions{
+entity Role{
     + PK role_id : INT
-    + description : INT
+    + description : varchar(128)
 }
+
 
 entity Account {
     + PK account_id : INT
-    + customer_id : INT
-    + account_type_id: INT
+    + customer : Customer
+    + account_type: AccountType
     + balance : DECIMAL(10,2)
     + created_at : DATETIME
+    + requisites : Requisites
+    + currency : varchar(3)
+    + fees : Fees
 }
-
-entity account_type{
+entity AccountType{
     + account_type_id: INT
     + account_type_name : varchar(64)
-    + maintenance_fee : DECIMAL(15, 2)
     + description: varchar(255)
 }
-
+entity Fees{
+        +PK fees_id : INT
+        + maintenance_fee : DECIMAL(15, 2)
+        + send_fee : DECIMAL(15, 2)
+        + receive_fee: DECIMAL(15, 2)
+        + funded_rate : DECIMAL(15, 2)
+        + start_date : DATETIME
+        + end_date : DATETIME
+}
 entity Transaction {
     + PK transaction_id : INT
-    + account_from_id : INT
-    + account_to_id : INT
+    + account_from : Account
+    + account_to : Account
     + amount : DECIMAL(10,2)
+    + currency : varchar(3)
     + description : varchar(255)
     + transaction_date : DATETIME
-    + transaction_type : transaction_type_id
-    + transaction_status : INT
+    + transaction_type : TransactionType
+    + transaction_status : TransactionStatus
     + created_at : timestamp
 }
 
-entity transaction_status{
-    + PR transaction_status : INT
+entity TransactionStatus{
+    + PK transaction_status : INT
     + transaction_description : varchar(64)
 }
-
-entity transaction_types{
+entity TransactionType{
     + PK transaction_type_id : INT
     + transaction_type_name : varchar(64)
     + transaction_fee: DECIMAL(15, 2)
     + description: varchar(255)
 }
 
-class Card {
-    + PK card_id : int
-    + account_id : int
+entity Card {
+    + PK card_id : INT
+    + account : Account
     + card_number : varchar(16)
     + card_type : varchar(32)
     + Expiration_date : date
     + security_code : varchar(3)
     + created_at : timestamp
 }
+entity Bank{
+    + PK bank_id : INT
+    + bank_name : varchar(64)
+    + swift : varchar(16)
+    + address : Address
+}
+
+entity BankAccount{
+    + PK account_id : Account
+    + iban : varchar(16)
+    + bank : Bank
+}
+entity Requisites{
+    + PK id : INT
+    + reciever_tax_number: INT
+    + receiver_name: varchar(128)
+    +  receiver_registration_address : Address
+    +  Beneﬁciary bank: Bank
+    +  receiver_account_number: Account
+}
 
 
-Customer ||--|| Address : address_id
-Customer ||--|| User : user_id
-Customer ||--|{ Account : customer_id
-Admin ||--|| User : user_id
-Admin ||--|| Permissions : role_id
-Account ||--o{ Transaction : account_sender_id
-Account ||--o{ Transaction : account_receiver_id
-Admin }o--|| Customer : admin_id
-Transaction ||--|| transaction_status : transaction_status
-Account ||--o{ Card
-Transaction }o--|| transaction_types : transaction_type_id
-Account }o--|| account_type : account_type_id
+
+
+PrivateInfo -- Address : address_id
+User --|{ Account : customer_id
+User -- PrivateInfo : private_info_id
+User -- Role : role_id
+User --o{User
+Account --o{ Transaction : account_sender_id
+Account --o{ Transaction : account_receiver_id
+Transaction -- TransactionStatus : transaction_status_id
+Account --o{ Card
+Transaction }o-- TransactionType : transaction_type_id
+Account }o--|| AccountType : account_type_id
+Bank --o{ BankAccount : bank_id
+BankAccount -- Account : account_id
+Account --Fees : fees_id
 @enduml
