@@ -20,6 +20,7 @@ public class ClientController {
         return clientService.getAll();
     }
 
+
     @PostMapping("/2")
     public Client createClient(@RequestBody ClientDto clientDto) {
         Client cl = new Client(clientDto.firstName(),clientDto.lastName(), clientDto.email(), clientDto.username(), clientDto.password(), clientDto.telephone());
