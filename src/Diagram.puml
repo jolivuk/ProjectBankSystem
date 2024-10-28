@@ -1,32 +1,28 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
-entity User{
-    + PK user_id : INT
-    + private_info : PrivateInfo
+' Домен управления пользователями
+entity User {
+    + PK id : INT
     + username : varchar(64)
     + password : varchar(64)
-    + role : Role
-    + manager : User
+    + is_active : boolean
     + created_at : timestamp
 }
 
-
-entity PrivateInfo{
-    + PK private_info_id: INT
+entity PrivateInfo {
+    + PK id : INT
     + firstname : varchar(64)
     + lastname : varchar(64)
     + dateOfRegistration : date
     + dateOfBirth : date
-    + address : Address
     + phone : varchar(15)
     + email : varchar(64)
-    + comment: varchar(255)
+    + comment : varchar(255)
     + created_at : timestamp
 }
 
-entity Address{
-    + PK address_id : INT
+entity Address {
+    + PK id : INT
     + country : varchar(64)
     + city : varchar(64)
     + postcode : varchar(6)
@@ -35,105 +31,136 @@ entity Address{
     + info : varchar(64)
 }
 
-entity Role{
-    + PK role_id : INT
+entity Role {
+    + PK id : INT
     + description : varchar(128)
 }
 
-
+' Домен счетов
 entity Account {
-    + PK account_id : INT
-    + customer : Customer
-    + account_type: AccountType
+    + PK id : INT
     + balance : DECIMAL(10,2)
+    + currency : varchar(3)
     + created_at : DATETIME
-    + requisites : Requisites
-    + currency : varchar(3)
-    + fees : Fees
 }
-entity AccountType{
-    + account_type_id: INT
+
+entity AccountType {
+    + PK id : INT
     + account_type_name : varchar(64)
-    + description: varchar(255)
+    + description : varchar(255)
 }
-entity Fees{
-        +PK fees_id : INT
-        + maintenance_fee : DECIMAL(15, 2)
-        + send_fee : DECIMAL(15, 2)
-        + receive_fee: DECIMAL(15, 2)
-        + funded_rate : DECIMAL(15, 2)
-        + start_date : DATETIME
-        + end_date : DATETIME
+
+' Домен комиссий
+entity FeeSchedule {
+    + PK id : INT
+    + name : varchar(64)
+    + description : varchar(255)
+    + is_active : boolean
+    + valid_from : DATETIME
+    + valid_to : DATETIME
+    + created_at : DATETIME
 }
-entity Transaction {
-    + PK transaction_id : INT
-    + account_from : Account
-    + account_to : Account
-    + amount : DECIMAL(10,2)
+
+entity FeeType {
+    + PK id : INT
+    + code : varchar(32)
+    + name : varchar(64)
+    + description : varchar(255)
+    + calculation_method : varchar(32)
+}
+
+entity FeeValue {
+    + PK id : INT
+    + fixed_amount : DECIMAL(15,2)
+    + percentage_rate : DECIMAL(5,2)
+    + min_amount : DECIMAL(15,2)
+    + max_amount : DECIMAL(15,2)
     + currency : varchar(3)
+    + created_at : DATETIME
+}
+
+entity AccountFeeSchedule {
+    + PK id : INT
+    + account_id : INT
+    + fee_schedule_id : INT
+    + assigned_at : DATETIME
+    + created_at : DATETIME
+}
+
+' Домен транзакций
+entity Transaction {
+    + PK id : INT
+    + account_from_id : INT
+    + account_to_id : INT
+    + amount : DECIMAL(10,2)
     + description : varchar(255)
     + transaction_date : DATETIME
-    + transaction_type : TransactionType
-    + transaction_status : TransactionStatus
     + created_at : timestamp
 }
 
-entity TransactionStatus{
+entity TransactionStatus {
     + PK transaction_status : INT
     + transaction_description : varchar(64)
 }
-entity TransactionType{
-    + PK transaction_type_id : INT
+
+entity TransactionType {
+    + PK id : INT
+    + fee_type_id : INT
     + transaction_type_name : varchar(64)
-    + transaction_fee: DECIMAL(15, 2)
-    + description: varchar(255)
+    + transaction_fee : DECIMAL(15,2)
+    + description : varchar(255)
 }
 
+' Домен карт и банков
 entity Card {
-    + PK card_id : INT
-    + account : Account
+    + PK id : INT
+    + account_id : INT
     + card_number : varchar(16)
     + card_type : varchar(32)
-    + Expiration_date : date
+    + expiration_date : date
     + security_code : varchar(3)
     + created_at : timestamp
 }
-entity Bank{
-    + PK bank_id : INT
+
+entity Bank {
+    + PK id : INT
+    + address_id : INT
     + bank_name : varchar(64)
     + swift : varchar(16)
-    + address : Address
 }
 
-entity BankAccount{
-    + PK account_id : Account
-    + iban : varchar(16)
-    + bank : Bank
-}
-entity Requisites{
+entity Requisites {
     + PK id : INT
-    + reciever_tax_number: INT
-    + receiver_name: varchar(128)
-    +  receiver_registration_address : Address
-    +  Beneﬁciary bank: Bank
-    +  receiver_account_number: Account
+    + bank_id : INT
+    + account_id : INT
+    + iban : varchar(16)
 }
 
+' Связи базового домена
+User ||--|| PrivateInfo : private_info_id
+User ||--|| Role : role_id
+User ||--o{ User : manager_id
+User ||--o{ Account : user_id
+PrivateInfo ||--|| Address : address_id
+Account ||--|| AccountType : account_type_id
+Account ||--o{ Card : account_id
+Account ||--|| Requisites : account_id
 
+' Связи транзакционного домена
+Transaction }|--|| Account : account_from_id >
+Transaction }|--|| Account : account_to_id >
+Transaction ||--|| TransactionStatus : transaction_status_id
+Transaction ||--|| TransactionType : transaction_type_id
 
+' Связи банковского домена
+Bank ||--o{ Requisites : bank_id
+Bank ||--|| Address : address_id
 
-PrivateInfo -- Address : address_id
-User --|{ Account : customer_id
-User -- PrivateInfo : private_info_id
-User -- Role : role_id
-User --o{User
-Account --o{ Transaction : account_sender_id
-Account --o{ Transaction : account_receiver_id
-Transaction -- TransactionStatus : transaction_status_id
-Account --o{ Card
-Transaction }o-- TransactionType : transaction_type_id
-Account }o--|| AccountType : account_type_id
-Bank --o{ BankAccount : bank_id
-BankAccount -- Account : account_id
-Account --Fees : fees_id
+' Связи домена комиссий
+Account ||--o{ AccountFeeSchedule : account_id
+AccountFeeSchedule }|--|| FeeSchedule : fee_schedule_id
+FeeSchedule ||--o{ FeeValue : fee_schedule_id
+FeeValue }|--|| FeeType : fee_type_id
+TransactionType ||--|| FeeType : fee_type_id
+
 @enduml
