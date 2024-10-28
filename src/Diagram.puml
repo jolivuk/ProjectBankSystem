@@ -1,140 +1,146 @@
 @startuml
 
+
 ' Домен управления пользователями
 entity User {
-    + PK id : INT
-    + username : varchar(64)
-    + password : varchar(64)
-    + is_active : boolean
-    + created_at : timestamp
+   + PK id : INT
+   + username : varchar(64)
+   + password : varchar(64)
+   + is_active : boolean
+   + privateInfo : PrivateInfo
+   + role : Role
+   + manager : User
+   + created_at : timestamp
 }
 
 entity PrivateInfo {
-    + PK id : INT
-    + firstname : varchar(64)
-    + lastname : varchar(64)
-    + dateOfRegistration : date
-    + dateOfBirth : date
-    + phone : varchar(15)
-    + email : varchar(64)
-    + comment : varchar(255)
-    + created_at : timestamp
+   + PK id : INT
+   + firstname : varchar(64)
+   + lastname : varchar(64)
+   + dateOfRegistration : date
+   + dateOfBirth : date
+   + phone : varchar(15)
+   + email : varchar(64)
+   + comment : varchar(255)
+   + created_at : timestamp
+   + address : Address
 }
 
 entity Address {
-    + PK id : INT
-    + country : varchar(64)
-    + city : varchar(64)
-    + postcode : varchar(6)
-    + street : varchar(64)
-    + houseNumber : INT
-    + info : varchar(64)
+   + PK id : INT
+   + country : varchar(64)
+   + city : varchar(64)
+   + postcode : varchar(6)
+   + street : varchar(64)
+   + houseNumber : INT
+   + info : varchar(64)
 }
 
 entity Role {
-    + PK id : INT
-    + description : varchar(128)
+   + PK id : INT
+   + description : varchar(128)
 }
 
 ' Домен счетов
 entity Account {
-    + PK id : INT
-    + balance : DECIMAL(10,2)
-    + currency : varchar(3)
-    + created_at : DATETIME
+   + PK id : INT
+   + user : User
+   + balance : DECIMAL(10,2)
+   + currency : varchar(3)
+   + created_at : DATETIME
 }
 
-entity AccountType {
-    + PK id : INT
-    + account_type_name : varchar(64)
-    + description : varchar(255)
-}
+
 
 ' Домен комиссий
 entity FeeSchedule {
-    + PK id : INT
-    + name : varchar(64)
-    + description : varchar(255)
-    + is_active : boolean
-    + valid_from : DATETIME
-    + valid_to : DATETIME
-    + created_at : DATETIME
+   + PK id : INT
+   + name : varchar(64)
+   + description : varchar(255)
+   + is_active : boolean
+   + valid_from : DATETIME
+   + valid_to : DATETIME
+   + created_at : DATETIME
 }
 
 entity FeeType {
-    + PK id : INT
-    + code : varchar(32)
-    + name : varchar(64)
-    + description : varchar(255)
-    + calculation_method : varchar(32)
+   + PK id : INT
+   + code : varchar(32)
+   + name : varchar(64)
+   + description : varchar(255)
+   + calculation_method : varchar(32)
 }
 
 entity FeeValue {
-    + PK id : INT
-    + fixed_amount : DECIMAL(15,2)
-    + percentage_rate : DECIMAL(5,2)
-    + min_amount : DECIMAL(15,2)
-    + max_amount : DECIMAL(15,2)
-    + currency : varchar(3)
-    + created_at : DATETIME
+   + PK id : INT
+   + fixed_amount : DECIMAL(15,2)
+   + percentage_rate : DECIMAL(5,2)
+   + min_amount : DECIMAL(15,2)
+   + max_amount : DECIMAL(15,2)
+   + currency : varchar(3)
+   + created_at : DATETIME
+    + fee_type : FeeType
+   + fee_schedule : FeeSchedule
 }
 
 entity AccountFeeSchedule {
-    + PK id : INT
-    + account_id : INT
-    + fee_schedule_id : INT
-    + assigned_at : DATETIME
-    + created_at : DATETIME
+   + PK id : INT
+   + account : Account
+   + fee_schedule : FeeSchedule
+   + assigned_at : DATETIME
+   + created_at : DATETIME
 }
 
 ' Домен транзакций
 entity Transaction {
-    + PK id : INT
-    + account_from_id : INT
-    + account_to_id : INT
-    + amount : DECIMAL(10,2)
-    + description : varchar(255)
-    + transaction_date : DATETIME
-    + created_at : timestamp
+   + PK id : INT
+   + sender : Requisites
+   + receiver : Requisites
+   + amount : DECIMAL(10,2)
+   + description : varchar(255)
+   + transaction_date : DATETIME
+   + created_at : timestamp
+   + transaction_status : TransactionStatus
 }
 
 entity TransactionStatus {
-    + PK transaction_status : INT
-    + transaction_description : varchar(64)
+   + PK id : INT
+   + description : varchar(64)
 }
 
 entity TransactionType {
-    + PK id : INT
-    + fee_type_id : INT
-    + transaction_type_name : varchar(64)
-    + transaction_fee : DECIMAL(15,2)
-    + description : varchar(255)
+   + PK id : INT
+   + fee_type : FeeType
+   + transaction_type_name : varchar(64)
+   + transaction_fee : DECIMAL(15,2)
+   + description : varchar(255)
 }
 
 ' Домен карт и банков
 entity Card {
-    + PK id : INT
-    + account_id : INT
-    + card_number : varchar(16)
-    + card_type : varchar(32)
-    + expiration_date : date
-    + security_code : varchar(3)
-    + created_at : timestamp
+   + PK id : INT
+   + account : Account
+   + card_number : varchar(16)
+   + card_type : varchar(32)
+   + expiration_date : date
+   + security_code : varchar(3)
+   + created_at : timestamp
 }
 
 entity Bank {
-    + PK id : INT
-    + address_id : INT
-    + bank_name : varchar(64)
-    + swift : varchar(16)
+   + PK id : INT
+   + address : Address
+   + bank_name : varchar(64)
+   + swift : varchar(16)
 }
 
 entity Requisites {
-    + PK id : INT
-    + bank_id : INT
-    + account_id : INT
-    + iban : varchar(16)
+   + PK id : INT
+   + bank : Bank
+   + account : Account
+   + iban : varchar(34)
 }
+
 
 ' Связи базового домена
 User ||--|| PrivateInfo : private_info_id
@@ -142,13 +148,12 @@ User ||--|| Role : role_id
 User ||--o{ User : manager_id
 User ||--o{ Account : user_id
 PrivateInfo ||--|| Address : address_id
-Account ||--|| AccountType : account_type_id
 Account ||--o{ Card : account_id
 Account ||--|| Requisites : account_id
 
 ' Связи транзакционного домена
-Transaction }|--|| Account : account_from_id >
-Transaction }|--|| Account : account_to_id >
+Transaction }|--|| Requisites : sender >
+Transaction }|--|| Requisites : receiver >
 Transaction ||--|| TransactionStatus : transaction_status_id
 Transaction ||--|| TransactionType : transaction_type_id
 
