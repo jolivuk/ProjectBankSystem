@@ -11,6 +11,7 @@ entity User {
    + role : Role
    + manager : User
    + created_at : timestamp
+
 }
 
 entity PrivateInfo {
