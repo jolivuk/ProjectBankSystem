@@ -7,25 +7,25 @@ import jakarta.persistence.*;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "client_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "client_first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "client_last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "client_email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "client_username")
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "client_password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "client_telephone")
+    @Column(name = "telephone")
     private String telephone;
 
     public Client() {
