@@ -20,11 +20,18 @@ entity PrivateInfo {
    + lastname : varchar(64)
    + dateOfRegistration : date
    + dateOfBirth : date
+   + documentType : documentType
+   + documentNumber: varchar(64)
    + phone : varchar(15)
    + email : varchar(64)
    + comment : varchar(255)
    + created_at : timestamp
    + address : Address
+}
+
+entity documentType{
+    + PR id : INT
+    + description : varchar(16)
 }
 
 entity Address {
@@ -38,7 +45,7 @@ entity Address {
 }
 
 entity Role {
-   + PK id : INT
+   + PK id : INTd
    + description : varchar(128)
 }
 
@@ -149,6 +156,7 @@ User ||--|| Role : role_id
 User ||--o{ User : manager_id
 User ||--o{ Account : user_id
 PrivateInfo ||--|| Address : address_id
+PrivateInfo }|--|| documentType : documentType_id
 Account ||--o{ Card : account_id
 Account ||--|| Requisites : account_id
 
