@@ -1,12 +1,12 @@
 package bank.app.entity;
 
-import bank.app.entity.enums.Currency;
 import bank.app.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "account")
@@ -30,20 +30,14 @@ public class Account{
     @Column(name = "balace")
     private Double balance;
 
-
-    @Column(name = "currency")
-    @Enumerated(EnumType.STRING)
-    private Currency currency;
-
     @Column(name = "created_at")
     private LocalDateTime created_at;
 
 
-    public Account(User user, Status status, Double balance, Currency currency, LocalDateTime created_at) {
+    public Account(User user, Status status, Double balance, LocalDateTime created_at) {
         this.user = user;
         this.status = status;
         this.balance = balance;
-        this.currency = currency;
         this.created_at = created_at;
     }
 
@@ -57,10 +51,6 @@ public class Account{
 
     public void setBalance(Double balance) {
         this.balance = balance;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
     }
 
 }

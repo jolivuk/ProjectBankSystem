@@ -54,26 +54,8 @@ public class Card {
         this.createdAt = createdAt;
     }
 
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public void setCardNumber(int cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
-    }
-
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    public void setSecurityCode(int securityCode) {
-        this.securityCode = securityCode;
-    }
-
 
 }

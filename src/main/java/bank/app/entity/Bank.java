@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -25,10 +27,14 @@ public class Bank {
     @Column(name = "swift")
     private int swift;
 
-    public Bank(Address address, String bankName, int swift) {
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    public Bank(Address address, String bankName, int swift, LocalDateTime createdAt) {
         this.address = address;
         this.bankName = bankName;
         this.swift = swift;
+        this.createdAt = createdAt;
     }
 
     public void setAddress(Address address) {
