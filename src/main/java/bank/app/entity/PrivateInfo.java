@@ -64,4 +64,5 @@ public class PrivateInfo {
         this.lastName = lastName;
         this.firstName = firstName;
     }
+
 }
