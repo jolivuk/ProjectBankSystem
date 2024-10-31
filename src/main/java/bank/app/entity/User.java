@@ -2,6 +2,7 @@ package bank.app.entity;
 
 import bank.app.entity.enums.DocumentType;
 import bank.app.entity.enums.Role;
+import bank.app.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,10 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @Column(name="is_active")
-    private boolean isActive = true;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_id")
+    private Status status;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "private_info_id")
@@ -42,11 +45,11 @@ public class User {
     @Column(name="created_at")
     private LocalDate createdAt;
 
-    public User(String username, String password, boolean isActive,
-                PrivateInfo privateInfo, Role role, User manager, LocalDate createdAt) {
+    public User(String username, String password, Status status, PrivateInfo privateInfo,
+                Role role, User manager, LocalDate createdAt) {
         this.username = username;
         this.password = password;
-        this.isActive = isActive;
+        this.status = status;
         this.privateInfo = privateInfo;
         this.role = role;
         this.manager = manager;
@@ -61,8 +64,8 @@ public class User {
         this.password = password;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void setPrivateInfo(PrivateInfo privateInfo) {

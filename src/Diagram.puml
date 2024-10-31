@@ -6,9 +6,9 @@ entity User {
    + PK id : INT
    + username : varchar(64)
    + password : varchar(64)
-   + is_active : boolean
    + privateInfo : PrivateInfo
    + role : Role
+   + status : Status
    + manager : User
    + created_at : timestamp
 
@@ -53,9 +53,14 @@ entity Role {
 entity Account {
    + PK id : INT
    + user : User
+   + status : Status
    + balance : DECIMAL(10,2)
    + currency : varchar(3)
    + created_at : DATETIME
+}
+entity Status{
+    + PK id : INT
+    + statusName : varchar(16)
 }
 
 
@@ -130,6 +135,7 @@ entity Card {
    + account : Account
    + card_number : varchar(16)
    + card_type : varchar(32)
+   + status : Status
    + expiration_date : date
    + security_code : varchar(3)
    + created_at : timestamp
@@ -176,5 +182,9 @@ AccountFeeSchedule }|--|| FeeSchedule : fee_schedule_id
 FeeSchedule ||--o{ FeeValue : fee_schedule_id
 FeeValue }|--|| FeeType : fee_type_id
 TransactionType ||--|| FeeType : fee_type_id
+
+Status ||--|| Account : status_id
+Status ||--|| User : status_id
+Status ||--|| Card : status_id
 
 @enduml
