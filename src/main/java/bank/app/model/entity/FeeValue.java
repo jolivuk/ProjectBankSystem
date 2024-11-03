@@ -1,8 +1,10 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -28,16 +30,21 @@ public class FeeValue {
     @Column(name="max_amount")
     private double maxAmount;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="fee_type_id")
     private FeeType feeType;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="fee_schedule_id")
     private FeeSchedule feeSchedule;
 
-    @Column(name="created_at")
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
     public FeeValue(double fixedAmount, double percentageRate, double minAmount, double maxAmount, FeeType feeType,
                     FeeSchedule feeSchedule, LocalDateTime createdAt) {
@@ -48,6 +55,10 @@ public class FeeValue {
         this.feeType = feeType;
         this.feeSchedule = feeSchedule;
         this.createdAt = createdAt;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public void setFixedAmount(double fixedAmount) {

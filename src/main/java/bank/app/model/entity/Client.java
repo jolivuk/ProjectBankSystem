@@ -1,4 +1,4 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 

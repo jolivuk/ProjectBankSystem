@@ -10,8 +10,8 @@ entity User {
    + role : Role
    + status : Status
    + manager : User
-   + created_at : timestamp
-   + last_update : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 
 }
 
@@ -27,13 +27,13 @@ entity PrivateInfo {
    + email : varchar(64)
    + comment : varchar(255)
    + address : Address
-   + created_at : timestamp
-   + last_update : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 
 entity documentType{
     + PR id : INT
-    + description : varchar(16)
+    + document_type_name : varchar(16)
 }
 
 entity Address {
@@ -47,8 +47,8 @@ entity Address {
 }
 
 entity Role {
-   + PK id : INTd
-   + description : varchar(128)
+   + PK id : INT
+   + role_name : varchar(128)
 }
 
 ' Домен счетов
@@ -58,8 +58,8 @@ entity Account {
    + status : Status
    + balance : DECIMAL(10,2)
    + currency : varchar(3)
-   + created_at : DATETIME
-   + last_update : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 entity Status{
     + PK id : INT
@@ -76,7 +76,8 @@ entity FeeSchedule {
    + is_active : boolean
    + valid_from : DATETIME
    + valid_to : DATETIME
-   + created_at : DATETIME
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 
 entity FeeType {
@@ -103,7 +104,8 @@ entity AccountFeeSchedule {
    + account : Account
    + fee_schedule : FeeSchedule
    + assigned_at : DATETIME
-   + created_at : DATETIME
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 
 ' Домен транзакций
@@ -116,8 +118,8 @@ entity Transaction {
    + comment : varchar(255)
    + transaction_date : DATETIME
    + transaction_status : TransactionStatus
-   + created_at : timestamp
-   + last_update : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 
 }
 
@@ -143,7 +145,8 @@ entity Card {
    + status : Status
    + expiration_date : date
    + security_code : varchar(3)
-   + created_at : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 
 entity Bank {
@@ -151,7 +154,8 @@ entity Bank {
    + address : Address
    + bank_name : varchar(64)
    + swift : varchar(16)
-   + created_at : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 
 entity Requisites {
@@ -159,7 +163,8 @@ entity Requisites {
    + bank : Bank
    + account : Account
    + iban : varchar(34)
-   + created_at : timestamp
+   + createdAt : timestamp
+   + lastUpdate : timestamp
 }
 
 ' Связи базового домена

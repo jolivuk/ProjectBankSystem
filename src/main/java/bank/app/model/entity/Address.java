@@ -1,11 +1,12 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -24,7 +25,7 @@ public class Address {
     private String city;
 
     @Column(name="postcode")
-    private String Postcode;
+    private String postcode;
 
     @Column(name="street")
     private String street;
@@ -35,18 +36,26 @@ public class Address {
     @Column(name="info")
     private String info;
 
-    @Column(name="created_at")
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
     public Address(String country, String city, String postcode, String street,
                    String houseNumber, String info, LocalDateTime createdAt) {
         this.country = country;
         this.city = city;
-        Postcode = postcode;
+        this.postcode = postcode;
         this.street = street;
         this.houseNumber = houseNumber;
         this.info = info;
         this.createdAt = createdAt;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public void setCountry(String country) {
@@ -58,7 +67,7 @@ public class Address {
     }
 
     public void setPostcode(String postcode) {
-        Postcode = postcode;
+        this.postcode = postcode;
     }
 
     public void setStreet(String street) {

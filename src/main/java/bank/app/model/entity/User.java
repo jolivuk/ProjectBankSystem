@@ -1,18 +1,24 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
-import bank.app.entity.enums.DocumentType;
-import bank.app.entity.enums.Role;
-import bank.app.entity.enums.Status;
+import bank.app.model.enums.RoleName;
+import bank.app.model.enums.StatusName;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="users")
+
+//@DynamicUpdate ее тоже можно
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,35 +31,35 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_id")
+    @ManyToOne
+    @JoinColumn(name = "status_id")
     private Status status;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    // @MapsId = почитать
     @JoinColumn(name = "private_info_id")
     private PrivateInfo privateInfo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role_id")
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @ManyToOne()
     @JoinColumn(name="manager_id",referencedColumnName = "user_id")
     private User manager;
 
-    @Column(name="created_at")
-    private LocalDate createdAt;
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    public User(String username, String password, Status status, PrivateInfo privateInfo,
-                Role role, User manager, LocalDate createdAt) {
-        this.username = username;
-        this.password = password;
-        this.status = status;
-        this.privateInfo = privateInfo;
-        this.role = role;
-        this.manager = manager;
-        this.createdAt = createdAt;
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
+
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public void setUsername(String username) {
@@ -66,10 +72,6 @@ public class User {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public void setPrivateInfo(PrivateInfo privateInfo) {
-        this.privateInfo = privateInfo;
     }
 
     public void setRole(Role role) {

@@ -1,4 +1,4 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class TransctionType {
     @Column(name="transaction_type_id")
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="fee_type_id")
     private FeeType feeType;
 

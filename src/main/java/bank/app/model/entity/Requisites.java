@@ -1,9 +1,13 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -25,12 +29,26 @@ public class Requisites {
     private Account account;
 
     @Column(name = "iban")
-    private int iban;
+    private String iban;
 
-    public Requisites(Bank bank, Account account, int iban) {
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
+
+    public Requisites(Bank bank, Account account, String iban, LocalDateTime createdAt, LocalDateTime lastUpdate) {
         this.bank = bank;
         this.account = account;
         this.iban = iban;
+        this.createdAt = createdAt;
+        this.lastUpdate = lastUpdate;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public void setBank(Bank bank) {
@@ -41,7 +59,7 @@ public class Requisites {
         this.account = account;
     }
 
-    public void setIban(int iban) {
+    public void setIban(String iban) {
         this.iban = iban;
     }
 

@@ -1,8 +1,10 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +18,14 @@ public class FeeSchedule {
     @Column(name="fee_schedule_id")
     private int id;
 
+    @Column(name = "fee_schedule_name")
+    private String name;
+
+
+
+    @Column(name = "fee_schedule_description")
+    private String description;
+
     @Column(name="is_active")
     private boolean isActive;
 
@@ -25,14 +35,25 @@ public class FeeSchedule {
     @Column(name="valid_to")
     private LocalDateTime validTo;
 
-    @Column(name="created_at")
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public FeeSchedule(boolean isActive, LocalDateTime validFrom, LocalDateTime validTo, LocalDateTime createdAt) {
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
+
+    public FeeSchedule(String name,String description,boolean isActive, LocalDateTime validFrom, LocalDateTime validTo, LocalDateTime createdAt) {
+        this.name= name;
+        this.description=description;
         this.isActive = isActive;
         this.validFrom = validFrom;
         this.validTo = validTo;
         this.createdAt = createdAt;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public void setActive(boolean active) {
