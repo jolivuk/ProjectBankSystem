@@ -11,6 +11,7 @@ entity User {
    + status : Status
    + manager : User
    + created_at : timestamp
+   + last_update : timestamp
 
 }
 
@@ -25,8 +26,9 @@ entity PrivateInfo {
    + phone : varchar(15)
    + email : varchar(64)
    + comment : varchar(255)
-   + created_at : timestamp
    + address : Address
+   + created_at : timestamp
+   + last_update : timestamp
 }
 
 entity documentType{
@@ -57,6 +59,7 @@ entity Account {
    + balance : DECIMAL(10,2)
    + currency : varchar(3)
    + created_at : DATETIME
+   + last_update : timestamp
 }
 entity Status{
     + PK id : INT
@@ -90,9 +93,8 @@ entity FeeValue {
    + percentage_rate : DECIMAL(5,2)
    + min_amount : DECIMAL(15,2)
    + max_amount : DECIMAL(15,2)
-   + currency : varchar(3)
    + created_at : DATETIME
-    + fee_type : FeeType
+   + fee_type : FeeType
    + fee_schedule : FeeSchedule
 }
 
@@ -110,10 +112,13 @@ entity Transaction {
    + sender : Requisites
    + receiver : Requisites
    + amount : DECIMAL(10,2)
-   + description : varchar(255)
+   + fee : DECIMAL(10,2)
+   + comment : varchar(255)
    + transaction_date : DATETIME
-   + created_at : timestamp
    + transaction_status : TransactionStatus
+   + created_at : timestamp
+   + last_update : timestamp
+
 }
 
 entity TransactionStatus {
@@ -146,6 +151,7 @@ entity Bank {
    + address : Address
    + bank_name : varchar(64)
    + swift : varchar(16)
+   + created_at : timestamp
 }
 
 entity Requisites {
@@ -153,8 +159,8 @@ entity Requisites {
    + bank : Bank
    + account : Account
    + iban : varchar(34)
+   + created_at : timestamp
 }
-
 
 ' Связи базового домена
 User ||--|| PrivateInfo : private_info_id

@@ -8,13 +8,49 @@ import lombok.Setter;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name="private_info")
 public class PrivateInfo {
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,9 +87,12 @@ public class PrivateInfo {
     private Address address;
 
     @Column(name="created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    public PrivateInfo(LocalDate createdAt, Address address, String comment, LocalDate birthDate,
+    @Column(name="last_update")
+    private LocalDateTime lastUpdate;
+
+    public PrivateInfo(LocalDateTime createdAt, Address address, String comment, LocalDate birthDate,
                        String phone, String email, String lastName, String firstName) {
         this.createdAt = createdAt;
         this.address = address;

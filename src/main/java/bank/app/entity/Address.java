@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -35,10 +36,10 @@ public class Address {
     private String info;
 
     @Column(name="created_at")
-    private ZonedDateTime createdAt;
+    private LocalDateTime createdAt;
 
     public Address(String country, String city, String postcode, String street,
-                   String houseNumber, String info, ZonedDateTime createdAt) {
+                   String houseNumber, String info, LocalDateTime createdAt) {
         this.country = country;
         this.city = city;
         Postcode = postcode;
