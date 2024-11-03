@@ -1,17 +1,21 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
-import bank.app.entity.enums.Status;
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "account")
+@Table(name = "accounts")
 @NoArgsConstructor
 @Getter
+@AllArgsConstructor
 public class Account{
 
     @Id
@@ -23,22 +27,23 @@ public class Account{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_id")
+    @ManyToOne
+    @JoinColumn(name = "status_id")
     private Status status;
 
-    @Column(name = "balace")
+    @Column(name = "balance")
     private Double balance;
 
-    @Column(name = "created_at")
-    private LocalDateTime created_at;
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Account(User user, Status status, Double balance, LocalDateTime created_at) {
-        this.user = user;
-        this.status = status;
-        this.balance = balance;
-        this.created_at = created_at;
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public void setStatus(Status status) {

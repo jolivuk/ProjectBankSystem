@@ -1,9 +1,12 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,30 +19,40 @@ public class AccountFeeSchedule {
     @Column(name="account_fee_schedule_id")
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="account_id")
     private Account account;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="fee_schedule_id")
-    private FeeSchedule feeSchelude;
+    private FeeSchedule feeSchedule;
+
 
     @Column(name="assigned_at")
     private LocalDateTime assignedAt;
 
-    @Column(name="created_at")
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
     public AccountFeeSchedule(Account account, FeeSchedule feeSchelude, LocalDateTime assignedAt,
                               LocalDateTime createdAt) {
         this.account = account;
-        this.feeSchelude = feeSchelude;
+        this.feeSchedule = feeSchelude;
         this.assignedAt = assignedAt;
         this.createdAt = createdAt;
     }
 
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     public void setFeeSchelude(FeeSchedule feeSchelude) {
-        this.feeSchelude = feeSchelude;
+        this.feeSchedule = feeSchelude;
     }
 
     public void setAssignedAt(LocalDateTime assignedAt) {

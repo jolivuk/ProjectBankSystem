@@ -1,6 +1,6 @@
-package bank.app.entity.enums;
+package bank.app.model.enums;
 
-public enum Role {
+public enum RoleName {
     /**
      * Role for customer
      */

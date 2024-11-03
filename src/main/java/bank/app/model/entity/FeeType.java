@@ -1,4 +1,4 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,13 +24,13 @@ public class FeeType {
     private String description;
 
     @Column(name="calculation_method")
-    private String calculation_method;
+    private String calculationMethod;
 
     public FeeType(String feeCode, String feeName, String description, String calculation_method) {
         this.feeCode = feeCode;
         this.feeName = feeName;
         this.description = description;
-        this.calculation_method = calculation_method;
+        this.calculationMethod = calculation_method;
     }
 
     public void setFeeCode(String feeCode) {
@@ -46,6 +46,6 @@ public class FeeType {
     }
 
     public void setCalculation_method(String calculation_method) {
-        this.calculation_method = calculation_method;
+        this.calculationMethod = calculation_method;
     }
 }

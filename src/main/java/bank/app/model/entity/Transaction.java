@@ -1,17 +1,23 @@
-package bank.app.entity;
+package bank.app.model.entity;
 
-import bank.app.entity.enums.Role;
-import bank.app.entity.enums.TransactionStatus;
+import bank.app.model.enums.TransactionStatusName;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="transaction")
+@AllArgsConstructor
+@Table(name="transactions")
+
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +36,7 @@ public class Transaction {
     private double amount;
 
     @Column(name="fee")
-    private double fee;
+    private BigDecimal fee;
 
     @Column(name="comment")
     private String comment;
@@ -38,29 +44,18 @@ public class Transaction {
     @Column(name="transaction_date")
     private ZonedDateTime transactionDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_status")
+    @ManyToOne
+    @JoinColumn(name = "transaction_status_id")
     private TransactionStatus transactionStatus;
 
-    @Column(name="created_at")
-    private ZonedDateTime createdAt;
+    @Column(name="created_at",updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    @Column(name="last_update")
-    private ZonedDateTime lastUpdate;
+    @Column(name = "last_update")
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Transaction(Requisites sender, Requisites receiver, double amount, double fee, String comment,
-                       ZonedDateTime transactionDate, TransactionStatus transactionStatus, ZonedDateTime createdAt,
-                       ZonedDateTime lastUpdate) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.amount = amount;
-        this.fee = fee;
-        this.comment = comment;
-        this.transactionDate = transactionDate;
-        this.transactionStatus = transactionStatus;
-        this.createdAt = createdAt;
-        this.lastUpdate = lastUpdate;
-    }
 
     public void setSender(Requisites sender) {
         this.sender = sender;
@@ -86,7 +81,7 @@ public class Transaction {
         this.transactionStatus = transactionStatus;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 }

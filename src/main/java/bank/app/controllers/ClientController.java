@@ -1,7 +1,7 @@
 package bank.app.controllers;
 
 import bank.app.dto.ClientDto;
-import bank.app.entity.Client;
+import bank.app.model.entity.Client;
 import bank.app.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
