@@ -2,6 +2,7 @@ package bank.app.model.entity;
 
 import bank.app.model.enums.RoleName;
 import bank.app.model.enums.StatusName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,22 +32,25 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
+    @JsonIgnore
     private Status status;
 
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    // @MapsId = почитать
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "private_info_id")
+    @JsonIgnore
     private PrivateInfo privateInfo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
+    @JsonIgnore
     private Role role;
 
-    @ManyToOne()
-    @JoinColumn(name="manager_id",referencedColumnName = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="manager_id", referencedColumnName = "user_id")
+    @JsonIgnore
     private User manager;
 
     @Column(name="created_at",updatable = false)
