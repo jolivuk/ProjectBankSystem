@@ -1,6 +1,7 @@
 package bank.app.controllers;
 
 
+import bank.app.dto.AddressDto;
 import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserDto;
 import bank.app.model.entity.Address;
@@ -44,9 +45,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -57,59 +56,14 @@ public class UserController {
 
     @PostMapping("/")
     public ResponseEntity<User> create(@RequestBody UserDto userDto) {
-//        Role role = switch (userDto.role()) {
-//            case "CUSTOMER" -> Role.ROLE_CUSTOMER;
-//            case "ADMIN" -> Role.ROLE_ADMIN;
-//            case "MANAGER" -> Role.ROLE_MANAGER;
-//            case "SUPERMANAGER" -> Role.ROLE_SUPER_MANAGER;
-//            default -> throw new IllegalArgumentException("Unknown role: " + userDto.role());
-//        };
-        Optional<User> manager = userService.getUserById(userDto.manager());
-        if(!manager.isPresent()){
-           // throw new ManagerNotFoundExeption()
-            return (ResponseEntity<User>) ResponseEntity.notFound();
-        }
-        User user = new User(userDto.username(),userDto.password(),
-                Status.ACTIVE, userDto.role(),manager.get());
-        userService.saveNewUser(user);
-        return ResponseEntity.ok(user);
-
+        User user = userService.saveNewUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PostMapping("/{id}/add/private_info")
     public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
-        Optional<User> optionalUser = userService.getUserById(id);
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
 
-        User user = optionalUser.get();
-        Address address = new Address(
-                privateInfoDto.address().country(),
-                privateInfoDto.address().street(),
-                privateInfoDto.address().city(),
-                privateInfoDto.address().state(),
-                privateInfoDto.address().postalCode(),
-                privateInfoDto.address().country()
-        );
-
-        Address savedAddress = addressService.saveAddress(address);
-
-        PrivateInfo privateInfo = new PrivateInfo(
-                privateInfoDto.firstName(),
-                privateInfoDto.lastName(),
-                privateInfoDto.email(),
-                privateInfoDto.phone(),
-                privateInfoDto.dateOfBirth(),
-                privateInfoDto.documentType(),
-                privateInfoDto.documentNumber(),
-                privateInfoDto.comment(),
-                savedAddress
-        );
-        PrivateInfo savedPrivateInfo = privateInfoService.savePrivateInfo(privateInfo);
-
-        user.setPrivateInfo(savedPrivateInfo);
-        userService.saveNewUser(user);
+        User user = userService.addPrivateInfoToUser(id, privateInfoDto);
 
         return ResponseEntity.ok(user);
     }

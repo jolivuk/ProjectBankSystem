@@ -1,9 +1,11 @@
 package bank.app.dto;
 
+
 public record AddressDto(
-        String street,
+        String country,
         String city,
-        String state,
-        String postalCode,
-        String country
+        String postcode,
+        String street,
+        String houseNumber,
+        String info
 ) {}

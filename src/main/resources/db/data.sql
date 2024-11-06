@@ -1,23 +1,3 @@
-INSERT INTO document_type (document_type_name)
-VALUES ('ID_CARD'),
-       ('PASSPORT_EU'),
-       ('PASSPORT_NON_EU'),
-       ('ANOTHER');
-
-
--- Заполнение таблицы transaction_status
-INSERT INTO transaction_status (transaction_status_name)
-VALUES ('INITIALIZED'),
-       ('PROCESSING'),
-       ('PENDING_CONFIRMATION'),
-       ('SECURITY_CHECK'),
-       ('PENDING_FUNDS'),
-       ('PROCESSED'),
-       ('COMPLETED'),
-       ('DECLINED'),
-       ('FAILED'),
-       ('CANCELLED');
-
 
 
 INSERT INTO address (country, city, postcode, street, house_number, info)
@@ -38,18 +18,18 @@ VALUES (1, 'Bank of America', 'BOFAUS3N'),
        (3, 'Deutsche Bank', 'DEUTDEFF');
 
 
-INSERT INTO private_info (first_name, last_name, date_of_birth, document_type_id, document_number, phone, email,
+INSERT INTO private_info (first_name, last_name, date_of_birth, document_type, document_number, phone, email,
                           address_id)
-VALUES ('John', 'Doe', '1985-07-21', 1, 'ID1234567', '+1234567890', 'john.doe@example.com', 1),
-       ('Anna', 'Smith', '1990-04-18', 2, 'EU9876543', '+0987654321', 'anna.smith@example.com', 2),
-       ('Emma', 'Brown', '1988-09-09', 3, 'NE6543210', '+1230984567', 'emma.brown@example.com', 3),
-       ('Liam', 'Johnson', '1992-11-11', 1, 'ID1234987', '+5671239084', 'liam.johnson@example.com', 4),
-       ('Olivia', 'Taylor', '1987-05-15', 3, 'AN5678390', '+4560981234', 'olivia.taylor@example.com', 5),
-       ('James', 'Williams', '1980-03-25', 1, 'ID5432109', '+1456789123', 'james.williams@example.com', 6),
-       ('Sophia', 'Davis', '1991-07-14', 2, 'EU1122334', '+2345678901', 'sophia.davis@example.com', 7),
-       ('William', 'Miller', '1978-02-27', 3, 'NE0098765', '+5678901234', 'william.miller@example.com', 8),
-       ('Mia', 'Wilson', '1995-10-30', 1, 'ID8765432', '+7890123456', 'mia.wilson@example.com', 9),
-       ('Michael', 'Anderson', '1983-12-12', 2, 'AN0987654', '+9012345678', 'michael.anderson@example.com', 10);
+VALUES ('John', 'Doe', '1985-07-21', 'PASSPORT_EU', 'ID1234567', '+1234567890', 'john.doe@example.com', 1),
+       ('Anna', 'Smith', '1990-04-18', 'ID_CARD', 'EU9876543', '+0987654321', 'anna.smith@example.com', 2),
+       ('Emma', 'Brown', '1988-09-09', 'PASSPORT_EU', 'NE6543210', '+1230984567', 'emma.brown@example.com', 3),
+       ('Liam', 'Johnson', '1992-11-11', 'ID_CARD', 'ID1234987', '+5671239084', 'liam.johnson@example.com', 4),
+       ('Olivia', 'Taylor', '1987-05-15', 'PASSPORT_EU', 'AN5678390', '+4560981234', 'olivia.taylor@example.com', 5),
+       ('James', 'Williams', '1980-03-25', 'PASSPORT_EU', 'ID5432109', '+1456789123', 'james.williams@example.com', 6),
+       ('Sophia', 'Davis', '1991-07-14', 'ID_CARD', 'EU1122334', '+2345678901', 'sophia.davis@example.com', 7),
+       ('William', 'Miller', '1978-02-27', 'PASSPORT_EU', 'NE0098765', '+5678901234', 'william.miller@example.com', 8),
+       ('Mia', 'Wilson', '1995-10-30', 'PASSPORT_EU', 'ID8765432', '+7890123456', 'mia.wilson@example.com', 9),
+       ('Michael', 'Anderson', '1983-12-12', 'PASSPORT_NON_EU', 'AN0987654', '+9012345678', 'michael.anderson@example.com', 10);
 
 -- Пользователи с привязкой к личной информации и ролями
 INSERT INTO users (username, password, private_info_id, role, status, manager_id)
@@ -136,11 +116,11 @@ VALUES (1, 'Domestic Transfer', 2.50, 'Fixed fee for domestic transactions'),
        (1, 'ATM Withdrawal', 3.00, 'Fixed fee for ATM withdrawals'),
        (2, 'Foreign Transaction', NULL, 'Percentage fee for transactions in foreign currency');
 
-INSERT INTO transactions (sender_id, receiver_id, amount, fee, comment, transaction_status_id)
-VALUES (1, 2, 100.00, 2.50, 'Payment for services', 6), -- COMPLETED
-       (3, 4, 250.00, 3.75, 'Gift', 6),                 -- COMPLETED
-       (5, 6, 500.00, 7.50, 'Invoice payment', 6),      -- COMPLETED
-       (7, 8, 150.00, 2.50, 'Loan repayment', 7),       -- DECLINED
-       (9, 10, 300.00, 6.00, 'Rent payment', 8); -- FAILED
+INSERT INTO transactions (sender_id, receiver_id, amount, fee, comment, transaction_status)
+VALUES (1, 2, 100.00, 2.50, 'Payment for services', 'COMLETED'),
+       (3, 4, 250.00, 3.75, 'Gift', 'COMLETED'),
+       (5, 6, 500.00, 7.50, 'Invoice payment', 'COMLETED'),
+       (7, 8, 150.00, 2.50, 'Loan repayment', 'DECLINED'),
+       (9, 10, 300.00, 6.00, 'Rent payment', 'FAILED');
 
 
