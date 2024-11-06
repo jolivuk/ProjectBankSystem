@@ -1,13 +1,10 @@
 package bank.app.model.entity;
 
-import bank.app.model.enums.RoleName;
 import bank.app.model.enums.TransactionStatusName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

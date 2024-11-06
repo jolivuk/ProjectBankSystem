@@ -1,6 +1,6 @@
 package bank.app.model.entity;
 
-import bank.app.model.enums.StatusName;
+import bank.app.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,8 +33,8 @@ public class Card {
     @Column(name = "card_type")
     private String cardType;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @Column(name = "expiration_date")

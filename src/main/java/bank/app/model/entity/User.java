@@ -1,7 +1,7 @@
 package bank.app.model.entity;
 
-import bank.app.model.enums.RoleName;
-import bank.app.model.enums.StatusName;
+import bank.app.model.enums.Role;
+import bank.app.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,9 +31,8 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id")
-    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
 
@@ -43,9 +41,8 @@ public class User {
     @JsonIgnore
     private PrivateInfo privateInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,6 +58,18 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
+    public User(String username, String password, Status status, PrivateInfo privateInfo, Role role, User manager) {
+        this.username = username;
+        this.password = password;
+        this.status = status;
+        this.privateInfo = privateInfo;
+        this.role = role;
+        this.manager = manager;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
@@ -74,9 +83,7 @@ public class User {
         this.password = password;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+
 
     public void setRole(Role role) {
         this.role = role;
@@ -85,4 +92,6 @@ public class User {
     public void setManager(User manager) {
         this.manager = manager;
     }
+
+
 }

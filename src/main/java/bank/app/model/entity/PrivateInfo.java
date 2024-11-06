@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name="private_info")
 public class PrivateInfo {
     @Id
@@ -47,7 +46,7 @@ public class PrivateInfo {
     @Column(name="comment")
     private String comment;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
@@ -60,7 +59,23 @@ public class PrivateInfo {
     private LocalDateTime lastUpdate;
 
 
-
+    public PrivateInfo(Long id, String firstName, String lastName, String email,
+                       String phone, LocalDate dateOfBirth, DocumentType documentType,
+                       String documentNumber, String comment, Address address, LocalDateTime createdAt,
+                       LocalDateTime lastUpdate) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.dateOfBirth = dateOfBirth;
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.comment = comment;
+        this.address = address;
+        this.createdAt = createdAt;
+        this.lastUpdate = lastUpdate;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -94,9 +109,7 @@ public class PrivateInfo {
         this.comment = comment;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+
 
 
 

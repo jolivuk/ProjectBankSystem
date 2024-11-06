@@ -1,6 +1,7 @@
 package bank.app.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="address")
 public class Address {
     @Id
@@ -43,16 +45,7 @@ public class Address {
     @Column(name = "last_update")
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
-    public Address(String country, String city, String postcode, String street,
-                   String houseNumber, String info, LocalDateTime createdAt) {
-        this.country = country;
-        this.city = city;
-        this.postcode = postcode;
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.info = info;
-        this.createdAt = createdAt;
-    }
+
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
