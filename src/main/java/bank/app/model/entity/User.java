@@ -3,6 +3,7 @@ package bank.app.model.entity;
 import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="users")
-
-//@DynamicUpdate ее тоже можно
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +34,8 @@ public class User {
     @Column(name = "status")
     private Status status;
 
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "private_info_id")
-    @JsonIgnore
     private PrivateInfo privateInfo;
 
     @Enumerated(EnumType.STRING)
@@ -87,6 +84,11 @@ public class User {
         this.privateInfo = privateInfo;
     }
 
+    @JsonProperty("privateInfo")
+    public PrivateInfo getPrivateInfoForJson() {
+        return this.privateInfo;
+    }
+
     public void setRole(Role role) {
         this.role = role;
     }
@@ -94,6 +96,5 @@ public class User {
     public void setManager(User manager) {
         this.manager = manager;
     }
-
 
 }

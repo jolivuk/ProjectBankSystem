@@ -1,14 +1,9 @@
 package bank.app.controllers;
 
 
-import bank.app.dto.AddressDto;
 import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserDto;
-import bank.app.model.entity.Address;
-import bank.app.model.entity.PrivateInfo;
 import bank.app.model.entity.User;
-import bank.app.model.enums.Role;
-import bank.app.model.enums.Status;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
@@ -18,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -62,9 +56,7 @@ public class UserController {
 
     @PostMapping("/{id}/add/private_info")
     public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
-
         User user = userService.addPrivateInfoToUser(id, privateInfoDto);
-
         return ResponseEntity.ok(user);
     }
 
