@@ -58,14 +58,14 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
-    public User(String username, String password, Status status, PrivateInfo privateInfo, Role role, User manager) {
+    public User(String username, String password, Status status, Role role, User manager) {
         this.username = username;
         this.password = password;
         this.status = status;
-        this.privateInfo = privateInfo;
         this.role = role;
         this.manager = manager;
     }
+
 
     public void setStatus(Status status) {
         this.status = status;
@@ -83,7 +83,9 @@ public class User {
         this.password = password;
     }
 
-
+    public void setPrivateInfo(PrivateInfo privateInfo) {
+        this.privateInfo = privateInfo;
+    }
 
     public void setRole(Role role) {
         this.role = role;

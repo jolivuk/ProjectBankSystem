@@ -33,14 +33,12 @@ CREATE TABLE users (
                        username VARCHAR(64) NOT NULL,
                        password VARCHAR(64) NOT NULL,
                        private_info_id BIGINT,
-                       role VARCHAR(16),
+                       role VARCHAR(32),
                        status VARCHAR(16),
                        manager_id BIGINT,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                        FOREIGN KEY (private_info_id) REFERENCES private_info(private_info_id),
-                       FOREIGN KEY (role_id) REFERENCES role(role_id),
-
                        FOREIGN KEY (manager_id) REFERENCES users(user_id)
 );
 CREATE TABLE accounts (

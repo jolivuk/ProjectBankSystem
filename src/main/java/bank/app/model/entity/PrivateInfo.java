@@ -1,8 +1,7 @@
 package bank.app.model.entity;
 
-import bank.app.model.enums.DocumentTypeName;
+import bank.app.model.enums.DocumentType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,8 +35,8 @@ public class PrivateInfo {
     @Column(name="date_of_birth")
     private LocalDate dateOfBirth;
 
-    @ManyToOne
-    @JoinColumn(name = "document_type_id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "document_type")
     private DocumentType documentType;
 
     @Column(name = "document_number")
@@ -59,11 +58,9 @@ public class PrivateInfo {
     private LocalDateTime lastUpdate;
 
 
-    public PrivateInfo(Long id, String firstName, String lastName, String email,
+    public PrivateInfo(String firstName, String lastName, String email,
                        String phone, LocalDate dateOfBirth, DocumentType documentType,
-                       String documentNumber, String comment, Address address, LocalDateTime createdAt,
-                       LocalDateTime lastUpdate) {
-        this.id = id;
+                       String documentNumber, String comment, Address address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -73,8 +70,6 @@ public class PrivateInfo {
         this.documentNumber = documentNumber;
         this.comment = comment;
         this.address = address;
-        this.createdAt = createdAt;
-        this.lastUpdate = lastUpdate;
     }
 
     public void setFirstName(String firstName) {
@@ -108,10 +103,6 @@ public class PrivateInfo {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
-
-
-
 
 
 }

@@ -1,4 +1,6 @@
 package bank.app.service.impl;
 
-public class TransactionServiceImpl {
+import bank.app.service.TransactionService;
+
+public class TransactionServiceImpl implements TransactionService {
 }

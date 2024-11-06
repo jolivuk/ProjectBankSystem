@@ -46,6 +46,14 @@ public class Address {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
+    public Address(String country, String city, String postcode, String street, String houseNumber, String info) {
+        this.country = country;
+        this.city = city;
+        this.postcode = postcode;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.info = info;
+    }
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
