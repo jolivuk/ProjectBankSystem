@@ -3,16 +3,18 @@ package bank.app.model.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name="address")
 public class Address {
     @Id
@@ -82,4 +84,5 @@ public class Address {
     public void setInfo(String info) {
         this.info = info;
     }
+
 }

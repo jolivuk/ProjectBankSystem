@@ -2,6 +2,8 @@ package bank.app.model.entity;
 
 import bank.app.model.enums.DocumentType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,9 +12,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="private_info")
 public class PrivateInfo {
     @Id
@@ -88,7 +92,7 @@ public class PrivateInfo {
         this.phone = phone;
     }
 
-    public void setBirthDate(LocalDate dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -104,5 +108,7 @@ public class PrivateInfo {
         this.comment = comment;
     }
 
-
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }
