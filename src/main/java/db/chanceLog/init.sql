@@ -11,14 +11,7 @@ CREATE TABLE address (
                          house_number INT NOT NULL,
                          info VARCHAR(64)
 );
-CREATE TABLE role (
-                      role_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                      role_name VARCHAR(128) NOT NULL
-);
-CREATE TABLE status (
-                        status_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                        status_name VARCHAR(16) NOT NULL
-);
+
 CREATE TABLE private_info (
                               private_info_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                               first_name VARCHAR(64) NOT NULL,
@@ -40,25 +33,25 @@ CREATE TABLE users (
                        username VARCHAR(64) NOT NULL,
                        password VARCHAR(64) NOT NULL,
                        private_info_id BIGINT,
-                       role_id BIGINT,
-                       status_id BIGINT,
+                       role VARCHAR(16),
+                       status VARCHAR(16),
                        manager_id BIGINT,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                        FOREIGN KEY (private_info_id) REFERENCES private_info(private_info_id),
                        FOREIGN KEY (role_id) REFERENCES role(role_id),
-                       FOREIGN KEY (status_id) REFERENCES status(status_id),
+
                        FOREIGN KEY (manager_id) REFERENCES users(user_id)
 );
 CREATE TABLE accounts (
                           account_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           user_id BIGINT,
-                          status_id BIGINT,
+                          status VARCHAR(16),
                           balance DECIMAL(10,2) NOT NULL,
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                           last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                          FOREIGN KEY (user_id) REFERENCES users(user_id),
-                          FOREIGN KEY (status_id) REFERENCES status(status_id)
+                          FOREIGN KEY (user_id) REFERENCES users(user_id)
+
 );
 CREATE TABLE fee_schedule (
                               fee_schedule_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -136,13 +129,13 @@ CREATE TABLE cards (
                        account_id BIGINT,
                        card_number VARCHAR(16) NOT NULL,
                        card_type VARCHAR(32),
-                       status_id BIGINT,
+                       status VARCHAR(16),
                        expiration_date DATE,
                        security_code VARCHAR(3),
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                       FOREIGN KEY (account_id) REFERENCES accounts(account_id),
-                       FOREIGN KEY (status_id) REFERENCES status(status_id)
+                       FOREIGN KEY (account_id) REFERENCES accounts(account_id)
+
 );
 CREATE TABLE transactions (
                               transaction_id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -1,7 +1,8 @@
 package bank.app.model.enums;
 
-public enum StatusName {
+public enum Status {
     ACTIVE,
+    INACTIVE,
     BLOCKED,
     DELETED
 }
