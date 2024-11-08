@@ -2,7 +2,7 @@ package bank.app.controllers;
 
 
 import bank.app.dto.PrivateInfoDto;
-import bank.app.dto.UserDto;
+import bank.app.dto.UserBasicDto;
 import bank.app.model.entity.User;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
@@ -49,15 +49,22 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> create(@RequestBody UserDto userDto) {
+    public ResponseEntity<User> create(@RequestBody UserBasicDto userDto) {
         User user = userService.saveNewUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PostMapping("/{id}/add/private_info")
     public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
+
         User user = userService.addPrivateInfoToUser(id, privateInfoDto);
+
         return ResponseEntity.ok(user);
     }
-
+    @PutMapping("/{id}/update")
+    public ResponseEntity<User> update(@RequestBody UserBasicDto userDto,
+                                                  @PathVariable Long id) {
+        User user = userService.updateInformationAboutUser(userDto, id);
+        return ResponseEntity.ok(user);
+    }
 }
