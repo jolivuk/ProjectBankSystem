@@ -1,10 +1,10 @@
 package bank.app.service.impl;
 
+import bank.app.dto.AccountBasicDto;
+import bank.app.dto.AccountFullDto;
 import bank.app.model.entity.Account;
-import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.service.AccountService;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,27 +20,31 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountById(Long accountId) {
-//        return accountRepository.findById(accountId).orElse(null);
-        return null;
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("account not found"));
+    }
+
+//    @Override
+//    public List<Account> readAllAccounts() {
+//        return null;
+//    }
+//
+//    @Override
+//    public void softDeleteAccount(Long accountId) {
+//
+//    }
+
+    @Override
+    public AccountBasicDto getBasicAccountInfo(Long accountId) {
+        Account account = getAccountById(accountId);
+        return AccountBasicDto.fromAccount(account);
     }
 
     @Override
-    public Account getAccountByUserId(Long userId) {
-        return null;
+    public AccountFullDto getFullAccountInfo(Long accountId) {
+        Account account = getAccountById(accountId);
+        return AccountFullDto.fromAccount(account);
     }
-
-
-    @Override
-    public List<Account> readAllAccounts() {
-//        return accountRepository.findAll();
-        return null;
-    }
-
-    @Override
-    public void softDeleteAccount(Long accountId) {
-
-    }
-
 //    @Override
 //    @Transactional
 //    public void softDeleteAccount(Long accountId) {
