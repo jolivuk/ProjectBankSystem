@@ -1,6 +1,7 @@
 package bank.app.model.entity;
 
 import bank.app.model.enums.TransactionStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +26,12 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name="sender_id", referencedColumnName = "account_id")
+    @JsonIgnore
     private Account sender;
 
     @ManyToOne
     @JoinColumn(name="receiver_id", referencedColumnName = "account_id")
+    @JsonIgnore
     private Account receiver;
 
     @Column(name="amount")
@@ -41,7 +44,7 @@ public class Transaction {
     private String comment;
 
     @Column(name="transaction_date")
-    private ZonedDateTime transactionDate;
+    private LocalDateTime transactionDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_status")
@@ -79,7 +82,7 @@ public class Transaction {
         this.comment = comment;
     }
 
-    public void setTransactionDate(ZonedDateTime transactionDate) {
+    public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
 

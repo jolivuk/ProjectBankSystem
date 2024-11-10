@@ -92,10 +92,7 @@ public class UserServiceImpl implements UserService {
             account.setStatus(Status.DELETED);
         }
 
-        // Сохранение изменений в базе данных
         accountRepository.saveAll(accounts);
-        userRepository.save(user);
-
         userRepository.save(user);
     }
 

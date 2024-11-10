@@ -6,5 +6,6 @@ import bank.app.model.entity.Transaction;
 import java.util.List;
 
 public interface TransactionService {
-   // List<Transaction> getTransactionsLastMonthByAccountId(Long accountId);
+    List<Transaction> getTransactionsByAccountId(Long accountId);
+    List<Transaction> getTransactionsLastMonthByAccountId(Long accountId);
 }

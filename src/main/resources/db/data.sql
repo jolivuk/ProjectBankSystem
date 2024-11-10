@@ -42,10 +42,15 @@ VALUES
     ('Deposit', 0.00, 'Account deposit');
 
 -- Вставка транзакций
-INSERT INTO transactions (sender_id, receiver_id, transaction_type_id, amount, fee, comment, transaction_status)
+INSERT INTO transactions (sender_id, receiver_id, transaction_type_id, amount, fee, comment, transaction_date, transaction_status)
 VALUES
-    (1, 2, 1, 200.00, 2.50, 'Monthly transfer', 'COMPLETED'),
-    (3, 4, 2, 500.00, 3.00, 'ATM withdrawal', 'COMPLETED'),
-    (2, 5, 3, 1500.00, 0.00, 'Salary deposit', 'COMPLETED'),
-    (1, 3, 1, 300.00, 2.50, 'Bill payment', 'COMPLETED'),
-    (5, 4, 2, 700.00, 3.00, 'Cash withdrawal', 'COMPLETED');
+    (1, 2, 1, 200.00, 2.50, 'Monthly transfer', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (3, 4, 2, 500.00, 3.00, 'ATM withdrawal', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (2, 5, 3, 1500.00, 0.00, 'Salary deposit', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (1, 3, 1, 300.00, 2.50, 'Bill payment', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (5, 4, 2, 700.00, 3.00, 'Cash withdrawal', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (2, 1, 1, 450.00, 1.50, 'Service fee', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (4, 3, 3, 1200.00, 0.00, 'Bonus', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (1, 5, 2, 600.00, 2.00, 'Loan payment', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (3, 2, 1, 50.00, 0.50, 'Gift transfer', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (5, 1, 2, 750.00, 2.50, 'Cash deposit', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED');

@@ -29,18 +29,17 @@ public class AccountController {
         return ResponseEntity.ok(accountService.findByUserId(userId));
     }
 
-//    @GetMapping("/{accountId}/transactions")
-//    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable Long accountId) {
-//        List<Transaction> transactions = transactionService.getAllTransactionsByAccountId(accountId);
-//        return ResponseEntity.ok(transactions);
-//    }
+    @GetMapping("/{accountId}/transactions")
+    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable Long accountId) {
+        List<Transaction> transactions = transactionService.getTransactionsByAccountId(accountId);
+        return ResponseEntity.ok(transactions);
+    }
 
-//    @GetMapping("/{accountId}/transactions/last-month")
-//    public ResponseEntity<List<Transaction>> getLastMonthTransactionsByAccount(@PathVariable Long accountId) {
-//        List<Transaction> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
-//        return ResponseEntity.ok(transactions);
-//    }
-
+    @GetMapping("/{accountId}/transactions/last-month")
+    public ResponseEntity<List<Transaction>> getLastMonthTransactionsByAccount(@PathVariable Long accountId) {
+        List<Transaction> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
+        return ResponseEntity.ok(transactions);
+    }
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) {
