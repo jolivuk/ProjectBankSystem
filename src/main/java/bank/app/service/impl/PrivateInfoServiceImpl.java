@@ -46,8 +46,6 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                 .documentNumber(privateInfoDto.documentNumber())
                 .comment(privateInfoDto.comment())
                 .build());
-
     }
-
 
 }

@@ -1,17 +1,10 @@
 DROP TABLE IF EXISTS transactions;
-DROP TABLE IF EXISTS fee_value;
-DROP TABLE IF EXISTS account_fee_schedule;
 DROP TABLE IF EXISTS transaction_type;
-DROP TABLE IF EXISTS cards;
-DROP TABLE IF EXISTS fee_type;
-DROP TABLE IF EXISTS fee_schedule;
-DROP TABLE IF EXISTS requisites;
 DROP TABLE IF EXISTS banks;
 DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS private_info;
 DROP TABLE IF EXISTS address;
-
 
 CREATE TABLE address (
                          address_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -54,98 +47,28 @@ CREATE TABLE users (
 CREATE TABLE accounts (
                           account_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           user_id BIGINT,
+                          iban VARCHAR(34) NOT NULL,
+                          swift VARCHAR(16),
                           status VARCHAR(16),
                           balance DECIMAL(10,2) NOT NULL,
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                           last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                           FOREIGN KEY (user_id) REFERENCES users(user_id)
-
-);
-CREATE TABLE fee_schedule (
-                              fee_schedule_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                              fee_schedule_name VARCHAR(64) NOT NULL,
-                              fee_schedule_description VARCHAR(255),
-                              is_active BOOLEAN NOT NULL,
-                              valid_from DATETIME,
-                              valid_to DATETIME,
-                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                              last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-CREATE TABLE fee_type (
-                          fee_type_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                          fee_code VARCHAR(32) NOT NULL,
-                          fee_name VARCHAR(64) NOT NULL,
-                          fee_description VARCHAR(255),
-                          calculation_method VARCHAR(32)
-);
-CREATE TABLE fee_value (
-                           fee_value_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                           fixed_amount DECIMAL(15,2),
-                           percentage_rate DECIMAL(5,2),
-                           min_amount DECIMAL(15,2),
-                           max_amount DECIMAL(15,2),
-                           fee_type_id BIGINT,
-                           fee_schedule_id BIGINT,
-                           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                           last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                           FOREIGN KEY (fee_type_id) REFERENCES fee_type(fee_type_id),
-                           FOREIGN KEY (fee_schedule_id) REFERENCES fee_schedule(fee_schedule_id)
-);
-CREATE TABLE account_fee_schedule (
-                                      account_fee_schedule_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                      account_id BIGINT,
-                                      fee_schedule_id BIGINT,
-                                      assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                      last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                      FOREIGN KEY (account_id) REFERENCES accounts(account_id),
-                                      FOREIGN KEY (fee_schedule_id) REFERENCES fee_schedule(fee_schedule_id)
 );
 
+-- Создание таблицы типов транзакций
 CREATE TABLE transaction_type (
-                                  transaction_type_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                  fee_type_id BIGINT,
-                                  transaction_type_name VARCHAR(64) NOT NULL,
-                                  transaction_fee DECIMAL(15,2),
-                                  transaction_type_description VARCHAR(255),
-                                  FOREIGN KEY (fee_type_id) REFERENCES fee_type(fee_type_id)
+                                   transaction_type_id INT AUTO_INCREMENT PRIMARY KEY,
+                                   transaction_type_name VARCHAR(16) NOT NULL,
+                                   transaction_type_fee DECIMAL(10,2),
+                                   transaction_type_description VARCHAR(64)
 );
-CREATE TABLE banks (
-                       bank_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                       address_id BIGINT,
-                       bank_name VARCHAR(64) NOT NULL,
-                       swift VARCHAR(16),
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                       last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                       FOREIGN KEY (address_id) REFERENCES address(address_id)
-);
-CREATE TABLE requisites (
-                            requisites_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                            bank_id BIGINT,
-                            account_id BIGINT,
-                            iban VARCHAR(34) NOT NULL,
-                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                            last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                            FOREIGN KEY (bank_id) REFERENCES banks(bank_id),
-                            FOREIGN KEY (account_id) REFERENCES accounts(account_id)
-);
-CREATE TABLE cards (
-                       card_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                       account_id BIGINT,
-                       card_number VARCHAR(16) NOT NULL,
-                       card_type VARCHAR(32),
-                       status VARCHAR(16),
-                       expiration_date DATE,
-                       security_code VARCHAR(3),
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                       last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                       FOREIGN KEY (account_id) REFERENCES accounts(account_id)
 
-);
 CREATE TABLE transactions (
                               transaction_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                               sender_id BIGINT,
                               receiver_id BIGINT,
+                              transaction_type_id INT, -- связь с типом транзакции
                               amount DECIMAL(10,2) NOT NULL,
                               fee DECIMAL(10,2),
                               comment VARCHAR(255),
@@ -153,6 +76,10 @@ CREATE TABLE transactions (
                               transaction_status VARCHAR(16),
                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                              FOREIGN KEY (sender_id) REFERENCES requisites(requisites_id),
-                              FOREIGN KEY (receiver_id) REFERENCES requisites(requisites_id)
+                              FOREIGN KEY (sender_id) REFERENCES accounts(account_id),
+                              FOREIGN KEY (receiver_id) REFERENCES accounts(account_id),
+                              FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(transaction_type_id)
 );
+
+
+

@@ -1,8 +1,10 @@
 package bank.app.controllers;
 
 
+import bank.app.dto.AddressDto;
 import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserBasicDto;
+import bank.app.model.entity.Account;
 import bank.app.model.entity.User;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -32,10 +34,6 @@ public class UserController {
         return userService.findAll();
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
@@ -43,28 +41,38 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         userService.deleteUserById(id);
         return ResponseEntity.ok("user with id :" + id + " was deleted");
     }
 
     @PostMapping("/")
     public ResponseEntity<User> create(@RequestBody UserBasicDto userDto) {
-        User user = userService.saveNewUser(userDto);
+        User user = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @PostMapping("/{id}/add/private_info")
+    @PostMapping("/{id}/private_info/add")
     public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
-
-        User user = userService.addPrivateInfoToUser(id, privateInfoDto);
-
+        User user = userService.addPrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
-    @PutMapping("/{id}/update")
-    public ResponseEntity<User> update(@RequestBody UserBasicDto userDto,
-                                                  @PathVariable Long id) {
-        User user = userService.updateInformationAboutUser(userDto, id);
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserBasicDto userDto) {
+        User user = userService.updateUser(id, userDto);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/{id}/private_info")
+    public ResponseEntity<User> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
+        User user = userService.updatePrivateInfo(id, privateInfoDto);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/{id}/private_info/address")
+    public ResponseEntity<User> updateAddress(@PathVariable Long id, @RequestBody AddressDto AddressDto) {
+        User user = userService.updateAddress(id, AddressDto);
         return ResponseEntity.ok(user);
     }
 }

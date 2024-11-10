@@ -1,6 +1,6 @@
 package bank.app.model.enums;
 
-public enum TransactionStatusName {
+public enum TransactionStatus {
     INITIALIZED,
     PROCESSING,
     PENDING_CONFIRMATION,
