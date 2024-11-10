@@ -13,5 +13,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     boolean deleteTransactionById(Long id);
     List<Transaction> findBySenderIdOrReceiverId(Long accountId, Long accountId1);
     List<Transaction> findBySenderIdOrReceiverIdAndTransactionDateBetween(Long accountId1, Long accountId2, LocalDateTime startDate, LocalDateTime endDate);
+
 }
 

@@ -41,6 +41,7 @@ public class AccountController {
         return ResponseEntity.ok(transactions);
     }
 
+
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) {
 //        accountService.softDeleteAccount(id);
