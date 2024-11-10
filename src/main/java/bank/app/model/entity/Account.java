@@ -2,6 +2,7 @@ package bank.app.model.entity;
 
 
 import bank.app.model.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,16 +27,18 @@ public class Account{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
+    @Column(name = "iban")
+    private String iban;
+
+    @Column(name = "swift")
+    private String swift;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
-
-//    @OneToMany
-//    @JoinColumn(name = "transaction_id")          check
-//    Set<Transaction> transaction;
 
     @Column(name = "balance")
     private Double balance;

@@ -55,6 +55,8 @@ entity Role {
 entity Account {
    + PK id : INT
    + user : User
+   + iban : varchar(34)
+   + swift : varchar(16)
    + status : Status
    + balance : DECIMAL(10,2)
    + currency : varchar(3)
@@ -67,60 +69,19 @@ entity Status{
 }
 
 
-
-' Домен комиссий
-entity FeeSchedule {
-   + PK id : INT
-   + name : varchar(64)
-   + description : varchar(255)
-   + is_active : boolean
-   + valid_from : DATETIME
-   + valid_to : DATETIME
-   + createdAt : timestamp
-   + lastUpdate : timestamp
-}
-
-entity FeeType {
-   + PK id : INT
-   + code : varchar(32)
-   + name : varchar(64)
-   + description : varchar(255)
-   + calculation_method : varchar(32)
-}
-
-entity FeeValue {
-   + PK id : INT
-   + fixed_amount : DECIMAL(15,2)
-   + percentage_rate : DECIMAL(5,2)
-   + min_amount : DECIMAL(15,2)
-   + max_amount : DECIMAL(15,2)
-   + created_at : DATETIME
-   + fee_type : FeeType
-   + fee_schedule : FeeSchedule
-}
-
-entity AccountFeeSchedule {
-   + PK id : INT
-   + account : Account
-   + fee_schedule : FeeSchedule
-   + assigned_at : DATETIME
-   + createdAt : timestamp
-   + lastUpdate : timestamp
-}
-
 ' Домен транзакций
 entity Transaction {
    + PK id : INT
-   + sender : Requisites
-   + receiver : Requisites
+   + sender : account
+   + receiver : account
    + amount : DECIMAL(10,2)
    + fee : DECIMAL(10,2)
    + comment : varchar(255)
    + transaction_date : DATETIME
    + transaction_status : TransactionStatus
+   + transaction_type : TransactionType
    + createdAt : timestamp
    + lastUpdate : timestamp
-
 }
 
 entity TransactionStatus {
@@ -130,41 +91,9 @@ entity TransactionStatus {
 
 entity TransactionType {
    + PK id : INT
-   + fee_type : FeeType
-   + transaction_type_name : varchar(64)
-   + transaction_fee : DECIMAL(15,2)
-   + description : varchar(255)
-}
-
-' Домен карт и банков
-entity Card {
-   + PK id : INT
-   + account : Account
-   + card_number : varchar(16)
-   + card_type : varchar(32)
-   + status : Status
-   + expiration_date : date
-   + security_code : varchar(3)
-   + createdAt : timestamp
-   + lastUpdate : timestamp
-}
-
-entity Bank {
-   + PK id : INT
-   + address : Address
-   + bank_name : varchar(64)
-   + swift : varchar(16)
-   + createdAt : timestamp
-   + lastUpdate : timestamp
-}
-
-entity Requisites {
-   + PK id : INT
-   + bank : Bank
-   + account : Account
-   + iban : varchar(34)
-   + createdAt : timestamp
-   + lastUpdate : timestamp
+   + name : varchar(16)
+   + fee : DECIMAL(10,2)
+   + description : varchar(64)
 }
 
 ' Связи базового домена
@@ -174,28 +103,15 @@ User ||--o{ User : manager_id
 User ||--o{ Account : user_id
 PrivateInfo ||--|| Address : address_id
 PrivateInfo }|--|| documentType : documentType_id
-Account ||--o{ Card : account_id
-Account ||--|| Requisites : account_id
+Account ||--|| Transaction : account_id
 
 ' Связи транзакционного домена
-Transaction }|--|| Requisites : sender >
-Transaction }|--|| Requisites : receiver >
+Transaction }|--|| Account : sender >
+Transaction }|--|| Account : receiver >
 Transaction ||--|| TransactionStatus : transaction_status_id
 Transaction ||--|| TransactionType : transaction_type_id
 
-' Связи банковского домена
-Bank ||--o{ Requisites : bank_id
-Bank ||--|| Address : address_id
-
-' Связи домена комиссий
-Account ||--o{ AccountFeeSchedule : account_id
-AccountFeeSchedule }|--|| FeeSchedule : fee_schedule_id
-FeeSchedule ||--o{ FeeValue : fee_schedule_id
-FeeValue }|--|| FeeType : fee_type_id
-TransactionType ||--|| FeeType : fee_type_id
-
 Status ||--|| Account : status_id
 Status ||--|| User : status_id
-Status ||--|| Card : status_id
 
 @enduml

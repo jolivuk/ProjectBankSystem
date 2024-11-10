@@ -1,6 +1,7 @@
 package bank.app.model.entity;
 
-import bank.app.model.enums.TransactionStatusName;
+import bank.app.model.enums.TransactionStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,6 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="transactions")
-
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +25,14 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="sender_id", referencedColumnName = "requisites_id")
-    private Requisites sender;
+    @JoinColumn(name="sender_id", referencedColumnName = "account_id")
+    @JsonIgnore
+    private Account sender;
 
     @ManyToOne
-    @JoinColumn(name="receiver_id", referencedColumnName = "requisites_id")
-    private Requisites receiver;
+    @JoinColumn(name="receiver_id", referencedColumnName = "account_id")
+    @JsonIgnore
+    private Account receiver;
 
     @Column(name="amount")
     private double amount;
@@ -42,11 +44,15 @@ public class Transaction {
     private String comment;
 
     @Column(name="transaction_date")
-    private ZonedDateTime transactionDate;
+    private LocalDateTime transactionDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_status")
+    private TransactionStatus transactionStatus;
 
     @ManyToOne
-    @JoinColumn(name = "transaction_status_id")
-    private TransactionStatus transactionStatus;
+    @JoinColumn(name = "transaction_type_id")
+    private TransactionType transactionType;
 
     @Column(name="created_at",updatable = false)
     @CreationTimestamp
@@ -56,12 +62,11 @@ public class Transaction {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
-
-    public void setSender(Requisites sender) {
+    public void setSender(Account sender) {
         this.sender = sender;
     }
 
-    public void setReceiver(Requisites receiver) {
+    public void setReceiver(Account receiver) {
         this.receiver = receiver;
     }
 
@@ -69,19 +74,23 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public void setFee(double fee) {
-        this.amount = fee;
+    public void setFee(BigDecimal fee) {
+        this.fee = fee;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
     }
 
+    public void setTransactionDate(LocalDateTime transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 }
