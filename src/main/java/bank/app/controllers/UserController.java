@@ -9,15 +9,18 @@ import bank.app.model.entity.User;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
 
     @Autowired
@@ -53,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/private_info/add")
-    public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
+    public ResponseEntity<User> addPrivateInfo(@PathVariable Long id,@Valid @RequestBody  PrivateInfoDto privateInfoDto) {
         User user = userService.addPrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
