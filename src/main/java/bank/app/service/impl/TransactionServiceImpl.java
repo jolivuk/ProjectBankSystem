@@ -26,7 +26,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(30);
-
         return transactionRepository.findBySenderIdOrReceiverIdAndTransactionDateBetween(accountId,accountId, startDate, endDate);
     }
 

@@ -58,6 +58,7 @@ public class Transaction {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+
     @Column(name = "last_update")
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
