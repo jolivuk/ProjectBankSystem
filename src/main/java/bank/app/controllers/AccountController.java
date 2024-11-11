@@ -50,6 +50,6 @@ public class AccountController {
 
 @GetMapping("/{id}")
 public ResponseEntity<AccountBasicDto> getBasicAccountInfo(@PathVariable Long id,
-                                                                               @RequestParam (name = "full",required = false) boolean isFull) {
+                                                           @RequestParam (name = "full",required = false) boolean isFull) {
     return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));}
 }

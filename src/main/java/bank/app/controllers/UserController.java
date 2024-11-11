@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> create(@RequestBody UserBasicDto userDto) {
+    public ResponseEntity<User> create(@Valid @RequestBody UserBasicDto userDto) {
         User user = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
