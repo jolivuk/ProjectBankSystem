@@ -48,13 +48,8 @@ public class AccountController {
 //        return ResponseEntity.noContent().build();
 //    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AccountBasicDto> getBasicAccountInfo(@PathVariable Long id) {
-        return ResponseEntity.ok(accountService.getBasicAccountInfo(id));
-    }
-
-    @GetMapping("/{id}/full")
-    public ResponseEntity<AccountFullDto> getFullAccountInfo(@PathVariable Long id) {
-        return ResponseEntity.ok(accountService.getFullAccountInfo(id));
-    }
+@GetMapping("/{id}")
+public ResponseEntity<AccountBasicDto> getBasicAccountInfo(@PathVariable Long id,
+                                                                               @RequestParam (name = "full",required = false) boolean isFull) {
+    return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));}
 }
