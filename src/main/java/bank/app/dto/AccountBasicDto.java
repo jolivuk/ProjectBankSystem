@@ -11,26 +11,33 @@ public class AccountBasicDto
      private final Long id;
      private final Status status;
      private final Double balance;
+     private final String iban;
+     private final String swift;
      private final LocalDateTime createdAt;
      private final LocalDateTime lastUpdate;
 
-     public AccountBasicDto(Long id, Status status, Double balance,
-                            LocalDateTime createdAt, LocalDateTime lastUpdate) {
+     public AccountBasicDto(Long id, Status status, Double balance, String iban,
+                            String swift, LocalDateTime createdAt, LocalDateTime lastUpdate) {
          this.id = id;
          this.status = status;
          this.balance = balance;
+         this.iban = iban;
+         this.swift = swift;
          this.createdAt = createdAt;
          this.lastUpdate = lastUpdate;
      }
-public static AccountBasicDto fromAccount(Account account) {
-        return new AccountBasicDto(
-        account.getId(),
-        account.getStatus(),
-        account.getBalance(),
-        account.getCreatedAt(),
-        account.getLastUpdate()
-        );
-        }
+
+     public static AccountBasicDto fromAccount(Account account) {
+         return new AccountBasicDto(
+                 account.getId(),
+                 account.getStatus(),
+                 account.getBalance(),
+                 account.getIban(),
+                 account.getSwift(),
+                 account.getCreatedAt(),
+                 account.getLastUpdate()
+         );
+     }
 
      public Long getId() {
          return id;
@@ -38,6 +45,14 @@ public static AccountBasicDto fromAccount(Account account) {
 
      public Status getStatus() {
          return status;
+     }
+
+     public String getIban() {
+         return iban;
+     }
+
+     public String getSwift() {
+         return swift;
      }
 
      public Double getBalance() {

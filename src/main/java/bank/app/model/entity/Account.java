@@ -51,6 +51,14 @@ public class Account{
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
+    public Account(User user, String iban, String swift, Status status, Double balance) {
+        this.user = user;
+        this.iban = iban;
+        this.swift = swift;
+        this.status = status;
+        this.balance = balance;
+    }
+
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }

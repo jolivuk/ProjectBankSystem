@@ -4,7 +4,7 @@ import bank.app.dto.AddressDto;
 import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserBasicDto;
 import bank.app.exeptions.UserAlreadyDeletedException;
-import bank.app.exeptions.UserNotFountException;
+import bank.app.exeptions.UserNotFoundException;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
 import bank.app.model.entity.PrivateInfo;
@@ -12,37 +12,30 @@ import bank.app.model.entity.User;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.UserRepository;
-import bank.app.service.AccountService;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PrivateInfoService privateInfoService;
-
-    @Autowired
-    private AddressService addressService;
-
-    @Autowired
-    private AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final PrivateInfoService privateInfoService;
+    private final AddressService addressService;
+    private final AccountRepository accountRepository;
 
 
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFountException("User with ID " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
     }
 
     @Override
@@ -65,8 +58,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if (!userOptional.isPresent()) {
             try {
-                throw new UserNotFountException("User with ID " + id + " not found");
-            } catch (UserNotFountException e) {
+                throw new UserNotFoundException("User with ID " + id + " not found");
+            } catch (UserNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }

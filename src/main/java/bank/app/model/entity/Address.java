@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Table(name="address")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="address_id")
@@ -41,23 +42,6 @@ public class Address {
 
     @Column(name="info")
     private String info;
-
-    @Column(name="created_at",updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "last_update")
-    @UpdateTimestamp
-    private LocalDateTime lastUpdate;
-
-//    public Address(String country, String city, String postcode, String street, String houseNumber, String info) {
-//        this.country = country;
-//        this.city = city;
-//        this.postcode = postcode;
-//        this.street = street;
-//        this.houseNumber = houseNumber;
-//        this.info = info;
-//    }
 
 
     public void setCountry(String country) {

@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 @Table(name="private_info")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PrivateInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="private_info_id")
@@ -68,20 +69,6 @@ public class PrivateInfo {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
-
-    public PrivateInfo(String firstName, String lastName, String email,
-                       String phone, LocalDate dateOfBirth, DocumentType documentType,
-                       String documentNumber, String comment, Address address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-        this.dateOfBirth = dateOfBirth;
-        this.documentType = documentType;
-        this.documentNumber = documentNumber;
-        this.comment = comment;
-        this.address = address;
-    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

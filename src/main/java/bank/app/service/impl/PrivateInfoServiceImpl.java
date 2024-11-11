@@ -6,20 +6,16 @@ import bank.app.model.entity.PrivateInfo;
 import bank.app.repository.PrivateInfoRepository;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PrivateInfoServiceImpl implements PrivateInfoService {
     private final PrivateInfoRepository privateInfoRepository;
-
-    @Autowired
     private AddressService addressService;
 
-    @Autowired
-    public PrivateInfoServiceImpl(PrivateInfoRepository privateInfoRepository) {
-        this.privateInfoRepository = privateInfoRepository;
-    }
 
     @Override
     public PrivateInfo savePrivateInfo(PrivateInfo privateInfo) {
