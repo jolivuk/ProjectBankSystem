@@ -75,4 +75,12 @@ public class Account{
         this.balance = balance;
     }
 
+    public boolean isBlocked(){
+        return status == Status.BLOCKED;
+    }
+
+    public boolean isDeleted(){
+        return status == Status.DELETED;
+    }
+
 }

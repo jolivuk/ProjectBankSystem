@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -39,7 +40,7 @@ public class Transaction {
     private double amount;
 
     @Column(name="fee")
-    private BigDecimal fee;
+    private double fee;
 
     @Column(name="comment")
     private String comment;
@@ -64,6 +65,18 @@ public class Transaction {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
+    public Transaction(Account sender, Account receiver, double amount,
+                       String comment, TransactionStatus transactionStatus,
+                       TransactionType transactionType) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.amount = amount;
+        this.comment = comment;
+        this.transactionStatus = transactionStatus;
+        this.transactionType = transactionType;
+    }
+
+
     public void setSender(Account sender) {
         this.sender = sender;
     }
@@ -76,7 +89,7 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public void setFee(BigDecimal fee) {
+    public void setFee(double fee) {
         this.fee = fee;
     }
 

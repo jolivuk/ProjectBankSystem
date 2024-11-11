@@ -2,13 +2,14 @@ package bank.app.dto;
 
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
-public record TransactionDto(String senderName, String receiverName,
+public record TransactionDto(
+        Long sender,
+        Long receiver,
         double amount,
-        String description,
-        LocalDateTime createdAt){
-
-
+        String comment,
+        String  transactionType){
 }

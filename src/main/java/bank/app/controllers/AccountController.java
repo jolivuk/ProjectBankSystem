@@ -2,6 +2,7 @@ package bank.app.controllers;
 
 import bank.app.dto.AccountBasicDto;
 import bank.app.dto.AccountFullDto;
+import bank.app.dto.TransactionDto;
 import bank.app.dto.UserBasicDto;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
@@ -44,6 +45,11 @@ public class AccountController {
         return ResponseEntity.ok(transactions);
     }
 
+    @PostMapping("/{accountId}/transactions/")
+    public ResponseEntity<Transaction> addTransaction(@RequestBody TransactionDto transactionDto) {
+        Transaction transaction = transactionService.addNewTransaction(transactionDto);
+        return ResponseEntity.ok(transaction);
+    }
 
     @PostMapping("/add/user/{userId}")
     public ResponseEntity<Account> add(@PathVariable Long userId,@RequestBody AccountBasicDto accountBasicDto){

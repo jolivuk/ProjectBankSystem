@@ -60,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createNewAccount(AccountBasicDto accountBasicDto, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("userNot founded"));
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found with id: " + userId));
         
         Account account = new Account(user,accountBasicDto.getIban(),
                 accountBasicDto.getSwift(),Status.ACTIVE,accountBasicDto.getBalance());
@@ -72,6 +72,5 @@ public class AccountServiceImpl implements AccountService {
     public List<Transaction> getAllTransactionsByAccountId(Long accountId) {
         return transactionRepository.findBySenderIdOrReceiverId(accountId, accountId);
     }
-
 
 }
