@@ -7,6 +7,7 @@ import bank.app.model.entity.Transaction;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.TransactionRepository;
 import bank.app.service.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,12 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
-    @Autowired
-    private TransactionRepository transactionRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
+    private final TransactionRepository transactionRepository;
 
     @Override
     public Account getAccountById(Long accountId) {
@@ -40,7 +38,6 @@ public class AccountServiceImpl implements AccountService {
         return transactionRepository.findBySenderIdOrReceiverId(accountId, accountId);
     }
 
-
     @Override
     public AccountBasicDto getBasicAccountInfo(Long accountId) {
         Account account = getAccountById(accountId);
@@ -52,7 +49,4 @@ public class AccountServiceImpl implements AccountService {
         Account account = getAccountById(accountId);
         return AccountFullDto.fromAccount(account);
     }
-
-
-
 }

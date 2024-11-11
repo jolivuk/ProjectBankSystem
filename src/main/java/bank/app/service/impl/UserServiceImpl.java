@@ -17,6 +17,7 @@ import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,19 +25,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PrivateInfoService privateInfoService;
-
-    @Autowired
-    private AddressService addressService;
-
-    @Autowired
-    private AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final PrivateInfoService privateInfoService;
+    private final AddressService addressService;
+    private final AccountRepository accountRepository;
 
 
     @Override

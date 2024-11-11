@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name="transaction_type")
 public class TransactionType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transaction_type_id")
@@ -37,11 +38,3 @@ public class TransactionType {
         this.transactionTypeDescription = transactionTypeDescription;
     }
 }
-
-/**
- *    + PK id : INT
- *    + fee_type : FeeType
- *    + transaction_type_name : varchar(64)
- *    + transaction_fee : DECIMAL(15,2)
- *    + description : varchar(255)
- */

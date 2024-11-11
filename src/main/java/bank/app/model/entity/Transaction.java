@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @Table(name="transactions")
 public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transaction_id")

@@ -4,19 +4,16 @@ import bank.app.dto.AddressDto;
 import bank.app.model.entity.Address;
 import bank.app.repository.AddressRepository;
 import bank.app.service.AddressService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
-
-    @Autowired
-    public AddressServiceImpl(AddressRepository addressRepository) {
-        this.addressRepository = addressRepository;
-    }
 
     @Override
     public Address saveAddress(Address address) {
@@ -32,7 +29,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address createAddress(AddressDto addressDto) {
-
         return addressRepository.save(Address.builder().country(addressDto.country())
                 .city(addressDto.city())
                 .postcode(addressDto.postcode())
@@ -41,5 +37,4 @@ public class AddressServiceImpl implements AddressService {
                 .info(addressDto.info())
                 .build());
     }
-
 }

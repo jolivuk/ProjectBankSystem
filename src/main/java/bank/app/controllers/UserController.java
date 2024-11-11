@@ -10,6 +10,7 @@ import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @Validated
+@RequiredArgsConstructor
 public class UserController {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PrivateInfoService privateInfoService;
-
-    @Autowired
-    private AddressService addressService;
+    private final UserService userService;
 
     @GetMapping()
     public List<User> findAllUsers() {
         return userService.findAll();
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
@@ -44,7 +37,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok("user with id :" + id + " was deleted");
     }
@@ -56,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/private_info/add")
-    public ResponseEntity<User> addPrivateInfo(@PathVariable Long id,@Valid @RequestBody  PrivateInfoDto privateInfoDto) {
+    public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoDto privateInfoDto) {
         User user = userService.addPrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
