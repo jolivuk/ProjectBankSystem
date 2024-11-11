@@ -11,20 +11,24 @@ import java.util.Objects;
 public class AccountFullDto extends AccountBasicDto{
     private final UserFullDto user;
 
-    public AccountFullDto(Long id, UserFullDto user, Status status,
-                          Double balance, LocalDateTime createdAt, LocalDateTime lastUpdate) {
-        super(id, status, balance, createdAt, lastUpdate);
+    public AccountFullDto(Long id, Status status, Double balance, String iban,
+                          String swift, LocalDateTime createdAt,
+                          LocalDateTime lastUpdate, UserFullDto user) {
+
+        super(id, status, balance, iban, swift, createdAt, lastUpdate);
         this.user = user;
     }
 
     public static AccountFullDto fromAccount(Account account) {
         return new AccountFullDto(
                 account.getId(),
-                UserFullDto.fromUser(account.getUser()),
                 account.getStatus(),
                 account.getBalance(),
+                account.getIban(),
+                account.getSwift(),
                 account.getCreatedAt(),
-                account.getLastUpdate()
+                account.getLastUpdate(),
+                UserFullDto.fromUser(account.getUser())
         );
     }
 
