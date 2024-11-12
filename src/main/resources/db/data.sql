@@ -26,9 +26,14 @@ VALUES
     ('client3', 'password123', 5, 'CUSTOMER', 'ACTIVE', 2);
 
 -- Вставка данных в таблицу счетов
+-- Акканут банка
+INSERT INTO accounts (account_id,user_id, iban, swift, status, balance)
+VALUES
+    (1,1, 'DE89370400440532013000', 'DEUTDEFF', 'ACTIVE', 0.00);
+
 INSERT INTO accounts (user_id, iban, swift, status, balance)
 VALUES
-    (3, 'DE89370400440532013000', 'DEUTDEFF', 'ACTIVE', 5000.00),
+    (3, 'DE12345678901234567890', 'COMMDEFF', 'ACTIVE', 7500.00),
     (3, 'DE89370400440532013001', 'DEUTDEFF', 'ACTIVE', 3000.00),
     (4, 'DE89370400440532013002', 'DEUTDEFF', 'ACTIVE', 7000.00),
     (4, 'DE89370400440532013003', 'DEUTDEFF', 'ACTIVE', 1500.00),

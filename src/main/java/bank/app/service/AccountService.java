@@ -15,4 +15,5 @@ public interface AccountService {
     List<Account> findByUserId(Long userId);
     Account createNewAccount(AccountBasicDto account,Long userId);
     List<Transaction> getAllTransactionsByAccountId(Long accountId);
+    void checkAccount(Account account);
 }

@@ -3,6 +3,7 @@ package bank.app.service.impl;
 import bank.app.dto.AccountBasicDto;
 import bank.app.dto.AccountFullDto;
 import bank.app.dto.UserBasicDto;
+import bank.app.exeptions.AccountIsBlockedException;
 import bank.app.exeptions.AccountNotFoundException;
 import bank.app.exeptions.UserNotFoundException;
 import bank.app.model.entity.Account;
@@ -60,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createNewAccount(AccountBasicDto accountBasicDto, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("userNot founded"));
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found with id: " + userId));
         
         Account account = new Account(user,accountBasicDto.getIban(),
                 accountBasicDto.getSwift(),Status.ACTIVE,accountBasicDto.getBalance());
@@ -73,5 +74,15 @@ public class AccountServiceImpl implements AccountService {
         return transactionRepository.findBySenderIdOrReceiverId(accountId, accountId);
     }
 
+    @Override
+    public void checkAccount(Account account) {
+        if (account.isDeleted()) {
+            throw new AccountIsBlockedException(String.format("Account with id %d is deleted", account.getId()));
+        }
+
+        if (account.isBlocked()) {
+            throw new AccountIsBlockedException(String.format("Account with id %d is blocked", account.getId()));
+        }
+    }
 
 }

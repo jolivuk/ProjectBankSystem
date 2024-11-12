@@ -56,7 +56,6 @@ CREATE TABLE accounts (
                           FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
--- Создание таблицы типов транзакций
 CREATE TABLE transaction_type (
                                    transaction_type_id INT AUTO_INCREMENT PRIMARY KEY,
                                    transaction_type_name VARCHAR(16) NOT NULL,
@@ -68,11 +67,11 @@ CREATE TABLE transactions (
                               transaction_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                               sender_id BIGINT,
                               receiver_id BIGINT,
-                              transaction_type_id INT, -- связь с типом транзакции
+                              transaction_type_id INT,
                               amount DECIMAL(10,2) NOT NULL,
                               fee DECIMAL(10,2),
                               comment VARCHAR(255),
-                              transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                              transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               transaction_status VARCHAR(16),
                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
