@@ -3,6 +3,7 @@ package bank.app.service.impl;
 import bank.app.dto.TransactionDto;
 import bank.app.dto.TransfertDto;
 import bank.app.exeptions.BalanceException;
+import bank.app.exeptions.TransactionNotFoundException;
 import bank.app.exeptions.TransactionTypeException;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
@@ -28,6 +29,27 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionTypeRepository transactionTypeRepository;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+
+    @Override
+    public Transaction getTransactionById(Long id){
+        if(id == null){
+            throw new IllegalArgumentException("Transaction id can not be null");
+        }
+        return transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException("transaction with id " + id + " not founded") );
+    }
+
+    @Override
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll();
+    }
+
+    @Override
+    public void delete(Long id) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new TransactionNotFoundException("Пользователь с ID: " + id + " не найден"));
+        transactionRepository.deleteById(id);
+    }
+
 
     @Override
     public List<Transaction> getTransactionsByAccountId(Long accountId) {
