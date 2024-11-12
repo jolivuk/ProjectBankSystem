@@ -3,6 +3,7 @@ package bank.app.service.impl;
 import bank.app.dto.AccountBasicDto;
 import bank.app.dto.AccountFullDto;
 import bank.app.dto.UserBasicDto;
+import bank.app.exeptions.AccountIsBlockedException;
 import bank.app.exeptions.AccountNotFoundException;
 import bank.app.exeptions.UserNotFoundException;
 import bank.app.model.entity.Account;
@@ -71,6 +72,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Transaction> getAllTransactionsByAccountId(Long accountId) {
         return transactionRepository.findBySenderIdOrReceiverId(accountId, accountId);
+    }
+
+    @Override
+    public void checkAccount(Account account) {
+        if (account.isDeleted()) {
+            throw new AccountIsBlockedException(String.format("Account with id %d is deleted", account.getId()));
+        }
+
+        if (account.isBlocked()) {
+            throw new AccountIsBlockedException(String.format("Account with id %d is blocked", account.getId()));
+        }
     }
 
 }

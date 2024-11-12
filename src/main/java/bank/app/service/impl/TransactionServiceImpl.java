@@ -1,6 +1,9 @@
 package bank.app.service.impl;
 
 import bank.app.dto.TransactionDto;
+import bank.app.dto.TransfertDto;
+import bank.app.exeptions.BalanceException;
+import bank.app.exeptions.TransactionTypeException;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
 import bank.app.model.entity.TransactionType;
@@ -40,45 +43,51 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction addNewTransaction(TransactionDto transactionDto) {
+    public Transaction addNewTransaction(Long accountId,TransfertDto transfertDto) {
 
-        Account sender = accountService.getAccountById(transactionDto.sender());
-        Account receiver = accountService.getAccountById(transactionDto.receiver());
+        TransactionDto transactionDto = new TransactionDto(
+                accountId, transfertDto.receiver(),transfertDto.amount(),transfertDto.comment(),transfertDto.transactionType());
 
-        if (sender.isDeleted() || sender.isBlocked() || receiver.isDeleted() || receiver.isBlocked()) {
-            throw new RuntimeException("One or both accounts are inactive or blocked.");
-        }
+        Account sender = accountService.getAccountById(transactionDto.getSender());
+        Account receiver = accountService.getAccountById(transactionDto.getReceiver());
+        Account bank = accountService.getAccountById(1L);
 
-        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionDto.transactionType())
-                .orElseThrow(() -> new RuntimeException("Transaction type not found"));
+        accountService.checkAccount(bank);
+        accountService.checkAccount(sender);
+        accountService.checkAccount(receiver);
+
+        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionDto.getTransactionType())
+                .orElseThrow(() ->
+                        new TransactionTypeException(String.format("Transaction Type %s not found", transactionDto.getTransactionType())));
 
 
-        Transaction transaction = new Transaction(sender, receiver, transactionDto.amount(),
-                transactionDto.comment(), TransactionStatus.INITIALIZED, transactionType);
+        Transaction transaction = new Transaction(sender, receiver, transactionDto.getAmount(),
+                transactionDto.getComment(), TransactionStatus.INITIALIZED, transactionType);
 
         transaction.setTransactionStatus(TransactionStatus.PROCESSING);
-        transaction.setFee(transactionType.getTransactionFee()*transactionDto.amount());
+        transaction.setFee(transactionType.getTransactionFee()*transactionDto.getAmount()/100);
         transactionRepository.save(transaction);
 
+        double totalSum = transactionDto.getAmount() + transaction.getFee();
 
-        if ((transactionDto.amount() + transaction.getFee()) > sender.getBalance()) {
+        if (totalSum > sender.getBalance()) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
-            transaction.setComment(transactionDto.comment() + " - Not enough balance");
+            transaction.setComment(transactionDto.getComment() + " - Not enough balance");
             transactionRepository.save(transaction);  // Save the failed transaction
-            throw new RuntimeException("Not enough balance");
+            throw new BalanceException("Not enough balance on account " + accountId);
         }
 
-        //Send code confirmation to user
 
-        sender.setBalance(sender.getBalance() - transactionDto.amount());
-        receiver.setBalance(receiver.getBalance() + transactionDto.amount());
-
+        sender.setBalance(sender.getBalance() - totalSum);
+        receiver.setBalance(receiver.getBalance() + transactionDto.getAmount());
+        bank.setBalance(bank.getBalance() + transaction.getFee());
 
         transaction.setTransactionStatus(TransactionStatus.COMPLETED);
         Transaction savedTransaction = transactionRepository.save(transaction);
 
         accountRepository.save(sender);
         accountRepository.save(receiver);
+        accountRepository.save(bank);
 
         return savedTransaction;
     }
