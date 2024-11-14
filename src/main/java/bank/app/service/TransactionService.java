@@ -14,5 +14,4 @@ public interface TransactionService {
     List<TransactionResponseDto> getTransactionsLastMonthByAccountId(Long accountId);
     Transaction addNewTransaction(TransactionDto transactionDto);
     List<TransactionResponseDto> adjustedAmountsInTransactionByAccount(List<Transaction> transactions,Long accountId);
-
 }

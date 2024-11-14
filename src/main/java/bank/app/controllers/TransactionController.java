@@ -38,5 +38,6 @@ public class TransactionController {
     public ResponseEntity<Transaction> addTransaction(@RequestBody TransactionDto transactionDto) {
         Transaction transaction = transactionService.addNewTransaction(transactionDto);
         return ResponseEntity.ok(transaction);
+
     }
 }
