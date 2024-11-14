@@ -1,5 +1,6 @@
 package bank.app.controllers;
 
+import bank.app.dto.TransactionDto;
 import bank.app.model.entity.Transaction;
 import bank.app.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -33,18 +34,9 @@ public class TransactionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/account/{accountId}")
-    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable Long accountId) {
-        List<Transaction> transactions = transactionService.getTransactionsByAccountId(accountId);
-        return transactions.isEmpty()
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                : new ResponseEntity<>(transactions, HttpStatus.OK);
-    }
-    @GetMapping("/account/{accountId}/last-month")
-    public ResponseEntity<List<Transaction>> getTransactionsLastMonthByAccountId(@PathVariable Long accountId) {
-        List<Transaction> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
-        return transactions.isEmpty()
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                : new ResponseEntity<>(transactions, HttpStatus.OK);
+    @PostMapping("/")
+    public ResponseEntity<Transaction> addTransaction(@RequestBody TransactionDto transactionDto) {
+        Transaction transaction = transactionService.addNewTransaction(transactionDto);
+        return ResponseEntity.ok(transaction);
     }
 }

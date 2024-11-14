@@ -1,7 +1,7 @@
 package bank.app.service.impl;
 
 import bank.app.dto.TransactionDto;
-import bank.app.dto.TransfertDto;
+import bank.app.dto.TransactionResponseDto;
 import bank.app.exeptions.BalanceException;
 import bank.app.exeptions.TransactionNotFoundException;
 import bank.app.exeptions.TransactionTypeException;
@@ -17,9 +17,9 @@ import bank.app.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,23 +52,21 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public List<Transaction> getTransactionsByAccountId(Long accountId) {
-        List<Transaction> transactions = transactionRepository.findBySenderIdOrReceiverId(accountId, accountId);
-        return transactions;
+    public List<TransactionResponseDto> getTransactionsByAccountId(Long accountId) {
+        return adjustedAmountsInTransactionByAccount(transactionRepository.findBySenderIdOrReceiverId(accountId, accountId),accountId);
     }
 
     @Override
-    public List<Transaction> getTransactionsLastMonthByAccountId(Long accountId) {
+    public List<TransactionResponseDto> getTransactionsLastMonthByAccountId(Long accountId) {
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(30);
-        return transactionRepository.findBySenderIdOrReceiverIdAndTransactionDateBetween(accountId,accountId, startDate, endDate);
+        return adjustedAmountsInTransactionByAccount(
+                transactionRepository.findBySenderIdOrReceiverIdAndTransactionDateBetween(accountId,accountId, startDate, endDate),
+                accountId);
     }
 
     @Override
-    public Transaction addNewTransaction(Long accountId,TransfertDto transfertDto) {
-
-        TransactionDto transactionDto = new TransactionDto(
-                accountId, transfertDto.receiver(),transfertDto.amount(),transfertDto.comment(),transfertDto.transactionType());
+    public Transaction addNewTransaction(TransactionDto transactionDto) {
 
         Account sender = accountService.getAccountById(transactionDto.getSender());
         Account receiver = accountService.getAccountById(transactionDto.getReceiver());
@@ -96,9 +94,8 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transaction.setComment(transactionDto.getComment() + " - Not enough balance");
             transactionRepository.save(transaction);  // Save the failed transaction
-            throw new BalanceException("Not enough balance on account " + accountId);
+            throw new BalanceException("Not enough balance on account " + transactionDto.getSender());
         }
-
 
         sender.setBalance(sender.getBalance() - totalSum);
         receiver.setBalance(receiver.getBalance() + transactionDto.getAmount());
@@ -112,6 +109,28 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.save(bank);
 
         return savedTransaction;
+    }
+
+    @Override
+    public List<TransactionResponseDto> adjustedAmountsInTransactionByAccount(List<Transaction> transactions, Long accountId) {
+        return transactions.stream()
+                .map(transaction -> {
+                    Double adjustedAmount = transaction.getSender().getId().equals(accountId)
+                            ? -transaction.getAmount()
+                            : transaction.getAmount();
+
+                    return new TransactionResponseDto(
+                            transaction.getId(),
+                            transaction.getSender().getId(),
+                            transaction.getReceiver().getId(),
+                            adjustedAmount,
+                            transaction.getComment(),
+                            transaction.getTransactionDate().toString(),
+                            transaction.getTransactionStatus().toString(),
+                            transaction.getTransactionType().getTransactionTypeName()
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
 }

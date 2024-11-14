@@ -7,6 +7,7 @@ import bank.app.service.AccountService;
 import bank.app.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,21 +32,19 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}/transactions")
-    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable Long accountId) {
-        List<Transaction> transactions = transactionService.getTransactionsByAccountId(accountId);
-        return ResponseEntity.ok(transactions);
+    public ResponseEntity<List<TransactionResponseDto>> getTransactionsByAccountId(@PathVariable Long accountId) {
+        List<TransactionResponseDto> transactions = transactionService.getTransactionsByAccountId(accountId);
+        return transactions.isEmpty()
+                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @GetMapping("/{accountId}/transactions/last-month")
-    public ResponseEntity<List<Transaction>> getLastMonthTransactionsByAccount(@PathVariable Long accountId) {
-        List<Transaction> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
-        return ResponseEntity.ok(transactions);
-    }
-
-    @PostMapping("/{accountId}/transactions/add")
-    public ResponseEntity<Transaction> addTransaction(@PathVariable Long accountId,@RequestBody TransfertDto tranfertDto) {
-        Transaction transaction = transactionService.addNewTransaction(accountId,tranfertDto);
-        return ResponseEntity.ok(transaction);
+    public ResponseEntity<List<TransactionResponseDto>> getLastMonthTransactionsByAccount(@PathVariable Long accountId) {
+        List<TransactionResponseDto> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
+        return transactions.isEmpty()
+                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @PostMapping("/add/user/{userId}")

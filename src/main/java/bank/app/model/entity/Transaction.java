@@ -1,5 +1,6 @@
 package bank.app.model.entity;
 
+import bank.app.dto.TransactionDto;
 import bank.app.model.enums.TransactionStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -46,6 +47,7 @@ public class Transaction {
     private String comment;
 
     @Column(name="transaction_date")
+    @CreationTimestamp
     private LocalDateTime transactionDate;
 
     @Enumerated(EnumType.STRING)
@@ -75,7 +77,6 @@ public class Transaction {
         this.transactionStatus = transactionStatus;
         this.transactionType = transactionType;
     }
-
 
     public void setSender(Account sender) {
         this.sender = sender;
