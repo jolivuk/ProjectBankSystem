@@ -8,19 +8,18 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Builder
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="private_info")
@@ -69,40 +68,16 @@ public class PrivateInfo {
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
 
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PrivateInfo that = (PrivateInfo) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(phone, that.phone) && Objects.equals(dateOfBirth, that.dateOfBirth) && documentType == that.documentType && Objects.equals(documentNumber, that.documentNumber) && Objects.equals(comment, that.comment) && Objects.equals(address, that.address) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setDocumentType(DocumentType documentType) {
-        this.documentType = documentType;
-    }
-
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, phone, dateOfBirth, documentType, documentNumber, comment, address, createdAt, lastUpdate);
     }
 }

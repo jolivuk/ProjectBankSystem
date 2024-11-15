@@ -2,17 +2,16 @@ package bank.app.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -43,28 +42,16 @@ public class Address {
     @Column(name="info")
     private String info;
 
-
-    public void setCountry(String country) {
-        this.country = country;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(id, address.id) && Objects.equals(country, address.country) && Objects.equals(city, address.city) && Objects.equals(postcode, address.postcode) && Objects.equals(street, address.street) && Objects.equals(houseNumber, address.houseNumber) && Objects.equals(info, address.info);
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, country, city, postcode, street, houseNumber, info);
     }
 }
