@@ -8,13 +8,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="users")
@@ -65,32 +68,16 @@ public class User {
     }
 
 
-    public void setStatus(Status status) {
-        this.status = status;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && status == user.status && Objects.equals(privateInfo, user.privateInfo) && role == user.role && Objects.equals(manager, user.manager) && Objects.equals(createdAt, user.createdAt) && Objects.equals(lastUpdate, user.lastUpdate);
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, status, privateInfo, role, manager, createdAt, lastUpdate);
     }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setPrivateInfo(PrivateInfo privateInfo) {
-        this.privateInfo = privateInfo;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setManager(User manager) {
-        this.manager = manager;
-    }
-
 }
