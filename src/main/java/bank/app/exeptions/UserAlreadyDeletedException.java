@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.concurrent.ExecutionException;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserAlreadyDeletedException extends Exception {
+public class UserAlreadyDeletedException extends RuntimeException {
     public UserAlreadyDeletedException(String message) {
         super(message);
     }

@@ -23,6 +23,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+// todo - все сервисы должны в методах принимать dto и возвращать dto на входе какой
+//  requestdto на выходе ResponceDto.Сервисы должны использовать mapper для преобразования сущности в dto и обратно
+//  и тесты
+// todo валидацию dto
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;

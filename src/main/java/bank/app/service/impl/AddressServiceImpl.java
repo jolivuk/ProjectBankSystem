@@ -1,40 +1,32 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AddressDto;
+import bank.app.dto.AddressCreateRequestDto;
+import bank.app.dto.AddressResponseDto;
+import bank.app.mapper.AddressMapper;
 import bank.app.model.entity.Address;
 import bank.app.repository.AddressRepository;
 import bank.app.service.AddressService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
-    @Override
-    public Address saveAddress(Address address) {
-        return addressRepository.save(address);
-    }
+    private final AddressMapper addressMapper;
 
 
     @Override
-    public Address getAddressById(Long id) {
+    public AddressResponseDto getAddressById(Long id) {
         return addressRepository.findById(id)
+                .map(addressMapper::toAddressResponseDto)
                 .orElseThrow(() -> new IllegalArgumentException("Address not found with id: " + id));
     }
 
     @Override
-    public Address createAddress(AddressDto addressDto) {
-        return addressRepository.save(Address.builder().country(addressDto.country())
-                .city(addressDto.city())
-                .postcode(addressDto.postcode())
-                .street(addressDto.street())
-                .houseNumber(addressDto.houseNumber())
-                .info(addressDto.info())
-                .build());
+    public AddressResponseDto createAddress(AddressCreateRequestDto dto) {
+        Address created = addressRepository.save(addressMapper.toAddress(dto));
+       return addressMapper.toAddressResponseDto(created);
     }
 }

@@ -14,7 +14,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Table(name="address")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address {
