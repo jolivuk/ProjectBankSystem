@@ -1,17 +1,13 @@
 package bank.app.controllers;
 
 
-import bank.app.dto.AddressDto;
+import bank.app.dto.AddressCreateRequestDto;
 import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserBasicDto;
-import bank.app.model.entity.Account;
 import bank.app.model.entity.User;
-import bank.app.service.AddressService;
-import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -67,8 +63,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}/private_info/address")
-    public ResponseEntity<User> updateAddress(@PathVariable Long id, @RequestBody AddressDto AddressDto) {
-        User user = userService.updateAddress(id, AddressDto);
+    public ResponseEntity<User> updateAddress(@PathVariable Long id, @RequestBody AddressCreateRequestDto AddressCreateRequestDto) {
+        User user = userService.updateAddress(id, AddressCreateRequestDto);
         return ResponseEntity.ok(user);
     }
 }

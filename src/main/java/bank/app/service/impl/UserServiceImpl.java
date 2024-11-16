@@ -1,6 +1,6 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AddressDto;
+import bank.app.dto.AddressCreateRequestDto;
 import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserBasicDto;
 import bank.app.exeptions.UserAlreadyDeletedException;
@@ -56,20 +56,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
-            try {
+        if (userOptional.isEmpty()) {
                 throw new UserNotFoundException("User with ID " + id + " not found");
-            } catch (UserNotFoundException e) {
-                throw new RuntimeException(e);
-            }
         }
         User user = userOptional.get();
         if (user.getStatus().equals(Status.DELETED)) {
-            try {
                 throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
-            } catch (UserAlreadyDeletedException e) {
-                throw new RuntimeException(e);
-            }
         }
         user.setStatus(Status.DELETED);
 
@@ -85,10 +77,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addPrivateInfo(Long id, PrivateInfoDto privateInfoDto) {
         User user = getUserById(id);
-        Address savedAddress = addressService.createAddress(privateInfoDto.address());
-        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoDto, savedAddress);
-        user.setPrivateInfo(savedPrivateInfo);
-        userRepository.save(user);
+//        Address savedAddress = addressService.createAddress(privateInfoDto.address());  // найти ошибку
+//        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoDto, savedAddress);
+//        user.setPrivateInfo(savedPrivateInfo);
+//        userRepository.save(user);
         return user;
     }
 
@@ -148,13 +140,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateAddress(Long id, AddressDto AddressDto) {
+    public User updateAddress(Long id, AddressCreateRequestDto AddressCreateRequestDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
         PrivateInfo privateInfo = user.getPrivateInfo();
         if (privateInfo == null) {
-            throw new EntityNotFoundException("PrivateInfo not found for user with id: " + id);
+            privateInfo = new PrivateInfo();
+            user.setPrivateInfo(privateInfo);
         }
 
         Address address = privateInfo.getAddress();
@@ -163,14 +156,13 @@ public class UserServiceImpl implements UserService {
             privateInfo.setAddress(address);
         }
 
-        address.setCountry(AddressDto.country());
-        address.setCity(AddressDto.city());
-        address.setPostcode(AddressDto.postcode());
-        address.setStreet(AddressDto.street());
-        address.setHouseNumber(AddressDto.houseNumber());
-        address.setInfo(AddressDto.info());
+        address.setCountry(AddressCreateRequestDto.country());
+        address.setCity(AddressCreateRequestDto.city());
+        address.setPostcode(AddressCreateRequestDto.postcode());
+        address.setStreet(AddressCreateRequestDto.street());
+        address.setHouseNumber(AddressCreateRequestDto.houseNumber());
+        address.setInfo(AddressCreateRequestDto.info());
 
-        addressService.saveAddress(address);
         return userRepository.save(user);
     }
 

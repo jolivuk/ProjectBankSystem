@@ -29,20 +29,21 @@ public record PrivateInfoDto(
         DocumentType documentType,
         String documentNumber,
         String comment,
-        AddressDto address
+        AddressCreateRequestDto address
 ) {
-    public static PrivateInfoDto fromPrivateInfo(PrivateInfo privateInfo) {
-        return new PrivateInfoDto(
-                privateInfo.getFirstName(),
-                privateInfo.getLastName(),
-                privateInfo.getEmail(),
-                privateInfo.getPhone(),
-                privateInfo.getDateOfBirth(),
-                privateInfo.getDocumentType(),
-                privateInfo.getDocumentNumber(),
-                privateInfo.getComment(),
-                privateInfo.getAddress() != null ? AddressDto.fromAddress(privateInfo.getAddress()) : null
-        );
+    public static PrivateInfoDto fromPrivateInfo(PrivateInfo privateInfo) { // todo == privateInfoMapper
+        return null;
+//        return new PrivateInfoDto(
+//                privateInfo.getFirstName(),
+//                privateInfo.getLastName(),
+//                privateInfo.getEmail(),
+//                privateInfo.getPhone(),
+//                privateInfo.getDateOfBirth(),
+//                privateInfo.getDocumentType(),
+//                privateInfo.getDocumentNumber(),
+//                privateInfo.getComment(),
+//                privateInfo.getAddress() != null ? AddressCreateRequestDto.fromAddress(privateInfo.getAddress()) : null
+//        );
     }
 }
 

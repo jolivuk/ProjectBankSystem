@@ -1,10 +1,10 @@
 package bank.app.service;
 
-import bank.app.dto.AddressDto;
+import bank.app.dto.AddressCreateRequestDto;
+import bank.app.dto.AddressResponseDto;
 import bank.app.model.entity.Address;
 
 public interface AddressService {
-    Address saveAddress(Address address);
-    Address getAddressById(Long id);
-    Address createAddress(AddressDto addressDto);
+    AddressResponseDto getAddressById(Long id);
+    AddressResponseDto createAddress(AddressCreateRequestDto addressCreateRequestDto);
 }
