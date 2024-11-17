@@ -10,7 +10,7 @@ import bank.app.model.enums.Status;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class ExpectedData {
+public class UserTestData {
     public static User returnUser(){
         Address address = new Address();
         address.setId(Long.valueOf(1));

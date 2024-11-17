@@ -20,13 +20,14 @@ import org.mockito.quality.Strictness;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static bank.app.utils.AddressTestData.getAddress;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AddressServiceImplTest {
-    private long counter = 0L;
+
 
     @InjectMocks
     private AddressServiceImpl addressService;
@@ -93,15 +94,5 @@ class AddressServiceImplTest {
         assertEquals(addressMapper.toAddressResponseDto(expected), actual);
     }
 
-    private Address getAddress() {
-        Address expected = new Address();
-        expected.setId(++counter);
-        expected.setInfo("info");
-        expected.setCity("Berlin");
-        expected.setCountry("Germany");
-        expected.setStreet("Alexanderplatz");
-        expected.setPostcode(String.valueOf(ThreadLocalRandom.current().nextInt(1, 10_000)));
-        expected.setHouseNumber("5");
-        return expected;
-    }
+
 }

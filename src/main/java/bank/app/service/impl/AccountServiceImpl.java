@@ -6,6 +6,7 @@ import bank.app.dto.UserBasicDto;
 import bank.app.exeptions.AccountIsBlockedException;
 import bank.app.exeptions.AccountNotFoundException;
 import bank.app.exeptions.UserNotFoundException;
+import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
 import bank.app.model.entity.User;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final AccountMapper accountMapper;
 
 
     private final TransactionRepository transactionRepository;
@@ -57,10 +59,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> findByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
-        return accountRepository.findAllByUserId(userId);
+    public List<AccountBasicDto> findByUserId(Long userId) {
+        List<Account> allByUserId = accountRepository.findAllByUserId(userId);
+        return accountMapper.toAccountBasicDtoList(allByUserId);
     }
 
     @Override

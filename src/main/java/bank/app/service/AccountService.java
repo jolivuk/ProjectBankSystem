@@ -9,11 +9,11 @@ import bank.app.model.entity.User;
 import java.util.List;
 
 public interface AccountService {
+    Account getAccountById(Long accountId);
     AccountBasicDto getBasicAccountInfo(Long accountId);
     AccountFullDto getFullAccountInfo(Long accountId);
-    Account getAccountById(Long accountId);
-    List<Account> findByUserId(Long userId);
-    Account createNewAccount(AccountBasicDto account,Long userId);
-    List<Transaction> getAllTransactionsByAccountId(Long accountId);
+    List<AccountBasicDto> findByUserId(Long userId);
+    Account createNewAccount(AccountBasicDto account,Long userId); // todo account заменить на accountDto
+    List<Transaction> getAllTransactionsByAccountId(Long accountId); // todo переместить в TransactionService
     void checkAccount(Account account);
 }

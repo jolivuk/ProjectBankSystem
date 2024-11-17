@@ -1,8 +1,7 @@
 package bank.app.controllers;
 
 import bank.app.model.entity.User;
-import bank.app.utils.ExpectedData;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import bank.app.utils.UserTestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.util.Assert;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,7 +28,7 @@ class UserControllerTest {
 
     @Test
     void findById() throws Exception {
-        User expectedUser = ExpectedData.returnUser();
+        User expectedUser = UserTestData.returnUser();
 
         String userJson = objectMapper.writeValueAsString(expectedUser);
 

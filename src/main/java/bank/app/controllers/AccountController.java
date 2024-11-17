@@ -27,7 +27,7 @@ public class AccountController {
 
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Account>> findAccountsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<AccountBasicDto>> findAccountsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(accountService.findByUserId(userId));
     }
 
