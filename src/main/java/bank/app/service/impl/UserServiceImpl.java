@@ -5,12 +5,14 @@ import bank.app.dto.PrivateInfoDto;
 import bank.app.dto.UserBasicDto;
 import bank.app.exeptions.UserAlreadyDeletedException;
 import bank.app.exeptions.UserNotFoundException;
+import bank.app.mapper.AddressMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
 import bank.app.model.entity.PrivateInfo;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
+import bank.app.repository.AddressRepository;
 import bank.app.repository.UserRepository;
 import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
@@ -29,7 +31,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PrivateInfoService privateInfoService;
     private final AddressService addressService;
+    private final AddressRepository addressRepository;
     private final AccountRepository accountRepository;
+    private final AddressMapper addressMapper;
 
 
     @Override
@@ -77,10 +81,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addPrivateInfo(Long id, PrivateInfoDto privateInfoDto) {
         User user = getUserById(id);
-//        Address savedAddress = addressService.createAddress(privateInfoDto.address());  // найти ошибку
-//        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoDto, savedAddress);
-//        user.setPrivateInfo(savedPrivateInfo);
-//        userRepository.save(user);
+        Address address = addressMapper.toAddress(privateInfoDto.address());
+        addressRepository.save(address);
+        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoDto, address);
+        user.setPrivateInfo(savedPrivateInfo);
+        userRepository.save(user);
         return user;
     }
 
