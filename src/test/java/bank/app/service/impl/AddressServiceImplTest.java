@@ -1,6 +1,6 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AddressCreateRequestDto;
+import bank.app.dto.AddressRequestDto;
 import bank.app.dto.AddressResponseDto;
 import bank.app.mapper.AddressMapper;
 import bank.app.model.entity.Address;
@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static bank.app.utils.AddressTestData.getAddress;
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,7 +79,7 @@ class AddressServiceImplTest {
     void createAddress() {
         Address expected = getAddress();
         Address forMock = expected.toBuilder().id(null).build();
-        AddressCreateRequestDto dto = new AddressCreateRequestDto(
+        AddressRequestDto dto = new AddressRequestDto(
                 expected.getCountry(),
                 expected.getCity(),
                 expected.getPostcode(),

@@ -1,38 +1,27 @@
 package bank.app.dto;
 
-import bank.app.model.entity.Account;
-import bank.app.model.entity.User;
 import bank.app.model.enums.Status;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
+@Getter
+@Setter
 public class AccountFullDto extends AccountBasicDto{
-    private final UserFullDto user;
+    private final UserResponseDto user;
 
     public AccountFullDto(Long id, Status status, Double balance, String iban,
                           String swift, LocalDateTime createdAt,
-                          LocalDateTime lastUpdate, UserFullDto user) {
+                          LocalDateTime lastUpdate, UserResponseDto user) {
 
         super(id, status, balance, iban, swift, createdAt, lastUpdate);
         this.user = user;
     }
 
-    public static AccountFullDto fromAccount(Account account) {
-        return new AccountFullDto(
-                account.getId(),
-                account.getStatus(),
-                account.getBalance(),
-                account.getIban(),
-                account.getSwift(),
-                account.getCreatedAt(),
-                account.getLastUpdate(),
-                UserFullDto.fromUser(account.getUser())
-        );
-    }
 
-    public UserFullDto getUser() {
+    public UserResponseDto getUser() {
         return user;
     }
 

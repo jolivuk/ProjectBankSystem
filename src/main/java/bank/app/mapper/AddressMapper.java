@@ -1,6 +1,6 @@
 package bank.app.mapper;
 
-import bank.app.dto.AddressCreateRequestDto;
+import bank.app.dto.AddressRequestDto;
 import bank.app.dto.AddressResponseDto;
 import bank.app.model.entity.Address;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class AddressMapper {
 
-    public Address toAddress(AddressCreateRequestDto dto) {
+    public Address toAddress(AddressRequestDto dto) {
         return Address.builder().country(dto.country())
                 .city(dto.city())
                 .postcode(dto.postcode())

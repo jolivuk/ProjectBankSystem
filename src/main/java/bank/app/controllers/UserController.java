@@ -1,10 +1,10 @@
 package bank.app.controllers;
 
 
-import bank.app.dto.AddressCreateRequestDto;
-import bank.app.dto.PrivateInfoDto;
-import bank.app.dto.UserBasicDto;
+import bank.app.dto.*;
+import bank.app.mapper.UserMapper;
 import bank.app.model.entity.User;
+import bank.app.model.enums.Role;
 import bank.app.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +21,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping()
-    public List<User> findAllUsers() {
+    public List<UserResponseDto> findAllUsers() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/bank")
+    public ResponseEntity<UserResponseDto> findByBank() {
+        User user = userService.getUserByStatus(Role.BANK);
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 
     @DeleteMapping("/{id}")
@@ -39,32 +46,32 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> create(@Valid @RequestBody UserBasicDto userDto) {
-        User user = userService.createUser(userDto);
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto userDto) {
+        UserResponseDto user = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PostMapping("/{id}/private_info/add")
-    public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoDto privateInfoDto) {
-        User user = userService.addPrivateInfo(id, privateInfoDto);
+    public ResponseEntity<UserResponseDto> addPrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoRequestDto privateInfoRequestDto) {
+        UserResponseDto user = userService.addPrivateInfo(id, privateInfoRequestDto);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserBasicDto userDto) {
-        User user = userService.updateUser(id, userDto);
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto userDto) {
+        UserResponseDto user = userService.updateUser(id, userDto);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}/private_info")
-    public ResponseEntity<User> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
-        User user = userService.updatePrivateInfo(id, privateInfoDto);
+    public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
+        UserResponseDto user = userService.updatePrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}/private_info/address")
-    public ResponseEntity<User> updateAddress(@PathVariable Long id, @RequestBody AddressCreateRequestDto AddressCreateRequestDto) {
-        User user = userService.updateAddress(id, AddressCreateRequestDto);
+    public ResponseEntity<UserResponseDto> updateAddress(@PathVariable Long id, @RequestBody AddressRequestDto AddressRequestDto) {
+        UserResponseDto user = userService.updateAddress(id, AddressRequestDto);
         return ResponseEntity.ok(user);
     }
 }

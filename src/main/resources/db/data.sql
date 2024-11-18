@@ -1,6 +1,7 @@
 -- Вставка данных в таблицу адресов
 INSERT INTO address (country, city, postcode, street, house_number, info)
 VALUES
+    ('Germany', 'Berlin', '10115', 'Marienplatz', 7, NULL),
     ('Germany', 'Berlin', '10115', 'Alexanderplatz', 5, NULL),
     ('Germany', 'Munich', '80331', 'Marienplatz', 10, NULL),
     ('Germany', 'Frankfurt', '60311', 'Zeil', 20, NULL),
@@ -19,11 +20,12 @@ VALUES
 -- Вставка пользователей (два менеджера и три клиента)
 INSERT INTO users (username, password, private_info_id, role, status, manager_id)
 VALUES
+    ('BANKaccount', 'password123', null, 'BANK', 'ACTIVE', NULL),
     ('manager1', 'password123', 1, 'MANAGER', 'ACTIVE', NULL),
     ('manager2', 'password123', 2, 'MANAGER', 'ACTIVE', NULL),
-    ('client1', 'password123', 3, 'CUSTOMER', 'ACTIVE', 1),
-    ('client2', 'password123', 4, 'CUSTOMER', 'ACTIVE', 1),
-    ('client3', 'password123', 5, 'CUSTOMER', 'ACTIVE', 2);
+    ('client1', 'password123', 3, 'CUSTOMER', 'ACTIVE', 2),
+    ('client2', 'password123', 4, 'CUSTOMER', 'ACTIVE', 2),
+    ('client3', 'password123', 5, 'CUSTOMER', 'ACTIVE', 3);
 
 -- Вставка данных в таблицу счетов
 -- Акканут банка
@@ -33,11 +35,12 @@ VALUES
 
 INSERT INTO accounts (user_id, iban, swift, status, balance)
 VALUES
-    (3, 'DE12345678901234567890', 'COMMDEFF', 'ACTIVE', 7500.00),
-    (3, 'DE89370400440532013001', 'DEUTDEFF', 'ACTIVE', 3000.00),
-    (4, 'DE89370400440532013002', 'DEUTDEFF', 'ACTIVE', 7000.00),
-    (4, 'DE89370400440532013003', 'DEUTDEFF', 'ACTIVE', 1500.00),
-    (5, 'DE89370400440532013004', 'DEUTDEFF', 'ACTIVE', 4000.00);
+    (4, 'DE12345678901234567890', 'COMMDEFF', 'ACTIVE', 7500.00),
+    (4, 'DE89370400440532013858', 'DEUTDEFF', 'ACTIVE', 3000.00),
+    (5, 'DE89370400440532013001', 'DEUTDEFF', 'ACTIVE', 3000.00),
+    (5, 'DE89370400440532013002', 'DEUTDEFF', 'ACTIVE', 7000.00),
+    (6, 'DE89370400440532013003', 'DEUTDEFF', 'ACTIVE', 1500.00),
+    (6, 'DE89370400440532013004', 'DEUTDEFF', 'ACTIVE', 4000.00);
 
 -- Вставка типов транзакций
 INSERT INTO transaction_type (transaction_type_name, transaction_type_fee, transaction_type_description)
@@ -49,13 +52,13 @@ VALUES
 -- Вставка транзакций
 INSERT INTO transactions (sender_id, receiver_id, transaction_type_id, amount, fee, comment, transaction_date, transaction_status)
 VALUES
-    (1, 2, 1, 200.00, 2.50, 'Monthly transfer', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (5, 2, 1, 200.00, 2.50, 'Monthly transfer', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
     (3, 4, 2, 500.00, 3.00, 'ATM withdrawal', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
     (2, 5, 3, 1500.00, 0.00, 'Salary deposit', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
-    (1, 3, 1, 300.00, 2.50, 'Bill payment', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (6, 3, 1, 300.00, 2.50, 'Bill payment', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
     (5, 4, 2, 700.00, 3.00, 'Cash withdrawal', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
-    (2, 1, 1, 450.00, 1.50, 'Service fee', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (2, 3, 1, 450.00, 1.50, 'Service fee', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
     (4, 3, 3, 1200.00, 0.00, 'Bonus', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
-    (1, 5, 2, 600.00, 2.00, 'Loan payment', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
+    (2, 5, 2, 600.00, 2.00, 'Loan payment', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
     (3, 2, 1, 50.00, 0.50, 'Gift transfer', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED'),
-    (5, 1, 2, 750.00, 2.50, 'Cash deposit', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED');
+    (5, 4, 2, 750.00, 2.50, 'Cash deposit', NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'COMPLETED');
