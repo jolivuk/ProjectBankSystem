@@ -1,6 +1,6 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AddressCreateRequestDto;
+import bank.app.dto.AddressRequestDto;
 import bank.app.dto.AddressResponseDto;
 import bank.app.mapper.AddressMapper;
 import bank.app.model.entity.Address;
@@ -25,7 +25,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressResponseDto createAddress(AddressCreateRequestDto dto) {
+    public AddressResponseDto createAddress(AddressRequestDto dto) {
         Address created = addressRepository.save(addressMapper.toAddress(dto));
        return addressMapper.toAddressResponseDto(created);
     }

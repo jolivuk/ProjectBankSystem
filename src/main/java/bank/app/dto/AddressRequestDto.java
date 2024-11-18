@@ -1,9 +1,7 @@
 package bank.app.dto;
 
 
-import bank.app.model.entity.Address;
-
-public record AddressCreateRequestDto(
+public record AddressRequestDto(
         String country,
         String city,
         String postcode,

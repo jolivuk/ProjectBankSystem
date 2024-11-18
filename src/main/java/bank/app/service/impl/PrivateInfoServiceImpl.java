@@ -1,6 +1,7 @@
 package bank.app.service.impl;
 
 import bank.app.dto.PrivateInfoDto;
+import bank.app.dto.PrivateInfoRequestDto;
 import bank.app.model.entity.Address;
 import bank.app.model.entity.PrivateInfo;
 import bank.app.repository.PrivateInfoRepository;
@@ -22,25 +23,19 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         return privateInfoRepository.save(privateInfo);
     }
 
-    @Override
-    public PrivateInfo getPrivateInfoById(Long id) {
-        return privateInfoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("PrivateInfo not found with id: " + id));
-    }
-
 
     @Override
-    public PrivateInfo createPrivateInfo(PrivateInfoDto privateInfoDto, Address savedAddress) {
+    public PrivateInfo createPrivateInfo(PrivateInfoRequestDto privateInfoRequestDto, Address savedAddress) {
         return privateInfoRepository.save(PrivateInfo.builder()
-                .firstName(privateInfoDto.firstName())
-                .lastName(privateInfoDto.lastName())
-                .email(privateInfoDto.email())
-                .phone(privateInfoDto.phone())
+                .firstName(privateInfoRequestDto.getFirstName())
+                .lastName(privateInfoRequestDto.getLastName())
+                .email(privateInfoRequestDto.getEmail())
+                .phone(privateInfoRequestDto.getPhone())
                 .address(savedAddress)
-                .dateOfBirth(privateInfoDto.dateOfBirth())
-                .documentType(privateInfoDto.documentType())
-                .documentNumber(privateInfoDto.documentNumber())
-                .comment(privateInfoDto.comment())
+                .dateOfBirth(privateInfoRequestDto.getDateOfBirth())
+                .documentType(privateInfoRequestDto.getDocumentType())
+                .documentNumber(privateInfoRequestDto.getDocumentNumber())
+                .comment(privateInfoRequestDto.getComment())
                 .build());
     }
 

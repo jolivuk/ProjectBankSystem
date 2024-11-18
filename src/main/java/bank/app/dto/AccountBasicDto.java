@@ -1,11 +1,14 @@
 package bank.app.dto;
 
-import bank.app.model.entity.Account;
 import bank.app.model.enums.Status;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Setter
+@Getter
 public class AccountBasicDto
  {
      private final Long id;
@@ -27,17 +30,7 @@ public class AccountBasicDto
          this.lastUpdate = lastUpdate;
      }
 
-     public static AccountBasicDto fromAccount(Account account) {
-         return new AccountBasicDto(
-                 account.getId(),
-                 account.getStatus(),
-                 account.getBalance(),
-                 account.getIban(),
-                 account.getSwift(),
-                 account.getCreatedAt(),
-                 account.getLastUpdate()
-         );
-     }
+
 
      public Long getId() {
          return id;

@@ -1,19 +1,21 @@
 package bank.app.service;
 
-import bank.app.dto.AddressCreateRequestDto;
-import bank.app.dto.UserBasicDto;
+import bank.app.dto.*;
 import bank.app.model.entity.User;
-import bank.app.dto.PrivateInfoDto;
+import bank.app.model.enums.Role;
+
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-    User getUserById(Long id);
-    List<User> findAll();
-    User createUser(UserBasicDto newUserDto);
+    UserResponseDto getUserById(Long id);
+    List<UserResponseDto> findAll();
+    UserResponseDto createUser(UserRequestDto newUserDto);
+    User getUserByStatus(Role role);
     void deleteUserById(Long id);
-    User addPrivateInfo(Long id, PrivateInfoDto privateInfoDto);
-    User updateUser(Long id, UserBasicDto userDto);
-    User updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto);
-    User updateAddress(Long id, AddressCreateRequestDto AddressCreateRequestDto);
+    UserResponseDto addPrivateInfo(Long id, PrivateInfoRequestDto privateInfoRequestDto);
+    UserResponseDto updateUser(Long id, UserRequestDto userDto);
+    UserResponseDto updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto);
+    UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto);
     }
 

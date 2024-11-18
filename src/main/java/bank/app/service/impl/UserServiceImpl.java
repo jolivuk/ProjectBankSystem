@@ -1,15 +1,15 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AddressCreateRequestDto;
-import bank.app.dto.PrivateInfoDto;
-import bank.app.dto.UserBasicDto;
+import bank.app.dto.*;
 import bank.app.exeptions.UserAlreadyDeletedException;
 import bank.app.exeptions.UserNotFoundException;
 import bank.app.mapper.AddressMapper;
+import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
 import bank.app.model.entity.PrivateInfo;
 import bank.app.model.entity.User;
+import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.AddressRepository;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,26 +35,38 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final AccountRepository accountRepository;
     private final AddressMapper addressMapper;
+    private final UserMapper userMapper;
 
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+        return userMapper.toDto(user);
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponseDto> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto) // Преобразуем User в UserResponseDto
+                .collect(Collectors.toList());
     }
-
     @Override
-    public User createUser(UserBasicDto newUserDto) {
-        User manager = getUserById(newUserDto.manager());
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        User manager = userRepository.findById(userRequestDto.manager())
+                .orElseThrow(() -> new UserNotFoundException("Manager with ID " + userRequestDto.manager() + " not found"));
 
-        User user = new User(newUserDto.username(),newUserDto.password(),
-                Status.ACTIVE, newUserDto.role(),manager);
+        User user = new User(userRequestDto.username(),userRequestDto.password(),
+                Status.ACTIVE, userRequestDto.role(),manager);
         userRepository.save(user);
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public User getUserByStatus(Role role) {
+        User user = userRepository.findByRole(role)
+                .orElseThrow(() -> new UserNotFoundException("User with role " + role + "not found"));
         return user;
     }
 
@@ -79,20 +92,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addPrivateInfo(Long id, PrivateInfoDto privateInfoDto) {
-        User user = getUserById(id);
-        Address address = addressMapper.toAddress(privateInfoDto.address());
+    public UserResponseDto addPrivateInfo(Long id, PrivateInfoRequestDto privateInfoRequestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+
+        Address address = addressMapper.toAddress(privateInfoRequestDto.getAddress());
         addressRepository.save(address);
-        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoDto, address);
+        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto, address);
         user.setPrivateInfo(savedPrivateInfo);
         userRepository.save(user);
-        return user;
+        return userMapper.toDto(user);
     }
 
 
 
     @Override
-    public User updateUser(Long id,UserBasicDto userDto) {
+    public UserResponseDto updateUser(Long id, UserRequestDto userDto) {
         if (userDto == null) {
             throw new IllegalArgumentException("FullUserDto cannot be null");
         }
@@ -112,8 +127,8 @@ public class UserServiceImpl implements UserService {
             } else {
                 existingUser.setManager(null);
             }
-
-            return userRepository.save(existingUser);
+            userRepository.save(existingUser);
+            return userMapper.toDto(existingUser);
 
         } catch (Exception e) {
             throw new RuntimeException("Error updating user: " + e.getMessage(), e);
@@ -121,7 +136,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto){
+    public UserResponseDto updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
@@ -141,11 +156,12 @@ public class UserServiceImpl implements UserService {
         privateInfo.setComment(privateInfoDto.comment());
 
         privateInfoService.savePrivateInfo(privateInfo);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 
     @Override
-    public User updateAddress(Long id, AddressCreateRequestDto AddressCreateRequestDto) {
+    public UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
@@ -161,14 +177,15 @@ public class UserServiceImpl implements UserService {
             privateInfo.setAddress(address);
         }
 
-        address.setCountry(AddressCreateRequestDto.country());
-        address.setCity(AddressCreateRequestDto.city());
-        address.setPostcode(AddressCreateRequestDto.postcode());
-        address.setStreet(AddressCreateRequestDto.street());
-        address.setHouseNumber(AddressCreateRequestDto.houseNumber());
-        address.setInfo(AddressCreateRequestDto.info());
+        address.setCountry(AddressRequestDto.country());
+        address.setCity(AddressRequestDto.city());
+        address.setPostcode(AddressRequestDto.postcode());
+        address.setStreet(AddressRequestDto.street());
+        address.setHouseNumber(AddressRequestDto.houseNumber());
+        address.setInfo(AddressRequestDto.info());
 
-        return userRepository.save(user);
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 
 }

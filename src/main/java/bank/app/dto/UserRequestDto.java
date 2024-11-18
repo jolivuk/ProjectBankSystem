@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record UserBasicDto(
+public record UserRequestDto(
         @NotBlank(message = "First name cannot be blank")
         @Size(max = 50, message = "First name should not exceed 50 characters")
         @Pattern(regexp = "(?!\\d+$)\\w+", message = "Username must contain at least one letter")

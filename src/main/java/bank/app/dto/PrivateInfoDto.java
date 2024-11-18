@@ -39,7 +39,7 @@ public record PrivateInfoDto(
         String documentNumber,
 
         String comment,
-        AddressCreateRequestDto address
+        AddressRequestDto address
 ) {
     public static PrivateInfoDto fromPrivateInfo(PrivateInfo privateInfo) { // todo == privateInfoMapper
         return null;

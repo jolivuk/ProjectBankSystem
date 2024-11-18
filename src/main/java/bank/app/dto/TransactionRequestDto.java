@@ -5,14 +5,14 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class TransactionDto{
+public class TransactionRequestDto {
         private final Long sender;
         private final Long receiver;
         private final double amount;
         private final String comment;
         private final String  transactionType;
 
-    public TransactionDto(Long sender, Long receiver, double amount, String comment, String transactionType) {
+    public TransactionRequestDto(Long sender, Long receiver, double amount, String comment, String transactionType) {
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
