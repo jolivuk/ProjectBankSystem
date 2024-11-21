@@ -40,9 +40,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         userService.deleteUserById(id);
-        return ResponseEntity.ok("user with id :" + id + " was deleted");
     }
 
     /**
@@ -86,6 +85,16 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    /**
+     *
+     * {
+              "username": "Ra",
+              "password": "Fa",
+              "status": "ACTIVE",
+              "role": "CUSTOMER",
+              "manager" : "2"
+          }
+     */
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto userDto) {
         UserResponseDto user = userService.updateUser(id, userDto);

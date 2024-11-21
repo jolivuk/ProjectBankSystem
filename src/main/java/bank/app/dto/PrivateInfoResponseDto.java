@@ -1,6 +1,8 @@
 package bank.app.dto;
 
 import bank.app.model.enums.DocumentType;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 

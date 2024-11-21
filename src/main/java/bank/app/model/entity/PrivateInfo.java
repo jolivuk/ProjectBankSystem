@@ -58,6 +58,7 @@ public class PrivateInfo {
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
+
     private Address address;
 
     @Column(name="created_at",updatable = false)

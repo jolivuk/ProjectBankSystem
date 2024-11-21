@@ -4,18 +4,20 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name="transaction_type")
 public class TransactionType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transaction_type_id")
-    private int id;
+    private Long id;
 
     @Column(name="transaction_type_name")
     private String transactionTypeName;
@@ -36,5 +38,9 @@ public class TransactionType {
 
     public void setTransactionTypeDescription(String transactionTypeDescription) {
         this.transactionTypeDescription = transactionTypeDescription;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
