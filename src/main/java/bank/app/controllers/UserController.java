@@ -1,11 +1,12 @@
 package bank.app.controllers;
 
-
 import bank.app.dto.*;
 import bank.app.mapper.UserMapper;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import bank.app.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,16 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping()
-    public List<UserResponseDto> findAllUsers() {
+    public List<UserResponseDto> findAllUsers(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    System.out.println("JSESSIONID: " + cookie.getValue());
+                }
+            }
+        }
+
         return userService.findAll();
     }
 
