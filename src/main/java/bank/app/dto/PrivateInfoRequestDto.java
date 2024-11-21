@@ -2,6 +2,7 @@ package bank.app.dto;
 
 import bank.app.model.enums.DocumentType;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

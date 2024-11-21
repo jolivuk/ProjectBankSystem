@@ -48,7 +48,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="manager_id", referencedColumnName = "user_id")
-    @JsonIgnore
+    @JsonIgnore // todo udalit json ignore v entity
     private User manager;
 
     @Column(name="created_at",updatable = false)
