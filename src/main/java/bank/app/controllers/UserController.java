@@ -1,9 +1,12 @@
 package bank.app.controllers;
 
 import bank.app.dto.*;
+import bank.app.mapper.PrivateInfoMapper;
 import bank.app.mapper.UserMapper;
+import bank.app.model.entity.PrivateInfo;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
+import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PrivateInfoService privateInfoService;
     private final UserMapper userMapper;
+    private final PrivateInfoMapper privateInfoMapper;
 
     @GetMapping()
     public List<UserResponseDto> findAllUsers(HttpServletRequest request) {
@@ -47,6 +52,11 @@ public class UserController {
     public ResponseEntity<UserResponseDto> findByBank() {
         User user = userService.getUserByStatus(Role.BANK);
         return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @GetMapping("/{id}/private_info")
+    public ResponseEntity<PrivateInfoResponseDto> getPrivateInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getPrivateInfoByUserId(id));
     }
 
     @DeleteMapping("/{id}")

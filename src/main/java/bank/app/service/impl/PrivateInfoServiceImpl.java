@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrivateInfoServiceImpl implements PrivateInfoService {
     private final PrivateInfoRepository privateInfoRepository;
-    private AddressService addressService;
+    private final AddressService addressService;
 
 
     @Override

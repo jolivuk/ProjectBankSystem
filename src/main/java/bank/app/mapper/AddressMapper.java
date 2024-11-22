@@ -22,6 +22,7 @@ public class AddressMapper {
 
     public AddressResponseDto toAddressResponseDto(Address address) {
         return new AddressResponseDto(
+                address.getId(),
                 address.getCountry(),
                 address.getCity(),
                 address.getPostcode(),

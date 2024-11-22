@@ -31,12 +31,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PrivateInfoService privateInfoService;
-    private final AddressService addressService;
     private final AddressRepository addressRepository;
     private final AccountRepository accountRepository;
     private final AddressMapper addressMapper;
     private final UserMapper userMapper;
-
 
     @Override
     public UserResponseDto getUserById(Long id) {
@@ -89,6 +87,12 @@ public class UserServiceImpl implements UserService {
 
         accountRepository.saveAll(accounts);
         userRepository.save(user);
+    }
+
+
+    @Override
+    public PrivateInfoResponseDto getPrivateInfoByUserId(Long id) {
+        return getUserById(id).privateResponseInfo();
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class PrivateInfoRequestDto {
 
     @NotBlank(message = "First name cannot be blank")
@@ -45,7 +46,6 @@ public class PrivateInfoRequestDto {
 
     @Size(max = 500, message = "Comment should not exceed 500 characters")
     private String comment;
-
 
     @NotNull(message = "Address cannot be null")
     private AddressRequestDto address;

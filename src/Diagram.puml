@@ -12,7 +12,6 @@ entity User {
    + manager : User
    + createdAt : timestamp
    + lastUpdate : timestamp
-
 }
 
 entity PrivateInfo {
@@ -67,7 +66,6 @@ entity Status{
     + PK id : INT
     + statusName : varchar(16)
 }
-
 
 ' Домен транзакций
 entity Transaction {

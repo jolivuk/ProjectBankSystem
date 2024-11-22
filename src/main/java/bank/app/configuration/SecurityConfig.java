@@ -57,14 +57,12 @@ public class SecurityConfig {
                 .roles("user")
                 .passwordEncoder(new BCryptPasswordEncoder()::encode)
                 .build();
-
         UserDetails admin = User.builder()
                 .username("admin")
                 .password("admin")
                 .roles("admin")
                 .passwordEncoder(new BCryptPasswordEncoder()::encode)
                 .build();
-
         return new InMemoryUserDetailsManager(user, admin);
     }
 }

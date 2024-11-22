@@ -15,6 +15,7 @@ public class PrivateInfoMapper {
 
     public PrivateInfoResponseDto toDto(PrivateInfo privateInfo) {
         return new PrivateInfoResponseDto(
+                privateInfo.getId(),
                 privateInfo.getFirstName(),
                 privateInfo.getLastName(),
                 privateInfo.getEmail(),
