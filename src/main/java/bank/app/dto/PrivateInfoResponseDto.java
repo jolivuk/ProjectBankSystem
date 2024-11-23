@@ -1,27 +1,26 @@
 package bank.app.dto;
 
 import bank.app.model.enums.DocumentType;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrivateInfoResponseDto {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-    private LocalDate dateOfBirth;
-    private DocumentType documentType;
-    private String documentNumber;
-    private String comment;
-    private AddressResponseDto address;
+    Long id;
+    String firstName;
+    String lastName;
+    String email;
+    String phone;
+    LocalDate dateOfBirth;
+    DocumentType documentType;
+    String documentNumber;
+    String comment;
+    AddressResponseDto address;
 
     // Getters and setters (or use Lombok annotations)
 
