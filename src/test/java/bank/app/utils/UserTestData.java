@@ -1,16 +1,9 @@
 package bank.app.utils;
 
 import bank.app.dto.*;
-import bank.app.model.entity.Address;
-import bank.app.model.entity.PrivateInfo;
-import bank.app.model.entity.User;
 import bank.app.model.enums.DocumentType;
-import bank.app.model.enums.Role;
-import bank.app.model.enums.Status;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserTestData {
@@ -51,6 +44,20 @@ public class UserTestData {
         return expectedUser;
     }
 
+    public static UserResponseDto getUserResponseDtoUpdate(){
+        UserResponseDto expectedUser = getUserResponseDto();
+        UserResponseDto responseUpdatedDto = new UserResponseDto(
+                2L,
+                "updatedUser",
+                "newPassword123",
+                "ACTIVE",
+                "MANAGER",
+                null,
+                expectedUser.privateInfoResponse()
+        );
+        return responseUpdatedDto;
+    }
+
     public static PrivateInfoRequestDto getPrivateInfoRequestDto(){
         AddressRequestDto addressRequestDto = new AddressRequestDto(
                 "Germany",
@@ -67,6 +74,7 @@ public class UserTestData {
     }
 
     public static PrivateInfoRequestDto getPrivateInfoRequestDtoUpdate(){
+
         AddressRequestDto addressRequestDto = new AddressRequestDto( "Germany", "Berlin",
                 "10115", "Marienplatz", "7", null);
 
@@ -84,6 +92,24 @@ public class UserTestData {
                 "Maxim","NewMustermann","newmax@example.com","+491111111111",
                 LocalDate.of(1980, 1, 1),
                 DocumentType.ID_CARD,"ID1777777",null, addressResponseDto);
+    }
+
+    public static UserResponseDto getUserResponseWithPrivateInfoDto(){
+
+        AddressResponseDto addressResponseDto = new AddressResponseDto( 1L,"Germany", "Munich",
+                "80331", "Karlsplatz", "8", null);
+
+        PrivateInfoResponseDto privateInfoResponseDto = new PrivateInfoResponseDto(1L,
+                "John","Smith","john.smith@example.com","+491234567899",
+                LocalDate.of(1985, 6, 15),
+                DocumentType.PASSPORT_EU,"D87654321",null, addressResponseDto);
+
+        UserResponseDto user = new UserResponseDto(
+                5L,"client3", "password3", "ACTIVE", "CUSTOMER", 2L,
+                privateInfoResponseDto
+        );
+
+        return user;
     }
 
     public static List<UserResponseDto> getAllUsers(){
@@ -141,7 +167,7 @@ public class UserTestData {
                 "password123",
                 "ACTIVE",
                 "CUSTOMER",
-                1L,
+                2L,
                 privateInfo3
         );
 
@@ -168,10 +194,15 @@ public class UserTestData {
                 "password123",
                 "ACTIVE",
                 "CUSTOMER",
-                1L,
+                2L,
                 privateInfo4
         );
 
-        return List.of(user1, user2, user3, user4);
+        UserResponseDto user5 = new UserResponseDto(
+                5L,"client3", "password3", "ACTIVE", "CUSTOMER", 2L,
+                null
+        );
+
+        return List.of(user1, user2, user3, user4,user5);
     }
 }

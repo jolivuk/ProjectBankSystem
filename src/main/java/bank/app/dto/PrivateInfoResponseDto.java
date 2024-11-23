@@ -38,11 +38,13 @@ public class PrivateInfoResponseDto {
         this.address = address;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            System.out.println("Error hier 1");
+            return false;
+        }
         PrivateInfoResponseDto that = (PrivateInfoResponseDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(firstName, that.firstName) &&
@@ -59,5 +61,20 @@ public class PrivateInfoResponseDto {
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, phone, dateOfBirth, documentType, documentNumber, comment, address);
+    }
+
+    @Override
+    public String toString() {
+        return "PrivateInfoDto{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", documentType=" + documentType +
+                ", documentNumber='" + documentNumber + '\'' +
+                ", comment='" + comment + '\'' +
+                ", address=" + (address != null ? address.toString() : "null") +
+                '}';
     }
 }

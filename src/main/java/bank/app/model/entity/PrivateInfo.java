@@ -56,9 +56,13 @@ public class PrivateInfo {
     @Column(name="comment")
     private String comment;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
 
+    @OneToOne(
+            mappedBy = "privateInfo",
+            cascade = CascadeType.ALL,
+            optional = true,
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @Column(name="created_at",updatable = false)
@@ -68,6 +72,11 @@ public class PrivateInfo {
     @Column(name = "last_update")
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @MapsId
+    private User user;
 
     @Override
     public boolean equals(Object o) {

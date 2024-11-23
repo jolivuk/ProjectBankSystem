@@ -14,7 +14,6 @@ import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.AddressRepository;
 import bank.app.repository.UserRepository;
-import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -92,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PrivateInfoResponseDto getPrivateInfoByUserId(Long id) {
-        return getUserById(id).privateResponseInfo();
+        return getUserById(id).privateInfoResponse();
     }
 
     @Override
@@ -103,12 +102,11 @@ public class UserServiceImpl implements UserService {
         Address address = addressMapper.toAddress(privateInfoRequestDto.getAddress());
         addressRepository.save(address);
         PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto, address);
+     //   savedPrivateInfo.setUser(user);
         user.setPrivateInfo(savedPrivateInfo);
         userRepository.save(user);
         return userMapper.toDto(user);
     }
-
-
 
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto userDto) {
