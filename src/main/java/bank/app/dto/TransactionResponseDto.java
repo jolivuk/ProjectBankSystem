@@ -1,23 +1,22 @@
 package bank.app.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
 @EqualsAndHashCode
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class TransactionResponseDto {
-        private final long transactionId;
-        private final Long sender;
-        private final Long receiver;
-        private final double amount;
-        private final String comment;
-        private final String transactionDate;
-        private final String transactionStatus;
-        private final String  transactionType;
+         long transactionId;
+         Long sender;
+        Long receiver;
+         double amount;
+         String comment;
+         String transactionDate;
+         String transactionStatus;
+         String  transactionType;
 
     public TransactionResponseDto(long transactionId, Long sender, Long receiver, double amount, String comment,
                                   String transactionDate, String transactionStatus, String transactionType) {

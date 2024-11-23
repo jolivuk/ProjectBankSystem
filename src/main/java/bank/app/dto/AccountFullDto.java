@@ -1,16 +1,19 @@
 package bank.app.dto;
 
 import bank.app.model.enums.Status;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class AccountFullDto extends AccountBasicDto{
-    private final UserResponseDto user;
+    UserResponseDto user;
 
     public AccountFullDto(Long id, Status status, Double balance, String iban,
                           String swift, LocalDateTime createdAt,

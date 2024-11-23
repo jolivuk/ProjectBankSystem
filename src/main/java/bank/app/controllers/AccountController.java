@@ -6,6 +6,7 @@ import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
 import bank.app.service.AccountService;
 import bank.app.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,23 +24,39 @@ public class AccountController {
     private final TransactionService transactionService;
     private final AccountMapper accountMapper;
 
+    @Operation(
+            summary = "Get basic account information",
+            description = "Get basic and full account information by account id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<AccountBasicDto> getBasicAccountInfo(@PathVariable Long id,
                                                                @RequestParam (name = "full",required = false) boolean isFull) {
         return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));}
 
 
+    @Operation(
+            summary = "Get basic account information",
+            description = "Get basic or full account information by account ID and return List<AccountBasicDto>"
+    )
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AccountBasicDto>> findAccountsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(accountService.findByUserId(userId));
     }
 
+    @Operation(
+            summary = "find the user who is the bank",
+            description = "accepts nothing and returns UserResponseDto"
+    )
     @GetMapping("/bank")
     public ResponseEntity<AccountBasicDto> findBankAccount() {
         Account account = accountService.getBankAccount();
         return ResponseEntity.ok(accountMapper.toBasicDto(account));
     }
 
+    @Operation(
+            summary = "Get all transactions in the bank by id",
+            description = "takes an accountId and returns List<TransactionResponseDto>"
+    )
     @GetMapping("/{accountId}/transactions")
     public ResponseEntity<List<TransactionResponseDto>> getTransactionsByAccountId(@PathVariable Long accountId) {
         List<TransactionResponseDto> transactions = transactionService.getTransactionsByAccountId(accountId);
@@ -48,6 +65,10 @@ public class AccountController {
                 : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get last month transactions",
+            description = "Get all transactions for a specific account within the last month"
+    )
     @GetMapping("/{accountId}/transactions/last-month")
     public ResponseEntity<List<TransactionResponseDto>> getLastMonthTransactionsByAccount(@PathVariable Long accountId) {
         List<TransactionResponseDto> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
@@ -56,6 +77,10 @@ public class AccountController {
                 : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Create new account",
+            description = "Create a new account for a specific user"
+    )
     @PostMapping("/add/user/{userId}")
     public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@RequestBody AccountBasicDto accountBasicDto){
         AccountBasicDto account = accountService.createNewAccount(accountBasicDto,userId);

@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(au -> au
                         .requestMatchers("/swagger-ui/**").hasRole("admin")
                         .requestMatchers("users").hasRole("user")
-                        .requestMatchers("accounts/bank").hasRole("admin")
+                        .requestMatchers("accounts").hasRole("admin")
+                        .requestMatchers(("transaction")).hasRole("admin")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
@@ -64,5 +65,6 @@ public class SecurityConfig {
                 .passwordEncoder(new BCryptPasswordEncoder()::encode)
                 .build();
         return new InMemoryUserDetailsManager(user, admin);
+
     }
 }
