@@ -42,6 +42,11 @@ public class Address {
     @Column(name="info")
     private String info;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "private_info_id", nullable = false)
+    @MapsId
+    private PrivateInfo privateInfo;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

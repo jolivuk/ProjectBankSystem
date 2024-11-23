@@ -22,7 +22,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(name="users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
@@ -38,7 +37,11 @@ public class User {
     @Column(name = "status")
     private Status status;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            optional = true,
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "private_info_id")
     private PrivateInfo privateInfo;
 
@@ -48,7 +51,6 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="manager_id", referencedColumnName = "user_id")
-    @JsonIgnore // todo udalit json ignore v entity
     private User manager;
 
     @Column(name="created_at",updatable = false)

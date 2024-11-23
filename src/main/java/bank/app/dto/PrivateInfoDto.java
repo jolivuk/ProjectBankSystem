@@ -55,5 +55,6 @@ public record PrivateInfoDto(
 //                privateInfo.getAddress() != null ? AddressCreateRequestDto.fromAddress(privateInfo.getAddress()) : null
 //        );
     }
+
 }
 
