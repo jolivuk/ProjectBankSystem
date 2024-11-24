@@ -50,7 +50,20 @@ public class PrivateInfoRequestDto {
     @Size(max = 500, message = "Comment should not exceed 500 characters")
     String comment;
 
-    @NotNull(message = "Address cannot be null")
     AddressRequestDto address;
 
+    @Override
+    public String toString() {
+        return "PrivateInfoRequestDto{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", documentType=" + documentType +
+                ", documentNumber='" + documentNumber + '\'' +
+                ", comment='" + comment + '\'' +
+                ", address=" + address +
+                '}';
+    }
 }

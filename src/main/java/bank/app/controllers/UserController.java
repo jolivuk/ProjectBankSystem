@@ -89,11 +89,11 @@ public class UserController {
 
     /**
      {
-     "username": "Vladimir",
-     "password": "adfasdffff",
+     "username": "customer5",
+     "password": "sUy9ITt08Q8Mgty",
      "status": "ACTIVE",
      "role": "CUSTOMER",
-     "manager" : "2"
+     "manager": 1
      }
      */
     @Operation(
@@ -115,14 +115,14 @@ public class UserController {
      "dateOfBirth": "1990-01-01",
      "documentType": "PASSPORT_EU",
      "documentNumber": "1234567890",
-     "comment": "Test comment",
+     "comment": "string",
      "address": {
      "country": "USA",
-     "street": "Main St",
      "city": "New York",
-     "houseNumber": "123",
      "postcode": "10001",
-     "info": ""
+     "street": "Main St",
+     "houseNumber": "123",
+     "info": "string"
      }
      }
      */
@@ -168,7 +168,8 @@ public class UserController {
      "dateOfBirth": "1990-01-01",
      "documentType": "PASSPORT_EU",
      "documentNumber": "1234567890",
-     "comment": "Test comment"
+     "comment": "Test comment",
+     "address": null
      }
      */
 
@@ -178,7 +179,7 @@ public class UserController {
     )
 
     @PutMapping("/{id}/private_info")
-    public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
+    public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoRequestDto privateInfoDto) {
         UserResponseDto user = userService.updatePrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }

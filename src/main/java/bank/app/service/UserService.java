@@ -17,7 +17,7 @@ public interface UserService {
     PrivateInfoResponseDto getPrivateInfoByUserId(Long id);
     UserResponseDto addPrivateInfo(Long id, PrivateInfoRequestDto privateInfoRequestDto);
     UserResponseDto updateUser(Long id, UserRequestDto userDto);
-    UserResponseDto updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto);
+    UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto);
     UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto);
     }
 

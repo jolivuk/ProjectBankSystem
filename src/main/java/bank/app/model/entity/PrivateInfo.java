@@ -27,7 +27,6 @@ import java.util.Objects;
 public class PrivateInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="private_info_id")
     private Long id;
 
@@ -60,7 +59,7 @@ public class PrivateInfo {
     @OneToOne(
             mappedBy = "privateInfo",
             cascade = CascadeType.ALL,
-            optional = true,
+            optional = false,
             fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
