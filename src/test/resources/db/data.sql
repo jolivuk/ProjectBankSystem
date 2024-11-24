@@ -1,25 +1,24 @@
+INSERT INTO users ( username, password, role, status, manager_id, created_at, last_update)
+VALUES
+    ( 'BANKAccount', 'password123', 'BANK', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'manager1', 'password123', 'MANAGER', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client1', 'password123', 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client2', 'password123', 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client3', 'password3', 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
+
+---- Вставка личной информации
+INSERT INTO private_info (private_info_id, first_name, last_name, date_of_birth, document_type, document_number, phone, email, created_at, last_update, user_id)
+VALUES
+    (2, 'Max', 'Mustermann', PARSEDATETIME('1980-01-01', 'yyyy-MM-dd'), 'PASSPORT_EU', 'D12345678', '491234567890', 'max@example.com', PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), 2),
+    (3, 'Erika', 'Mustermann', PARSEDATETIME('1985-05-10', 'yyyy-MM-dd'), 'PASSPORT_EU', 'D87654321', '491234567891', 'erika@example.com', PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), 3),
+    (4, 'Hans', 'Muller', PARSEDATETIME('1975-08-15', 'yyyy-MM-dd'), 'ID_CARD', 'ID123456', '491234567892', 'hans@example.com', PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), 4);
+
 -- Вставка данных в таблицу адресов
-INSERT INTO address (address_id, country, city, postcode, street, house_number, info)
+INSERT INTO address (address_id, country, city, postcode, street, house_number, info, private_info_id)
 VALUES
-    (2, 'Germany', 'Berlin', '10115', 'Marienplatz', 7, NULL),
-    (3, 'Germany', 'Berlin', '10115', 'Alexanderplatz', 5, NULL),
-    (4, 'Germany', 'Munich', '80331', 'Marienplatz', 10, NULL);
-
--- Вставка личной информации
-INSERT INTO private_info (private_info_id, first_name, last_name, date_of_birth, document_type, document_number, phone, email, address_id, created_at, last_update)
-VALUES
-    (2, 'Max', 'Mustermann', PARSEDATETIME('1980-01-01', 'yyyy-MM-dd'), 'PASSPORT_EU', 'D12345678', '491234567890', 'max@example.com', 2, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
-    (3, 'Erika', 'Mustermann', PARSEDATETIME('1985-05-10', 'yyyy-MM-dd'), 'PASSPORT_EU', 'D87654321', '491234567891', 'erika@example.com', 3, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
-    (4, 'Hans', 'Muller', PARSEDATETIME('1975-08-15', 'yyyy-MM-dd'), 'ID_CARD', 'ID123456', '491234567892', 'hans@example.com', 4, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
-
--- Вставка пользователей
-INSERT INTO users (username, password, private_info_id, role, status, manager_id, created_at, last_update)
-VALUES
-    ('BANKAccount', 'password123', NULL, 'BANK', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss')),
-    ('manager1', 'password123', 2, 'MANAGER', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
-    ('client1', 'password123', 3, 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
-    ('client2', 'password123', 4, 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
-    ('client3', 'password3', NULL, 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
+    (2, 'Germany', 'Berlin', '10115', 'Marienplatz', '7', NULL, 2),
+    (3, 'Germany', 'Berlin', '10115', 'Alexanderplatz', '5', NULL, 3),
+    (4, 'Germany', 'Munich', '80331', 'Marienplatz', '10', NULL, 4);
 
 -- Вставка данных в таблицу счетов
 INSERT INTO accounts (user_id, iban, swift, status, balance, created_at, last_update)

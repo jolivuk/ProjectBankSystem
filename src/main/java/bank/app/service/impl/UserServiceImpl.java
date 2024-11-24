@@ -99,12 +99,17 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
 
+        PrivateInfo privateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto,user);
+
         Address address = addressMapper.toAddress(privateInfoRequestDto.getAddress());
+        address.setPrivateInfo(privateInfo);
         addressRepository.save(address);
-        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto, address);
-     //   savedPrivateInfo.setUser(user);
-        user.setPrivateInfo(savedPrivateInfo);
+
+        privateInfo.setAddress(address);
+
+        user.setPrivateInfo(privateInfo);
         userRepository.save(user);
+
         return userMapper.toDto(user);
     }
 
@@ -138,7 +143,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto){
+    public UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
@@ -148,14 +153,14 @@ public class UserServiceImpl implements UserService {
             user.setPrivateInfo(privateInfo);
         }
 
-        privateInfo.setFirstName(privateInfoDto.firstName());
-        privateInfo.setLastName(privateInfoDto.lastName());
-        privateInfo.setEmail(privateInfoDto.email());
-        privateInfo.setPhone(privateInfoDto.phone());
-        privateInfo.setDateOfBirth(privateInfoDto.dateOfBirth());
-        privateInfo.setDocumentType(privateInfoDto.documentType());
-        privateInfo.setDocumentNumber(privateInfoDto.documentNumber());
-        privateInfo.setComment(privateInfoDto.comment());
+        privateInfo.setFirstName(privateInfoDto.getFirstName());
+        privateInfo.setLastName(privateInfoDto.getLastName());
+        privateInfo.setEmail(privateInfoDto.getEmail());
+        privateInfo.setPhone(privateInfoDto.getPhone());
+        privateInfo.setDateOfBirth(privateInfoDto.getDateOfBirth());
+        privateInfo.setDocumentType(privateInfoDto.getDocumentType());
+        privateInfo.setDocumentNumber(privateInfoDto.getDocumentNumber());
+        privateInfo.setComment(privateInfoDto.getComment());
 
         privateInfoService.savePrivateInfo(privateInfo);
         userRepository.save(user);

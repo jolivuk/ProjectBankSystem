@@ -20,7 +20,6 @@ import java.util.Objects;
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="address_id")
     private Long id;
 
@@ -43,7 +42,7 @@ public class Address {
     private String info;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "private_info_id", nullable = false)
+    @JoinColumn(name = "private_info_id")
     @MapsId
     private PrivateInfo privateInfo;
 
