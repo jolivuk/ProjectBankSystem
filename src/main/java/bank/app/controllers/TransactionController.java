@@ -32,7 +32,7 @@ public class TransactionController {
 
     @Operation(
             summary = "Delete transaction by id",
-            description = "accept transaction id and return ResponseEntity<Void>"
+            description = "accept transaction id and return ResponseEntity\\<Void\\>"
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -40,15 +40,27 @@ public class TransactionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     *
+     *
+    {
+        "sender":5,
+        "receiver":4,
+        "amount": 500.0,
+        "transactionType": "Deposit",
+        "comment": "Salary deposit"
+    }
+     **/
+
     @Operation(
             summary = "Create new transaction",
             description = "Returns created transaction"
     )
 
     @PostMapping("/")
-    public ResponseEntity<Transaction> addTransaction(@RequestBody TransactionRequestDto transactionRequestDto) {
+    public ResponseEntity<TransactionResponseDto> addTransaction(@RequestBody TransactionRequestDto transactionRequestDto) {
         Transaction transaction = transactionService.addNewTransaction(transactionRequestDto);
-        return ResponseEntity.ok(transaction);
+        return ResponseEntity.status(HttpStatus.CREATED).body(transactionMapper.toDto(transaction));
 
     }
 }

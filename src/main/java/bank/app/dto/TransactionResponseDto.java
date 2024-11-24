@@ -9,14 +9,14 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class TransactionResponseDto {
-         long transactionId;
+         Long transactionId;
          Long sender;
         Long receiver;
          double amount;
          String comment;
          String transactionDate;
          String transactionStatus;
-         String  transactionType;
+         String transactionType;
 
     public TransactionResponseDto(long transactionId, Long sender, Long receiver, double amount, String comment,
                                   String transactionDate, String transactionStatus, String transactionType) {

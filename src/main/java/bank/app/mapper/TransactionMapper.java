@@ -21,7 +21,7 @@ public class TransactionMapper {
                 transaction.getComment(),
                 transaction.getTransactionDate().toString(),
                 transaction.getTransactionStatus().toString(),
-                transaction.getTransactionType().toString()
+                transaction.getTransactionType().getTransactionTypeName()
         );
     }
 

@@ -37,7 +37,8 @@ public class TransactionServiceImpl implements TransactionService {
         if(id == null){
             throw new IllegalArgumentException("Transaction id can not be null");
         }
-        return transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException("transaction with id " + id + " not founded") );
+        return transactionRepository.findById(id)
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + id + " not founded") );
     }
 
     @Override
@@ -48,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void delete(Long id) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException("Пользователь с ID: " + id + " не найден"));
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + id + " not found "));
         transactionRepository.deleteById(id);
     }
 
@@ -113,7 +114,4 @@ public class TransactionServiceImpl implements TransactionService {
 
         return savedTransaction;
     }
-
-
-
 }

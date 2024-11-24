@@ -137,10 +137,6 @@ class UserControllerTest {
         String responseJSON = mvcResult.getResponse().getContentAsString();
 
         UserResponseDto actualUserJSON = objectMapper.readValue(responseJSON, UserResponseDto.class);
-        System.out.println("------------------");
-
-        System.out.println(actualUserJSON);
-        System.out.println("------------------");
 
         UserResponseDto expectedUserDTO = new UserResponseDto(
                 6L,
