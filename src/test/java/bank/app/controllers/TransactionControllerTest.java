@@ -1,8 +1,15 @@
 package bank.app.controllers;
 
 
+import bank.app.controllers.handler.ErrorResponse;
+import bank.app.dto.TransactionRequestDto;
+import bank.app.dto.TransactionResponseDto;
+import bank.app.dto.UserRequestDto;
+import bank.app.dto.UserResponseDto;
+import bank.app.model.enums.Role;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -10,12 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.LocalDateTime;
+
+import static bank.app.utils.UserTestData.getUserResponseDto;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -24,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("/db/schema.sql")
 @Sql("/db/data.sql")
 @ActiveProfiles("test")
+@WithMockUser(username = "admin", password= "admin", roles = "admin")
 class TransactionControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +47,7 @@ class TransactionControllerTest {
     @Test
     void getInformationById() throws Exception {
 
-        Long transactionId = 1L;
+        Long transactionId = 2L;
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/transactions/{id}", transactionId)
@@ -41,67 +55,28 @@ class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        String actualTransactionJson = mvcResult.getResponse().getContentAsString();
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
 
-        String expectedJson = """
-            {
-                "transactionId": 1,
-                "sender": 5,
-                "receiver": 2,
-                "amount": 200.0,
-                "comment": "Monthly transfer",
-                "transactionStatus": "COMPLETED",
-                "transactionType": "TransactionType(id=1, transactionTypeName=Transfer, transactionFee=2.5, transactionTypeDescription=Standard bank transfer)"
-            }
-            """;
+        TransactionResponseDto actualTransactionJSON = objectMapper.readValue(jsonResponse, TransactionResponseDto.class);
 
-        JSONAssert.assertEquals(expectedJson, actualTransactionJson, JSONCompareMode.LENIENT);
+        TransactionResponseDto expectedTransaction = new TransactionResponseDto(
+                2L,2L,3L,500,"ATM withdrawal",
+                "2024-11-21T11:30",
+                "COMPLETED","Withdrawal"
+        );
 
+        Assertions.assertEquals(actualTransactionJSON, expectedTransaction);
 
-        JsonNode jsonNode = objectMapper.readTree(actualTransactionJson);
-        String transactionDate = jsonNode.get("transactionDate").asText();
-        assertNotNull(transactionDate);
-        assertTrue(transactionDate.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?"));
     }
-
-
-
-
-
-
 
     @Test
     void delete() throws Exception {
         Long transactionId = 1L;
 
-        String expectedBeforeJSON = """
-            {
-                "transactionId": 1,
-                "sender": 5,
-                "receiver": 2,
-                "amount": 200.0,
-                "comment": "Monthly transfer",
-                "transactionStatus": "COMPLETED",
-                "transactionType": "TransactionType(id=1, transactionTypeName=Transfer, transactionFee=2.5, transactionTypeDescription=Standard bank transfer)"
-            }
-            """;
-
-        String actualBeforeJSON = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/transactions/{id}", transactionId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        JSONAssert.assertEquals(expectedBeforeJSON, actualBeforeJSON, JSONCompareMode.LENIENT);
-
-
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/transactions/{id}", transactionId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/transactions/{id}", transactionId)
@@ -109,19 +84,40 @@ class TransactionControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
-        String actualErrorJSON = mvcResult.getResponse().getContentAsString();
-        String expectedErrorJSON = """
-            {
-                "status": 400,
-                "message": "transaction with id 1 not founded"
-            }
-            """;
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
 
-        JSONAssert.assertEquals(expectedErrorJSON, actualErrorJSON, false);
+        ErrorResponse errorResponse = objectMapper.readValue(jsonResponse, ErrorResponse.class);
+
+        Assertions.assertEquals(400, errorResponse.getStatus());
+        Assertions.assertEquals("Transaction with id 1 not founded", errorResponse.getMessage());
     }
 
     @Test
     void addTransaction() throws Exception {
+        TransactionRequestDto requestDto = new TransactionRequestDto(
+                2L,
+                4L,
+                200,
+                "Transfer friend",
+                "Transfer"
+        );
 
+        MvcResult mvcResult = mockMvc.perform(post("/transactions/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String responseJSON = mvcResult.getResponse().getContentAsString();
+
+        TransactionResponseDto actualTransactionJSON = objectMapper.readValue(responseJSON, TransactionResponseDto.class);
+
+        Assertions.assertEquals(6L, actualTransactionJSON.getTransactionId());
+        Assertions.assertEquals(2L, actualTransactionJSON.getSender());
+        Assertions.assertEquals(4L, actualTransactionJSON.getReceiver());
+        Assertions.assertEquals(200, actualTransactionJSON.getAmount());
+        Assertions.assertEquals("Transfer friend", actualTransactionJSON.getComment());
+        Assertions.assertEquals("COMPLETED",actualTransactionJSON.getTransactionStatus());
+        Assertions.assertEquals("Transfer", actualTransactionJSON.getTransactionType());
     }
 }

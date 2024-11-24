@@ -1,5 +1,6 @@
 package bank.app.dto;
 
+import bank.app.repository.TransactionTypeRepository;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -30,7 +31,7 @@ public class TransactionRequestDto {
         String comment;
 
     @NotNull(message = "Transaction type cannot be null")
-        String  transactionType;
+          String transactionType;
 
     public TransactionRequestDto(Long sender, Long receiver, double amount, String comment, String transactionType) {
         this.sender = sender;
