@@ -29,7 +29,4 @@ public class TransactionResponseDto {
         this.transactionStatus = transactionStatus;
         this.transactionType = transactionType;
     }
-
-
-
 }

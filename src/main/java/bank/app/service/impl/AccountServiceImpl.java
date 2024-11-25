@@ -2,6 +2,7 @@ package bank.app.service.impl;
 
 import bank.app.dto.AccountBasicDto;
 import bank.app.dto.AccountFullDto;
+import bank.app.dto.AccountRequestDto;
 import bank.app.exeptions.AccountIsBlockedException;
 import bank.app.exeptions.AccountNotFoundException;
 import bank.app.exeptions.UserNotFoundException;
@@ -63,13 +64,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountFullDto createNewAccount(AccountBasicDto accountBasicDto, Long userId) {
+    public AccountBasicDto createNewAccount(AccountRequestDto accountRequestDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found with id: " + userId));
         
-        Account account = new Account(user,accountBasicDto.getIban(),
-                accountBasicDto.getSwift(),Status.ACTIVE,accountBasicDto.getBalance());
+        Account account = new Account(user,accountRequestDto.iban(),
+                accountRequestDto.swift(),accountRequestDto.status(),accountRequestDto.balance());
         accountRepository.save(account);
-        return accountMapper.toFullDto(account);
+        return accountMapper.toBasicDto(account);
     }
 
     @Override

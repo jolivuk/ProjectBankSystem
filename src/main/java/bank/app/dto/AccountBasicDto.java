@@ -4,6 +4,7 @@ import bank.app.model.enums.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@ToString
 public class AccountBasicDto
  {
      Long id;

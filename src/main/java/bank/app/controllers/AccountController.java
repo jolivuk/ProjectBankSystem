@@ -3,12 +3,10 @@ package bank.app.controllers;
 import bank.app.dto.*;
 import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
-import bank.app.model.entity.Transaction;
 import bank.app.service.AccountService;
 import bank.app.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +27,8 @@ public class AccountController {
             description = "Get basic and full account information by account id"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<AccountBasicDto> getBasicAccountInfo(@PathVariable Long id,
-                                                               @RequestParam (name = "full",required = false) boolean isFull) {
+    public ResponseEntity<AccountBasicDto> getAccountInfo(@PathVariable Long id,
+                                                          @RequestParam (name = "full",required = false) boolean isFull) {
         return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));}
 
 
@@ -48,9 +46,9 @@ public class AccountController {
             description = "accepts nothing and returns UserResponseDto"
     )
     @GetMapping("/bank")
-    public ResponseEntity<AccountBasicDto> findBankAccount() {
+    public ResponseEntity<AccountFullDto> findBankAccount() {
         Account account = accountService.getBankAccount();
-        return ResponseEntity.ok(accountMapper.toBasicDto(account));
+        return ResponseEntity.ok(accountMapper.toFullDto(account));
     }
 
     @Operation(
@@ -82,9 +80,10 @@ public class AccountController {
             description = "Create a new account for a specific user"
     )
     @PostMapping("/add/user/{userId}")
-    public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@RequestBody AccountBasicDto accountBasicDto){
-        AccountBasicDto account = accountService.createNewAccount(accountBasicDto,userId);
-        return ResponseEntity.ok(account);
+    public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@RequestBody AccountRequestDto accountRequestDto){
+        AccountBasicDto account = accountService.createNewAccount(accountRequestDto,userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(account);
+
     }
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) {
