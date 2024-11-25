@@ -64,9 +64,15 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponseDto> getTransactionsLastMonthByAccountId(Long accountId) {
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(30);
-        return transactionMapper.adjustedAmountsInTransactions(
-                transactionRepository.findBySenderIdOrReceiverIdAndTransactionDateBetween(accountId,accountId, startDate, endDate),
-                accountId);
+
+        System.out.println("Searching transactions between: " + startDate + " and " + endDate);
+
+        List<Transaction> transactions = transactionRepository.findByDateRangeAndAccount(
+                startDate,
+                endDate,
+                accountId
+        );
+        return transactionMapper.adjustedAmountsInTransactions(transactions, accountId);
     }
 
     @Override

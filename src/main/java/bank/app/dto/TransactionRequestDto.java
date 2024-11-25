@@ -40,5 +40,4 @@ public class TransactionRequestDto {
         this.comment = comment;
         this.transactionType = transactionType;
     }
-
 }

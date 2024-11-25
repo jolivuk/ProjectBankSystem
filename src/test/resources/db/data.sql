@@ -39,8 +39,7 @@ VALUES
 -- Вставка транзакций
 INSERT INTO transactions (sender_id, receiver_id, transaction_type_id, amount, fee, comment, transaction_date, transaction_status, created_at, last_update)
 VALUES
-    (2, 3, 1, 200.00, 2.50, 'Monthly transfer', PARSEDATETIME('2024-11-21 11:20:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-11-21 11:20:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 11:20:00', 'yyyy-MM-dd HH:mm:ss')),
+    (2, 3, 1, 200.00, 2.50, 'Monthly transfer', PARSEDATETIME('2024-09-21 11:20:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-09-21 11:20:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-09-21 11:20:00', 'yyyy-MM-dd HH:mm:ss')),
     (2, 3, 2, 500.00, 3.00, 'ATM withdrawal', PARSEDATETIME('2024-11-21 11:30:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-11-21 11:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 11:30:00', 'yyyy-MM-dd HH:mm:ss')),
     (3, 2, 3, 1500.00, 0.00, 'Salary deposit', PARSEDATETIME('2024-11-21 11:40:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-11-21 11:40:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 11:40:00', 'yyyy-MM-dd HH:mm:ss')),
-    (3, 1, 1, 1000.00, 2.50, 'Company transfer', PARSEDATETIME('2024-11-21 12:00:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-11-21 12:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 12:00:00', 'yyyy-MM-dd HH:mm:ss')),
-    (1, 2, 3, 5000.00, 0.00, 'Bank deposit', PARSEDATETIME('2024-11-21 12:30:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-11-21 12:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 12:30:00', 'yyyy-MM-dd HH:mm:ss'));
+    (3, 1, 1, 1000.00, 2.50, 'Company transfer', PARSEDATETIME('2024-11-21 12:00:00', 'yyyy-MM-dd HH:mm:ss'), 'COMPLETED', PARSEDATETIME('2024-11-21 12:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 12:00:00', 'yyyy-MM-dd HH:mm:ss'));
