@@ -17,11 +17,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAllByUserId(Long userId);
 
-    @Query(value = "SELECT * FROM accounts a " +
-            "JOIN users u ON u.user_id = a.user_id " +
-            "WHERE u.status = 'ACTIVE' AND a.status = 'ACTIVE' " +
-            "AND u.role = :userRole " +
-            "ORDER BY a.created_at ASC LIMIT 1",
-            nativeQuery = true)
+    @Query("SELECT a FROM Account a LEFT JOIN FETCH User u WHERE u.role = :userRole " +
+            "AND u.status = 'ACTIVE' AND a.status = 'ACTIVE'")
     Optional<Account> findFirstByUserRoleNative(@Param("userRole") String userRole);
 }
