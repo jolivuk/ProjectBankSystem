@@ -74,9 +74,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getBankAccount() {
-        User user = userRepository.findByRole(Role.BANK)
-                .orElseThrow(() -> new UserNotFoundException("User not found with role: " + Role.BANK));
-        Account accountBank = getAccountById(user.getId());
+        Account accountBank = accountRepository.findByUserRole(Role.BANK).stream().findFirst()
+                .orElseThrow(() -> new UserNotFoundException("User not found with role: " + Role.BANK));;
         return accountBank;
     }
 
