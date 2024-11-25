@@ -66,7 +66,7 @@ class UserControllerTest {
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                             .get("/users/{id}", userId)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
+                    .andExpect(status() .isOk())
                     .andReturn();
 
             String jsonResponse = mvcResult.getResponse().getContentAsString();
