@@ -16,10 +16,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t " +
             "LEFT JOIN FETCH t.sender s " +
             "LEFT JOIN FETCH t.receiver r " +
-            "LEFT JOIN FETCH t.transactionType tt " +
             "WHERE t.transactionDate BETWEEN :startDate AND :endDate " +
             "AND (s.id = :accountId OR r.id = :accountId) " +
-            "AND t.transactionStatus = 'COMPLETED' " +
             "ORDER BY t.transactionDate DESC")
     List<Transaction> findByDateRangeAndAccount(
             @Param("startDate") LocalDateTime startDate,

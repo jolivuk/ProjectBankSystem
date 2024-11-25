@@ -223,24 +223,17 @@ class AccountControllerTest {
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         List<TransactionResponseDto> actualTransactions = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
 
-        /**
-         (2, 3, 2, 500.00, 3.00, 'ATM withdrawal', PARSEDATETIME('2024-11-21 11:30:00', 'yyyy-MM-dd HH:mm:ss'),
-         'COMPLETED', PARSEDATETIME('2024-11-21 11:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 11:30:00',
-         'yyyy-MM-dd HH:mm:ss')),
-
-         (3, 2, 3, 1500.00, 0.00, 'Salary deposit', PARSEDATETIME('2024-11-21 11:40:00', 'yyyy-MM-dd HH:mm:ss'),
-         'COMPLETED', PARSEDATETIME('2024-11-21 11:40:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 11:40:00',
-         'yyyy-MM-dd HH:mm:ss')),
-         */
         List<TransactionResponseDto> expectedTransactions = List.of(
+                new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
+                        "2024-11-21T11:40","COMPLETED","Deposit"
+                ),
                 new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
                         "2024-11-21T11:30",
                         "COMPLETED","Withdrawal"
-                ),
-                new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED","Deposit"
                 )
         );
+
+        System.out.println(expectedTransactions);
 
         Assertions.assertEquals(actualTransactions,expectedTransactions);
     }
