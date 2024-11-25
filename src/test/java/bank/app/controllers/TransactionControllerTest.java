@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import static bank.app.utils.UserTestData.getUserResponseDto;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -54,6 +55,7 @@ class TransactionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
+
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 
