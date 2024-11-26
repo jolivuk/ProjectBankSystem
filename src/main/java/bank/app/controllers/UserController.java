@@ -26,9 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final PrivateInfoService privateInfoService;
     private final UserMapper userMapper;
-    private final PrivateInfoMapper privateInfoMapper;
 
     @Operation(
             summary = "find All users in database",
@@ -83,8 +81,10 @@ public class UserController {
                     " throws an exception that the user is not found"
     )
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
         userService.deleteUserById(id);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -132,11 +132,12 @@ public class UserController {
             description = "takes PrivateInfoRequestDto and returns UserResponseDto" +
                     " which contains updated information about the user"
     )
-    @PostMapping("/{id}/private_info/add")
+    @PostMapping("/{id}/private_info/")
     public ResponseEntity<UserResponseDto> addPrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoRequestDto privateInfoRequestDto) {
         UserResponseDto user = userService.addPrivateInfo(id, privateInfoRequestDto);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
+
 
     /**
      *

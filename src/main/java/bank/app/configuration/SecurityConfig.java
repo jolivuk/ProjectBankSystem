@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(au -> au
                         .requestMatchers("/swagger-ui/**").hasRole("admin")
-                        .requestMatchers("users").hasRole("user")
+                       // .requestMatchers("users").hasRole("user")
                         .requestMatchers("accounts").hasRole("admin")
                         .requestMatchers(("transaction")).hasRole("admin")
                         .anyRequest().authenticated())

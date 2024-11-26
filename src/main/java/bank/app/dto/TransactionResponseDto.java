@@ -1,7 +1,11 @@
 package bank.app.dto;
 
+import bank.app.model.entity.TransactionType;
+import bank.app.model.enums.TransactionTypeName;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -16,10 +20,10 @@ public class TransactionResponseDto {
          String comment;
          String transactionDate;
          String transactionStatus;
-         String transactionType;
+         TransactionTypeName transactionType;
 
     public TransactionResponseDto(long transactionId, Long sender, Long receiver, double amount, String comment,
-                                  String transactionDate, String transactionStatus, String transactionType) {
+                                  String transactionDate, String transactionStatus, TransactionTypeName transactionType) {
         this.transactionId = transactionId;
         this.sender = sender;
         this.receiver = receiver;

@@ -1,5 +1,6 @@
 package bank.app.model.entity;
 
+import bank.app.model.enums.TransactionTypeName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,10 +18,11 @@ public class TransactionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transaction_type_id")
-    private Long id;
+    private int id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="transaction_type_name")
-    private String transactionTypeName;
+    private TransactionTypeName transactionTypeName;
 
     @Column(name="transaction_type_fee")
     private double transactionFee;
@@ -28,7 +30,7 @@ public class TransactionType {
     @Column(name="transaction_type_description")
     private String transactionTypeDescription;
 
-    public void setTransactionTypeName(String transactionTypeName) {
+    public void setTransactionTypeName(TransactionTypeName transactionTypeName) {
         this.transactionTypeName = transactionTypeName;
     }
 
@@ -40,7 +42,7 @@ public class TransactionType {
         this.transactionTypeDescription = transactionTypeDescription;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

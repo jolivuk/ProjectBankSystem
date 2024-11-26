@@ -17,10 +17,8 @@ import bank.app.service.AccountService;
 import bank.app.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +37,6 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + id + " not founded") );
-    }
-
-    @Override
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
     }
 
     @Override
@@ -78,37 +71,37 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction addNewTransaction(TransactionRequestDto transactionRequestDto) {
 
-        Account sender = accountService.getAccountById(transactionRequestDto.getSender());
-        Account receiver = accountService.getAccountById(transactionRequestDto.getReceiver());
+        Account sender = accountService.getAccountById(transactionRequestDto.sender());
+        Account receiver = accountService.getAccountById(transactionRequestDto.receiver());
         Account bank = accountService.getBankAccount();
 
         accountService.checkAccount(bank);
         accountService.checkAccount(sender);
         accountService.checkAccount(receiver);
 
-        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionRequestDto.getTransactionType())
+        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionRequestDto.transactionType())
                 .orElseThrow(() ->
-                        new TransactionTypeException(String.format("Transaction Type %s not found", transactionRequestDto.getTransactionType())));
+                        new TransactionTypeException(String.format("Transaction Type %s not found", transactionRequestDto.transactionType())));
 
 
-        Transaction transaction = new Transaction(sender, receiver, transactionRequestDto.getAmount(),
-                transactionRequestDto.getComment(), TransactionStatus.INITIALIZED, transactionType);
+        Transaction transaction = new Transaction(sender, receiver, transactionRequestDto.amount(),
+                transactionRequestDto.comment(), TransactionStatus.INITIALIZED, transactionType);
 
         transaction.setTransactionStatus(TransactionStatus.PROCESSING);
-        transaction.setFee(transactionType.getTransactionFee()* transactionRequestDto.getAmount()/100);
+        transaction.setFee(transactionType.getTransactionFee()* transactionRequestDto.amount()/100);
         transactionRepository.save(transaction);
 
-        double totalSum = transactionRequestDto.getAmount() + transaction.getFee();
+        double totalSum = transactionRequestDto.amount() + transaction.getFee();
 
         if (totalSum > sender.getBalance()) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
-            transaction.setComment(transactionRequestDto.getComment() + " - Not enough balance");
+            transaction.setComment(transactionRequestDto.comment() + " - Not enough balance");
             transactionRepository.save(transaction);  // Save the failed transaction
-            throw new BalanceException("Not enough balance on account " + transactionRequestDto.getSender());
+            throw new BalanceException("Not enough balance on account " + transactionRequestDto.sender());
         }
 
         sender.setBalance(sender.getBalance() - totalSum);
-        receiver.setBalance(receiver.getBalance() + transactionRequestDto.getAmount());
+        receiver.setBalance(receiver.getBalance() + transactionRequestDto.amount());
         bank.setBalance(bank.getBalance() + transaction.getFee());
 
         transaction.setTransactionStatus(TransactionStatus.COMPLETED);

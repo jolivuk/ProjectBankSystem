@@ -2,7 +2,6 @@ package bank.app.model.entity;
 
 
 import bank.app.model.enums.Status;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

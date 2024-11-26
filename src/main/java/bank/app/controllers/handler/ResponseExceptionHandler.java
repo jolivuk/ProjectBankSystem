@@ -21,7 +21,6 @@ public class ResponseExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(UserAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleUserAlreadyDeleted(UserAlreadyDeletedException exception) {
         ErrorResponse error = new ErrorResponse(

@@ -62,7 +62,7 @@ CREATE TABLE accounts (
 
 CREATE TABLE transaction_type (
                                   transaction_type_id INT AUTO_INCREMENT PRIMARY KEY,
-                                  transaction_type_name VARCHAR(16) NOT NULL,
+                                  transaction_type_name VARCHAR(36) NOT NULL,
                                   transaction_type_fee DECIMAL(10,2),
                                   transaction_type_description VARCHAR(64)
 );

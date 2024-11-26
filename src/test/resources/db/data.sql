@@ -32,9 +32,9 @@ VALUES
 -- Вставка типов транзакций
 INSERT INTO transaction_type (transaction_type_name, transaction_type_fee, transaction_type_description)
 VALUES
-    ('Transfer', 2.50, 'Standard bank transfer'),
-    ('Withdrawal', 3.00, 'Cash withdrawal'),
-    ('Deposit', 0.00, 'Account deposit');
+    ('TRANSFER', 2.50, 'Standard bank transfer'),
+    ('WITHDRAWAL', 3.00, 'Cash withdrawal'),
+    ('DEPOSIT', 0.00, 'Account deposit');
 
 -- Вставка транзакций
 INSERT INTO transactions (sender_id, receiver_id, transaction_type_id, amount, fee, comment, transaction_date, transaction_status, created_at, last_update)

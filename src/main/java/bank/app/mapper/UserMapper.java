@@ -1,6 +1,5 @@
 package bank.app.mapper;
 
-
 import bank.app.dto.UserResponseDto;
 import bank.app.model.entity.User;
 import org.springframework.stereotype.Component;

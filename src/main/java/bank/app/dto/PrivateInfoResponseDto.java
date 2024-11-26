@@ -42,7 +42,6 @@ public class PrivateInfoResponseDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) {
-            System.out.println("Error hier 1");
             return false;
         }
         PrivateInfoResponseDto that = (PrivateInfoResponseDto) o;

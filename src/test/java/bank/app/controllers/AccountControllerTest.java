@@ -1,8 +1,8 @@
 package bank.app.controllers;
 
 import bank.app.dto.*;
-import bank.app.model.enums.DocumentType;
 import bank.app.model.enums.Status;
+import bank.app.model.enums.TransactionTypeName;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -195,14 +194,14 @@ class AccountControllerTest {
                 new TransactionResponseDto(
                         1L, 2L, 3L,-200.00,"Monthly transfer",
                         "2024-09-21T11:20",
-                        "COMPLETED","Transfer"
+                        "COMPLETED", TransactionTypeName.TRANSFER
                 ),
                 new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
                         "2024-11-21T11:30",
-                        "COMPLETED","Withdrawal"
+                        "COMPLETED",TransactionTypeName.WITHDRAWAL
                 ),
                 new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED","Deposit"
+                        "2024-11-21T11:40","COMPLETED",TransactionTypeName.DEPOSIT
                         )
                 );
 
@@ -225,11 +224,11 @@ class AccountControllerTest {
 
         List<TransactionResponseDto> expectedTransactions = List.of(
                 new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED","Deposit"
+                        "2024-11-21T11:40","COMPLETED",TransactionTypeName.DEPOSIT
                 ),
                 new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
                         "2024-11-21T11:30",
-                        "COMPLETED","Withdrawal"
+                        "COMPLETED",TransactionTypeName.WITHDRAWAL
                 )
         );
 

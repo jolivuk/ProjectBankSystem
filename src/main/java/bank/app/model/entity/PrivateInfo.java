@@ -1,13 +1,8 @@
 package bank.app.model.entity;
 
 import bank.app.model.enums.DocumentType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -88,5 +83,24 @@ public class PrivateInfo {
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, phone, dateOfBirth, documentType, documentNumber, comment, address, createdAt, lastUpdate);
+    }
+
+    @Override
+    public String toString() {
+        return "PrivateInfo{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", documentType=" + documentType +
+                ", documentNumber='" + documentNumber + '\'' +
+                ", comment='" + comment + '\'' +
+                ", address=" + address +
+                ", createdAt=" + createdAt +
+                ", lastUpdate=" + lastUpdate +
+                ", user=" + user +
+                '}';
     }
 }

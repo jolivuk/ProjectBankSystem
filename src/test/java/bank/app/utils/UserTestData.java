@@ -44,6 +44,43 @@ public class UserTestData {
         return expectedUser;
     }
 
+    public static UserResponseDto getDeletedUserResponseDto(){
+        AddressResponseDto address = new AddressResponseDto(
+                2L,
+                "Germany",
+                "Berlin",
+                "10115",
+                "Marienplatz",
+                "7",
+                null
+        );
+
+        PrivateInfoResponseDto privateInfo = new PrivateInfoResponseDto(
+                2L,
+                "Max",
+                "Mustermann",
+                "max@example.com",
+                "491234567890",
+                LocalDate.parse("1980-01-01"),
+                DocumentType.PASSPORT_EU,
+                "D12345678",
+                null,
+                address
+        );
+
+        UserResponseDto expectedUser = new UserResponseDto(
+                2L,
+                "manager1",
+                "password123",
+                "DELETED",
+                "MANAGER",
+                null,
+                privateInfo
+        );
+
+        return expectedUser;
+    }
+
     public static UserResponseDto getUserResponseDtoUpdate(){
         UserResponseDto expectedUser = getUserResponseDto();
         UserResponseDto responseUpdatedDto = new UserResponseDto(
@@ -84,9 +121,9 @@ public class UserTestData {
     }
 
     public static PrivateInfoResponseDto getPrivateInfoResponseDto(){
-        //address rests the same as in database
+
         AddressResponseDto addressResponseDto = new AddressResponseDto( 2L,"Germany", "Berlin",
-                "10115", "Marienplatz", "7", null);
+                    "10115", "Marienplatz", "7", null);
 
         return new PrivateInfoResponseDto(2L,
                 "Maxim","NewMustermann","newmax@example.com","+491111111111",
@@ -96,10 +133,10 @@ public class UserTestData {
 
     public static UserResponseDto getUserResponseWithPrivateInfoDto(){
 
-        AddressResponseDto addressResponseDto = new AddressResponseDto( 1L,"Germany", "Munich",
+        AddressResponseDto addressResponseDto = new AddressResponseDto( 5L,"Germany", "Munich",
                 "80331", "Karlsplatz", "8", null);
 
-        PrivateInfoResponseDto privateInfoResponseDto = new PrivateInfoResponseDto(1L,
+        PrivateInfoResponseDto privateInfoResponseDto = new PrivateInfoResponseDto(5L,
                 "John","Smith","john.smith@example.com","+491234567899",
                 LocalDate.of(1985, 6, 15),
                 DocumentType.PASSPORT_EU,"D87654321",null, addressResponseDto);

@@ -3,7 +3,6 @@ package bank.app.service.impl;
 import bank.app.dto.*;
 import bank.app.exeptions.UserAlreadyDeletedException;
 import bank.app.exeptions.UserNotFoundException;
-import bank.app.mapper.AddressMapper;
 import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
@@ -13,13 +12,14 @@ import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.AddressRepository;
+import bank.app.repository.PrivateInfoRepository;
 import bank.app.repository.UserRepository;
+import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,10 +30,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PrivateInfoService privateInfoService;
-    private final AddressRepository addressRepository;
     private final AccountRepository accountRepository;
-    private final AddressMapper addressMapper;
     private final UserMapper userMapper;
+    private final PrivateInfoRepository privateInfoRepository;
 
     @Override
     public UserResponseDto getUserById(Long id) {
@@ -71,11 +70,11 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
-                throw new UserNotFoundException("User with ID " + id + " not found");
+            throw new UserNotFoundException("User with ID " + id + " not found");
         }
         User user = userOptional.get();
         if (user.getStatus().equals(Status.DELETED)) {
-                throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
+            throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
         }
         user.setStatus(Status.DELETED);
 
@@ -101,17 +100,14 @@ public class UserServiceImpl implements UserService {
 
         PrivateInfo privateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto,user);
 
-        Address address = addressMapper.toAddress(privateInfoRequestDto.getAddress());
-        address.setPrivateInfo(privateInfo);
-        addressRepository.save(address);
-
-        privateInfo.setAddress(address);
+        privateInfoRepository.save(privateInfo);
 
         user.setPrivateInfo(privateInfo);
         userRepository.save(user);
 
         return userMapper.toDto(user);
     }
+
 
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto userDto) {
@@ -162,7 +158,7 @@ public class UserServiceImpl implements UserService {
         privateInfo.setDocumentNumber(privateInfoDto.getDocumentNumber());
         privateInfo.setComment(privateInfoDto.getComment());
 
-        privateInfoService.savePrivateInfo(privateInfo);
+        privateInfoRepository.save(privateInfo);
         userRepository.save(user);
         return userMapper.toDto(user);
     }

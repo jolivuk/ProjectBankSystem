@@ -21,7 +21,7 @@ public class TransactionController {
 
     @Operation(
             summary = "Get transaction by id",
-            description = "Returns List<TransactionResponseDto> information by id"
+            description = "Returns <TransactionResponseDto> information by id"
     )
     @GetMapping("/{id}")
     public ResponseEntity<TransactionResponseDto> getInformationById(@PathVariable Long id) {

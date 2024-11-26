@@ -1,9 +1,6 @@
 package bank.app.mapper;
 
-import bank.app.dto.AccountBasicDto;
-import bank.app.dto.AccountFullDto;
 import bank.app.dto.TransactionResponseDto;
-import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +11,9 @@ import java.util.stream.Collectors;
 public class TransactionMapper {
 
     public TransactionResponseDto toDto(Transaction transaction) {
+        System.out.println("--------------------------------------------------");
+        System.out.println(transaction.getTransactionType().getTransactionTypeName());
+        System.out.println("--------------------------------------------------");
         return new TransactionResponseDto(transaction.getId(),
                 transaction.getSender().getId(),
                 transaction.getReceiver().getId(),

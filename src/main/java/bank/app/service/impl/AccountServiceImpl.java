@@ -8,10 +8,8 @@ import bank.app.exeptions.AccountNotFoundException;
 import bank.app.exeptions.UserNotFoundException;
 import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
-import bank.app.model.entity.Transaction;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
-import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.TransactionRepository;
 import bank.app.repository.UserRepository;
@@ -24,10 +22,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-// todo - все сервисы должны в методах принимать dto и возвращать dto на входе какой
-//  requestdto на выходе ResponceDto.Сервисы должны использовать mapper для преобразования сущности в dto и обратно
-//  и тесты
-// todo валидацию dto
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;

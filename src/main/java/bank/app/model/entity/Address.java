@@ -58,4 +58,17 @@ public class Address {
     public int hashCode() {
         return Objects.hash(id, country, city, postcode, street, houseNumber, info);
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", postcode='" + postcode + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", info='" + info + '\'' +
+                '}';
+    }
 }
