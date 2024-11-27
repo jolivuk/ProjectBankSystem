@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static bank.app.utils.UserTestData.getDeletedUserResponseDto;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -238,7 +239,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void add() throws Exception {
+    void addAccountTest() throws Exception {
         AccountRequestDto requestDto  = new AccountRequestDto(
                 Status.ACTIVE,
                 100.00,
@@ -266,6 +267,33 @@ class AccountControllerTest {
         Assertions.assertEquals("DE22345678901234567890", actual.getIban());
         Assertions.assertEquals("CAMMDEFF", actual.getSwift());
 
+
+    }
+
+    @Test
+    void softDeleteAccount() throws Exception {
+        Long accountId = 3L;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/accounts/{id}", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+
+        MvcResult afterDelete = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{id}", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = afterDelete.getResponse().getContentAsString();
+        AccountBasicDto afterDeleteAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
+
+        Assertions.assertEquals(3L, afterDeleteAccountJson.getId());
+        Assertions.assertEquals(3000.00, afterDeleteAccountJson.getBalance());
+        Assertions.assertEquals(Status.DELETED, afterDeleteAccountJson.getStatus());
+        Assertions.assertEquals("DE89370400440532013858", afterDeleteAccountJson.getIban());
+        Assertions.assertEquals("DEUTDEFF", afterDeleteAccountJson.getSwift());
 
     }
 }

@@ -59,6 +59,29 @@ class UserControllerTest {
     }
 
     @Test
+    void findAllUsersForManagerTest() throws Exception {
+
+        Long userId = 2L;
+
+
+        String allUsersJson = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/users/{id}/customers", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<UserResponseDto> allUsersByManagerDto = objectMapper.readValue(allUsersJson,
+                new TypeReference<>() {
+                });
+
+        List<UserResponseDto> expected = getAllUsersForManager();
+
+        Assertions.assertEquals(expected, allUsersByManagerDto);
+    }
+
+    @Test
     void findUserByIdTest() throws Exception {
 
             Long userId = 2L;
@@ -254,7 +277,7 @@ class UserControllerTest {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserJSON = objectMapper.readValue(jsonResponse, UserResponseDto.class);
-        AddressResponseDto actualAddressResponseDto = actualUserJSON.privateInfoResponse().getAddress();
+        AddressResponseDto actualAddressResponseDto = actualUserJSON.privateInfoResponse().address();
 
         AddressResponseDto expectedAddressDto = new AddressResponseDto(
                 2L,

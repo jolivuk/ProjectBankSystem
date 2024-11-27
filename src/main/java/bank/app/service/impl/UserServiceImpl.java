@@ -3,6 +3,7 @@ package bank.app.service.impl;
 import bank.app.dto.*;
 import bank.app.exeptions.UserAlreadyDeletedException;
 import bank.app.exeptions.UserNotFoundException;
+import bank.app.exeptions.UserRoleException;
 import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
@@ -45,13 +46,31 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::toDto) // Преобразуем User в UserResponseDto
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserResponseDto> findAllByManagerId(Long id){
+        User manager = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Manager with ID " + id + " not found"));
+
+        if (!isManager(manager))
+            throw new UserRoleException("User with ID " + id + " is not Manager");
+
+        return userRepository.findAllByManagerId(id)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User manager = userRepository.findById(userRequestDto.manager())
                 .orElseThrow(() -> new UserNotFoundException("Manager with ID " + userRequestDto.manager() + " not found"));
+
+        if (!isManager(manager))
+            throw new UserRoleException("User with ID " + userRequestDto.manager() + " is not Manager");
 
         User user = new User(userRequestDto.username(),userRequestDto.password(),
                 Status.ACTIVE, userRequestDto.role(),manager);
@@ -149,14 +168,14 @@ public class UserServiceImpl implements UserService {
             user.setPrivateInfo(privateInfo);
         }
 
-        privateInfo.setFirstName(privateInfoDto.getFirstName());
-        privateInfo.setLastName(privateInfoDto.getLastName());
-        privateInfo.setEmail(privateInfoDto.getEmail());
-        privateInfo.setPhone(privateInfoDto.getPhone());
-        privateInfo.setDateOfBirth(privateInfoDto.getDateOfBirth());
-        privateInfo.setDocumentType(privateInfoDto.getDocumentType());
-        privateInfo.setDocumentNumber(privateInfoDto.getDocumentNumber());
-        privateInfo.setComment(privateInfoDto.getComment());
+        privateInfo.setFirstName(privateInfoDto.firstName());
+        privateInfo.setLastName(privateInfoDto.lastName());
+        privateInfo.setEmail(privateInfoDto.email());
+        privateInfo.setPhone(privateInfoDto.phone());
+        privateInfo.setDateOfBirth(privateInfoDto.dateOfBirth());
+        privateInfo.setDocumentType(privateInfoDto.documentType());
+        privateInfo.setDocumentNumber(privateInfoDto.documentNumber());
+        privateInfo.setComment(privateInfoDto.comment());
 
         privateInfoRepository.save(privateInfo);
         userRepository.save(user);
@@ -189,6 +208,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         return userMapper.toDto(user);
+    }
+
+    @Override
+    public boolean isManager(User user) {
+        return user.getRole().equals(Role.MANAGER);
     }
 
 }

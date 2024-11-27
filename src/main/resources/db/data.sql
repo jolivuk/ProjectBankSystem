@@ -1,16 +1,17 @@
+-- Вставляем данные в таблицу users
 INSERT INTO users (username, password, status, role, manager_id) VALUES
-                                                                     ('BANKaccount', 'password123', 'ACTIVE', 'BANK', NULL),
-                                                                     ('manager1', 'password1', 'ACTIVE', 'MANAGER', NULL),
-                                                                     ('customer1', 'password2', 'ACTIVE', 'CUSTOMER', 2),
-                                                                     ('customer2', 'password3', 'INACTIVE', 'CUSTOMER', 2),
-                                                                     ('customer3', 'password4', 'ACTIVE', 'CUSTOMER', 2);
+        ('BANKaccount', 'password123', 'ACTIVE', 'BANK', NULL),
+        ('manager1', 'password1', 'ACTIVE', 'MANAGER', NULL),
+        ('customer1', 'password2', 'ACTIVE', 'CUSTOMER', 2),
+        ('customer2', 'password3', 'INACTIVE', 'CUSTOMER', 2),
+        ('customer3', 'password4', 'ACTIVE', 'CUSTOMER', 2);
 
 -- Вставляем данные в таблицу private_info
 INSERT INTO private_info (private_info_id,first_name, last_name, email, phone, date_of_birth, document_type, document_number, comment, user_id) VALUES
-                        (2,'John', 'Doe', 'john.doe@example.com', '+1234567890', '1990-01-01', 'PASSPORT_EU', 'A12345678', 'Test comment for user1', 2),
-                        (3,'Jane', 'Smith', 'jane.smith@example.com', '+9876543210', '1985-05-15', 'ID_CARD', 'B98765432', 'Test comment for user2', 3),
-                        (4,'Erika', 'Mustermann', 'erika@example.com','491234567891','1985-05-10', 'PASSPORT_EU', 'D87654321', NULL ,  4),
-                        (5,'Hans', 'Müller', 'hans@example.com','491234567892','1975-08-15','ID_CARD', 'ID123456',NULL,5);
+        (2,'John', 'Doe', 'john.doe@example.com', '+1234567890', '1990-01-01', 'PASSPORT_EU', 'A12345678', 'Test comment for user1', 2),
+        (3,'Jane', 'Smith', 'jane.smith@example.com', '+9876543210', '1985-05-15', 'ID_CARD', 'B98765432', 'Test comment for user2', 3),
+        (4,'Erika', 'Mustermann', 'erika@example.com','491234567891','1985-05-10', 'PASSPORT_EU', 'D87654321', NULL ,  4),
+        (5,'Hans', 'Müller', 'hans@example.com','491234567892','1975-08-15','ID_CARD', 'ID123456',NULL,5);
 
 
 -- Вставка данных в таблицу адресов

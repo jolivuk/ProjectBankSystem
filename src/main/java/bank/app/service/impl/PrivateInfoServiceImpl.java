@@ -18,18 +18,18 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
     @Override
     public PrivateInfo createPrivateInfo(PrivateInfoRequestDto privateInfoRequestDto, User user) {
 
-        AddressRequestDto addressRequestDto = privateInfoRequestDto.getAddress();
+        AddressRequestDto addressRequestDto = privateInfoRequestDto.address();
         Address address = addressService.createAddress(addressRequestDto);
 
         PrivateInfo privateInfo = PrivateInfo.builder()
-                .firstName(privateInfoRequestDto.getFirstName())
-                .lastName(privateInfoRequestDto.getLastName())
-                .email(privateInfoRequestDto.getEmail())
-                .phone(privateInfoRequestDto.getPhone())
-                .dateOfBirth(privateInfoRequestDto.getDateOfBirth())
-                .documentType(privateInfoRequestDto.getDocumentType())
-                .documentNumber(privateInfoRequestDto.getDocumentNumber())
-                .comment(privateInfoRequestDto.getComment())
+                .firstName(privateInfoRequestDto.firstName())
+                .lastName(privateInfoRequestDto.lastName())
+                .email(privateInfoRequestDto.email())
+                .phone(privateInfoRequestDto.phone())
+                .dateOfBirth(privateInfoRequestDto.dateOfBirth())
+                .documentType(privateInfoRequestDto.documentType())
+                .documentNumber(privateInfoRequestDto.documentNumber())
+                .comment(privateInfoRequestDto.comment())
                 .user(user)
                 .address(address)
                 .build();

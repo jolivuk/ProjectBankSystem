@@ -1,11 +1,15 @@
 package bank.app.controllers;
 
 import bank.app.dto.*;
+import bank.app.exeptions.AccountNotFoundException;
 import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
 import bank.app.service.AccountService;
 import bank.app.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,9 +79,37 @@ public class AccountController {
                 : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
+    /**
+     * {
+     *   "status": "ACTIVE",
+     *   "balance": 0,
+     *   "iban": "DE44123456789012345678",
+     *   "swift": "DEUTDEFFXXX"
+     * }
+     */
+
     @Operation(
             summary = "Create new account",
-            description = "Create a new account for a specific user"
+            description = "Create a new account for a specific user",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Account object that needs to be created",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = AddressRequestDto.class),
+                    examples = @ExampleObject(
+                            name = "Default Account Example",
+                            value = """
+                                    {
+                                      "status": "ACTIVE",
+                                      "balance": 0,
+                                      "iban": "DE44123456789012345678",
+                                      "swift": "DEUTDEFFXXX"
+                                    }
+                                    """
+                    )
+            )
+    )
     )
     @PostMapping("/add/user/{userId}")
     public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@RequestBody AccountRequestDto accountRequestDto){
@@ -85,11 +117,11 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
 
     }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) {
-//        accountService.softDeleteAccount(id);
-//        return ResponseEntity.noContent().build();
-//    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) throws AccountNotFoundException {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

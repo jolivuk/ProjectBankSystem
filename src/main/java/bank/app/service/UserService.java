@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService {
     UserResponseDto getUserById(Long id);
     List<UserResponseDto> findAll();
+    List<UserResponseDto> findAllByManagerId(Long id);
     UserResponseDto createUser(UserRequestDto newUserDto);
     User getUserByStatus(Role role);
     void deleteUserById(Long id);
@@ -17,5 +18,6 @@ public interface UserService {
     UserResponseDto updateUser(Long id, UserRequestDto userDto);
     UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto);
     UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto);
+    boolean isManager(User user);
 }
 
