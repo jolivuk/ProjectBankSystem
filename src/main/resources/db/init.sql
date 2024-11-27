@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
                        user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        username VARCHAR(255) UNIQUE NOT NULL,
-                       password VARCHAR(255) UNIQUE NOT NULL,
+                       password VARCHAR(255) NOT NULL,
                        status VARCHAR(255),
                        role VARCHAR(255),
                        manager_id BIGINT,
