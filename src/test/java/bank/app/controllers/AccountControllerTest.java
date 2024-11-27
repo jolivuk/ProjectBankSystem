@@ -1,8 +1,8 @@
 package bank.app.controllers;
 
 import bank.app.dto.*;
-import bank.app.model.enums.DocumentType;
 import bank.app.model.enums.Status;
+import bank.app.model.enums.TransactionTypeName;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static bank.app.utils.UserTestData.getDeletedUserResponseDto;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -195,14 +195,14 @@ class AccountControllerTest {
                 new TransactionResponseDto(
                         1L, 2L, 3L,-200.00,"Monthly transfer",
                         "2024-09-21T11:20",
-                        "COMPLETED","Transfer"
+                        "COMPLETED", TransactionTypeName.TRANSFER
                 ),
                 new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
                         "2024-11-21T11:30",
-                        "COMPLETED","Withdrawal"
+                        "COMPLETED",TransactionTypeName.WITHDRAWAL
                 ),
                 new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED","Deposit"
+                        "2024-11-21T11:40","COMPLETED",TransactionTypeName.DEPOSIT
                         )
                 );
 
@@ -225,11 +225,11 @@ class AccountControllerTest {
 
         List<TransactionResponseDto> expectedTransactions = List.of(
                 new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED","Deposit"
+                        "2024-11-21T11:40","COMPLETED",TransactionTypeName.DEPOSIT
                 ),
                 new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
                         "2024-11-21T11:30",
-                        "COMPLETED","Withdrawal"
+                        "COMPLETED",TransactionTypeName.WITHDRAWAL
                 )
         );
 
@@ -239,7 +239,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void add() throws Exception {
+    void addAccountTest() throws Exception {
         AccountRequestDto requestDto  = new AccountRequestDto(
                 Status.ACTIVE,
                 100.00,
@@ -267,6 +267,33 @@ class AccountControllerTest {
         Assertions.assertEquals("DE22345678901234567890", actual.getIban());
         Assertions.assertEquals("CAMMDEFF", actual.getSwift());
 
+
+    }
+
+    @Test
+    void softDeleteAccount() throws Exception {
+        Long accountId = 3L;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/accounts/{id}", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+
+        MvcResult afterDelete = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{id}", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = afterDelete.getResponse().getContentAsString();
+        AccountBasicDto afterDeleteAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
+
+        Assertions.assertEquals(3L, afterDeleteAccountJson.getId());
+        Assertions.assertEquals(3000.00, afterDeleteAccountJson.getBalance());
+        Assertions.assertEquals(Status.DELETED, afterDeleteAccountJson.getStatus());
+        Assertions.assertEquals("DE89370400440532013858", afterDeleteAccountJson.getIban());
+        Assertions.assertEquals("DEUTDEFF", afterDeleteAccountJson.getSwift());
 
     }
 }

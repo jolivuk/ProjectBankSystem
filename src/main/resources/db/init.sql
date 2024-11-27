@@ -1,5 +1,3 @@
-use banksystem;
-
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS transaction_type;
 DROP TABLE IF EXISTS banks;
@@ -10,8 +8,8 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
                        user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                       username VARCHAR(255) NOT NULL,
-                       password VARCHAR(255) NOT NULL,
+                       username VARCHAR(255) UNIQUE NOT NULL,
+                       password VARCHAR(255) UNIQUE NOT NULL,
                        status VARCHAR(255),
                        role VARCHAR(255),
                        manager_id BIGINT,
@@ -24,11 +22,11 @@ CREATE TABLE private_info (
                               private_info_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                               first_name VARCHAR(255),
                               last_name VARCHAR(255),
-                              email VARCHAR(255),
-                              phone VARCHAR(255),
+                              email VARCHAR(255) UNIQUE NOT NULL,
+                              phone VARCHAR(255) UNIQUE NOT NULL,
                               date_of_birth DATE,
                               document_type VARCHAR(255),
-                              document_number VARCHAR(255),
+                              document_number VARCHAR(255) UNIQUE NOT NULL,
                               comment TEXT,
                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -51,8 +49,8 @@ CREATE TABLE address (
 CREATE TABLE accounts (
                           account_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           user_id BIGINT,
-                          iban VARCHAR(34) NOT NULL,
-                          swift VARCHAR(16),
+                          iban VARCHAR(34) UNIQUE NOT NULL,
+                          swift VARCHAR(16) NOT NULL,
                           status VARCHAR(16),
                           balance DECIMAL(10,2) NOT NULL,
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -62,7 +60,7 @@ CREATE TABLE accounts (
 
 CREATE TABLE transaction_type (
                                   transaction_type_id INT AUTO_INCREMENT PRIMARY KEY,
-                                  transaction_type_name VARCHAR(16) NOT NULL,
+                                  transaction_type_name VARCHAR(36) NOT NULL,
                                   transaction_type_fee DECIMAL(10,2),
                                   transaction_type_description VARCHAR(64)
 );

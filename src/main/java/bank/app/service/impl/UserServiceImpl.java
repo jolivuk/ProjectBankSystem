@@ -3,7 +3,7 @@ package bank.app.service.impl;
 import bank.app.dto.*;
 import bank.app.exeptions.UserAlreadyDeletedException;
 import bank.app.exeptions.UserNotFoundException;
-import bank.app.mapper.AddressMapper;
+import bank.app.exeptions.UserRoleException;
 import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
@@ -13,13 +13,14 @@ import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.AddressRepository;
+import bank.app.repository.PrivateInfoRepository;
 import bank.app.repository.UserRepository;
+import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,10 +31,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PrivateInfoService privateInfoService;
-    private final AddressRepository addressRepository;
     private final AccountRepository accountRepository;
-    private final AddressMapper addressMapper;
     private final UserMapper userMapper;
+    private final PrivateInfoRepository privateInfoRepository;
 
     @Override
     public UserResponseDto getUserById(Long id) {
@@ -46,13 +46,31 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::toDto) // Преобразуем User в UserResponseDto
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserResponseDto> findAllByManagerId(Long id){
+        User manager = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Manager with ID " + id + " not found"));
+
+        if (!isManager(manager))
+            throw new UserRoleException("User with ID " + id + " is not Manager");
+
+        return userRepository.findAllByManagerId(id)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User manager = userRepository.findById(userRequestDto.manager())
                 .orElseThrow(() -> new UserNotFoundException("Manager with ID " + userRequestDto.manager() + " not found"));
+
+        if (!isManager(manager))
+            throw new UserRoleException("User with ID " + userRequestDto.manager() + " is not Manager");
 
         User user = new User(userRequestDto.username(),userRequestDto.password(),
                 Status.ACTIVE, userRequestDto.role(),manager);
@@ -71,11 +89,11 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
-                throw new UserNotFoundException("User with ID " + id + " not found");
+            throw new UserNotFoundException("User with ID " + id + " not found");
         }
         User user = userOptional.get();
         if (user.getStatus().equals(Status.DELETED)) {
-                throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
+            throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
         }
         user.setStatus(Status.DELETED);
 
@@ -101,17 +119,14 @@ public class UserServiceImpl implements UserService {
 
         PrivateInfo privateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto,user);
 
-        Address address = addressMapper.toAddress(privateInfoRequestDto.getAddress());
-        address.setPrivateInfo(privateInfo);
-        addressRepository.save(address);
-
-        privateInfo.setAddress(address);
+        privateInfoRepository.save(privateInfo);
 
         user.setPrivateInfo(privateInfo);
         userRepository.save(user);
 
         return userMapper.toDto(user);
     }
+
 
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto userDto) {
@@ -153,16 +168,16 @@ public class UserServiceImpl implements UserService {
             user.setPrivateInfo(privateInfo);
         }
 
-        privateInfo.setFirstName(privateInfoDto.getFirstName());
-        privateInfo.setLastName(privateInfoDto.getLastName());
-        privateInfo.setEmail(privateInfoDto.getEmail());
-        privateInfo.setPhone(privateInfoDto.getPhone());
-        privateInfo.setDateOfBirth(privateInfoDto.getDateOfBirth());
-        privateInfo.setDocumentType(privateInfoDto.getDocumentType());
-        privateInfo.setDocumentNumber(privateInfoDto.getDocumentNumber());
-        privateInfo.setComment(privateInfoDto.getComment());
+        privateInfo.setFirstName(privateInfoDto.firstName());
+        privateInfo.setLastName(privateInfoDto.lastName());
+        privateInfo.setEmail(privateInfoDto.email());
+        privateInfo.setPhone(privateInfoDto.phone());
+        privateInfo.setDateOfBirth(privateInfoDto.dateOfBirth());
+        privateInfo.setDocumentType(privateInfoDto.documentType());
+        privateInfo.setDocumentNumber(privateInfoDto.documentNumber());
+        privateInfo.setComment(privateInfoDto.comment());
 
-        privateInfoService.savePrivateInfo(privateInfo);
+        privateInfoRepository.save(privateInfo);
         userRepository.save(user);
         return userMapper.toDto(user);
     }
@@ -193,6 +208,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         return userMapper.toDto(user);
+    }
+
+    @Override
+    public boolean isManager(User user) {
+        return user.getRole().equals(Role.MANAGER);
     }
 
 }

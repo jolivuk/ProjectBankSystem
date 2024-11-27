@@ -4,15 +4,10 @@ package bank.app.controllers;
 import bank.app.controllers.handler.ErrorResponse;
 import bank.app.dto.TransactionRequestDto;
 import bank.app.dto.TransactionResponseDto;
-import bank.app.dto.UserRequestDto;
-import bank.app.dto.UserResponseDto;
-import bank.app.model.enums.Role;
-import com.fasterxml.jackson.databind.JsonNode;
+import bank.app.model.enums.TransactionTypeName;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,15 +18,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.time.LocalDateTime;
-
-import static bank.app.utils.UserTestData.getUserResponseDto;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,7 +52,7 @@ class TransactionControllerTest {
         TransactionResponseDto expectedTransaction = new TransactionResponseDto(
                 2L,2L,3L,500,"ATM withdrawal",
                 "2024-11-21T11:30",
-                "COMPLETED","Withdrawal"
+                "COMPLETED", TransactionTypeName.WITHDRAWAL
         );
 
         Assertions.assertEquals(actualTransactionJSON, expectedTransaction);
@@ -101,7 +89,7 @@ class TransactionControllerTest {
                 4L,
                 200,
                 "Transfer friend",
-                "Transfer"
+                TransactionTypeName.TRANSFER
         );
 
         MvcResult mvcResult = mockMvc.perform(post("/transactions/")
@@ -114,12 +102,12 @@ class TransactionControllerTest {
 
         TransactionResponseDto actualTransactionJSON = objectMapper.readValue(responseJSON, TransactionResponseDto.class);
 
-        Assertions.assertEquals(6L, actualTransactionJSON.getTransactionId());
+        Assertions.assertEquals(5L, actualTransactionJSON.getTransactionId());
         Assertions.assertEquals(2L, actualTransactionJSON.getSender());
         Assertions.assertEquals(4L, actualTransactionJSON.getReceiver());
         Assertions.assertEquals(200, actualTransactionJSON.getAmount());
         Assertions.assertEquals("Transfer friend", actualTransactionJSON.getComment());
         Assertions.assertEquals("COMPLETED",actualTransactionJSON.getTransactionStatus());
-        Assertions.assertEquals("Transfer", actualTransactionJSON.getTransactionType());
+        Assertions.assertEquals(TransactionTypeName.TRANSFER, actualTransactionJSON.getTransactionType());
     }
 }

@@ -4,8 +4,8 @@ package bank.app.controllers;
 import bank.app.dto.*;
 import bank.app.model.enums.Role;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,6 +59,29 @@ class UserControllerTest {
     }
 
     @Test
+    void findAllUsersForManagerTest() throws Exception {
+
+        Long userId = 2L;
+
+
+        String allUsersJson = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/users/{id}/customers", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<UserResponseDto> allUsersByManagerDto = objectMapper.readValue(allUsersJson,
+                new TypeReference<>() {
+                });
+
+        List<UserResponseDto> expected = getAllUsersForManager();
+
+        Assertions.assertEquals(expected, allUsersByManagerDto);
+    }
+
+    @Test
     void findUserByIdTest() throws Exception {
 
             Long userId = 2L;
@@ -79,22 +102,7 @@ class UserControllerTest {
     @Test
     void deleteUserTest() throws Exception {
 
-        Long userId = 3L;
-
-        MvcResult beforeDelete = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/{id}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String beforeDeleteJSON = beforeDelete.getResponse().getContentAsString();
-        String expectedBeforeJSON = """
-           {
-               "id": 3,
-               "status": "ACTIVE"
-           }
-           """;
-        JSONAssert.assertEquals(expectedBeforeJSON, beforeDeleteJSON, false);
+        Long userId = 2L;
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/users/{id}", userId)
@@ -108,14 +116,13 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        String afterDeleteJSON = afterDelete.getResponse().getContentAsString();
-        String expectedAfterJSON = """
-           {
-               "id": 3,
-               "status": "DELETED"
-           }
-           """;
-        JSONAssert.assertEquals(expectedAfterJSON, afterDeleteJSON, false);
+
+        String jsonResponse = afterDelete.getResponse().getContentAsString();
+        UserResponseDto afterDeleteUserJson = objectMapper.readValue(jsonResponse, UserResponseDto.class);
+
+        UserResponseDto expectedDeletedUser = getDeletedUserResponseDto();
+
+        Assertions.assertEquals(afterDeleteUserJson, expectedDeletedUser);
     }
 
     @Test
@@ -173,32 +180,27 @@ class UserControllerTest {
         Assertions.assertEquals(expectedUserDto, actualUserJSON);
     }
 
+    @Transactional
     @Test
-    void addPrivateInfoToUserTest() throws Exception {
+    void addPrivateInfoToUserTest() throws Exception
+    {
 
         Long userId = 5L;
 
         PrivateInfoRequestDto privateInfo = getPrivateInfoRequestDto();
 
-        System.out.println("--------------------------");
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/users/{id}/private_info/", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(privateInfo)))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-//        System.out.println(privateInfo.toString());
-//        System.out.println("--------------------------");
-//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/users/{id}/private_info/add", userId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(privateInfo)))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        String jsonResponse = mvcResult.getResponse().getContentAsString();
-//        UserResponseDto actualUserResponseDto = objectMapper.readValue(jsonResponse, UserResponseDto.class);
-//        String actualUserResponse = actualUserResponseDto.toString();
-//
-//        UserResponseDto expectedUserJSON = getUserResponseWithPrivateInfoDto();
-//
-//        Assertions.assertEquals(expectedUserJSON, actualUserResponseDto);
-        //JSONAssert.assertEquals(expectedUserJSON,jsonResponse,true);
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        UserResponseDto actualUserResponseDto = objectMapper.readValue(jsonResponse, UserResponseDto.class);
+
+        UserResponseDto expectedUser = getUserResponseWithPrivateInfoDto();
+        Assertions.assertEquals(expectedUser, actualUserResponseDto);
     }
 
     @Test
@@ -253,14 +255,8 @@ class UserControllerTest {
 
     @Test
     void updateAddressToUserTest() throws Exception {
-        // Given
-        Long userId = 2L;
 
-        MvcResult beforeUpdate = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/{id}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andReturn();
+        Long userId = 2L;
 
         AddressRequestDto addressDto = new AddressRequestDto(
                 "Germany",
@@ -281,7 +277,7 @@ class UserControllerTest {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserJSON = objectMapper.readValue(jsonResponse, UserResponseDto.class);
-        AddressResponseDto actualAddressResponseDto = actualUserJSON.privateInfoResponse().getAddress();
+        AddressResponseDto actualAddressResponseDto = actualUserJSON.privateInfoResponse().address();
 
         AddressResponseDto expectedAddressDto = new AddressResponseDto(
                 2L,
@@ -294,7 +290,6 @@ class UserControllerTest {
         );
 
         Assertions.assertEquals(expectedAddressDto, actualAddressResponseDto );
-
     }
 }
 

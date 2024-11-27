@@ -5,7 +5,6 @@ import bank.app.dto.AccountFullDto;
 import bank.app.model.entity.Account;
 import org.springframework.stereotype.Component;
 
-
 import java.util.List;
 
 @Component
