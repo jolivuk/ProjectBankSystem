@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String errorMessage = "Data integrity violation";
         String errorCode = "";
 
@@ -24,11 +24,14 @@ public class GlobalExceptionHandler {
             errorCode = String.valueOf(sqlEx.getErrorCode());
             errorMessage += ": " + sqlEx.getMessage();
             errorMessage += ": SQL error code " + errorCode;
-            if (sqlEx.getErrorCode() == 1062) {
-                return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
-            }
         }
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                errorMessage,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

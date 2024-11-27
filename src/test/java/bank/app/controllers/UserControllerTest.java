@@ -63,7 +63,6 @@ class UserControllerTest {
 
         Long userId = 2L;
 
-
         String allUsersJson = mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}/customers", userId)
                         .contentType(MediaType.APPLICATION_JSON))

@@ -2,10 +2,14 @@ package bank.app.controllers;
 
 import bank.app.dto.TransactionRequestDto;
 import bank.app.dto.TransactionResponseDto;
+import bank.app.dto.UserRequestDto;
 import bank.app.mapper.TransactionMapper;
 import bank.app.model.entity.Transaction;
 import bank.app.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,20 +45,38 @@ public class TransactionController {
     }
 
     /**
-     *
-     *
-    {
-        "sender":5,
-        "receiver":4,
-        "amount": 500.0,
-        "transactionType": "Deposit",
-        "comment": "Salary deposit"
-    }
+     * {
+     * "sender":5,
+     * "receiver":4,
+     * "amount": 500.0,
+     * "transactionType": "Deposit",
+     * "comment": "Salary deposit"
+     * }
      **/
 
     @Operation(
             summary = "Create new transaction",
-            description = "Returns created transaction"
+            description = "Returns created transaction",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Transaction object that needs to be created",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = TransactionRequestDto.class),
+                            examples = @ExampleObject(
+                                    name = "Default Transaction Example",
+                                    value = """
+                                                {
+                                                       "sender":5,
+                                                       "receiver":4,
+                                                       "amount": 500.0,
+                                                       "transactionType": "DEPOSIT",
+                                                       "comment": "Salary deposit"
+                                                  }
+                                            """
+                            )
+                    )
+            )
     )
 
     @PostMapping("/")

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class TransactionResponseDto {
          Long transactionId;
          Long sender;
-        Long receiver;
+         Long receiver;
          double amount;
          String comment;
          String transactionDate;
