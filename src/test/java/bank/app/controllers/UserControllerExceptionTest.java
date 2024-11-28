@@ -27,8 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WithMockUser(username = "user", password= "user", roles = "user")
 public class UserControllerExceptionTest {
+
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -36,7 +38,6 @@ public class UserControllerExceptionTest {
     void findAllUsersForManagerExceptionTest() throws Exception {
 
         Long userId = 6L;
-
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}/customers", userId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -47,7 +48,6 @@ public class UserControllerExceptionTest {
     void findByIdExceptionTest() throws Exception {
 
         Long userId = 6L;
-
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -56,6 +56,7 @@ public class UserControllerExceptionTest {
 
     @Test
     void createUserExceptionTest() throws Exception {
+
         UserRequestDto requestDto = new UserRequestDto(
                 "client3",
                 "password123",
@@ -74,8 +75,8 @@ public class UserControllerExceptionTest {
 
     @Test
     void createPrivateInfoExceptionTest() throws Exception {
-        Long userId = 5L;
 
+        Long userId = 5L;
         PrivateInfoRequestDto privateInfo = getPrivateInfoRequestDtoException();
 
         mockMvc.perform(MockMvcRequestBuilders

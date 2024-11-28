@@ -1,6 +1,7 @@
 package bank.app.controllers;
 
 import bank.app.dto.*;
+import bank.app.model.enums.DocumentType;
 import bank.app.model.enums.Status;
 import bank.app.model.enums.TransactionTypeName;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,6 +35,7 @@ class AccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -48,9 +51,9 @@ class AccountControllerTest {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 
-        AccountBasicDto expectedAccount = objectMapper.readValue(jsonResponse,AccountBasicDto.class);
+        AccountBasicDto actualAccount = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
 
-        AccountBasicDto actualAccount = new AccountBasicDto(
+        AccountBasicDto expectedAccount = new AccountBasicDto(
                 3L,
                 Status.ACTIVE,
                 3000.00,
@@ -60,14 +63,51 @@ class AccountControllerTest {
                 LocalDateTime.of(2024, 11, 21, 11, 05, 00)
         );
 
-        Assertions.assertEquals(actualAccount,expectedAccount);
+        Assertions.assertEquals(actualAccount, expectedAccount);
     }
 
 
     @Test
     void getFullAccountInfo() throws Exception {
 
-        Long accountId = 3L;
+        AddressResponseDto address = new AddressResponseDto(3L,
+                "Germany",
+                "Berlin",
+                "10115",
+                "Alexanderplatz",
+                "5",
+                null);
+        PrivateInfoResponseDto privateInfo = new PrivateInfoResponseDto(3L,
+                "Erika",
+                "Mustermann",
+                "erika@example.com",
+                "491234567891",
+                LocalDate.of(1985, 5, 10),
+                DocumentType.PASSPORT_EU,
+                "D87654321",
+                null,
+                address
+        );
+        UserResponseDto userResponseDto = new UserResponseDto(
+                3L,
+                "client1",
+                "password123",
+                "ACTIVE",
+                "CUSTOMER",
+                2L,
+                privateInfo
+        );
+        AccountFullDto expectedAccount = new AccountFullDto(
+                4L,
+                Status.ACTIVE,
+                3000.00,
+                "DE89370400440532013001",
+                "DEUTDEFF",
+                LocalDateTime.of(2024, 11, 21, 11, 10, 00),
+                LocalDateTime.of(2024, 11, 21, 11, 10, 00),
+                userResponseDto);
+
+        Long accountId = 4L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{accountId}?full=true", accountId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,36 +118,14 @@ class AccountControllerTest {
 
         AccountFullDto actualAccount = objectMapper.readValue(jsonResponse, AccountFullDto.class);
 
-        UserResponseDto userResponseDto = new UserResponseDto(
-                3L,
-                "client1",
-                "password123",
-                "ACTIVE",
-                "CUSTOMER",
-                2L,
-                null
-        );
 
-        AccountFullDto expectedAccount = objectMapper.readValue(jsonResponse, AccountFullDto.class);
-
-
-        AccountFullDto accountFullDto = new AccountFullDto(3L,
-                Status.ACTIVE,
-                3000.00,
-                "DE89370400440532013001",
-                "DEUTDEFF",
-                LocalDateTime.of(2024,11,21,11,10,00),
-                LocalDateTime.of(2024,11,21,11,10,00),
-                userResponseDto);
-
-        Assertions.assertEquals(actualAccount,expectedAccount);
+        Assertions.assertEquals(expectedAccount, actualAccount);
     }
 
     @Test
     void findAccountsByUserId() throws Exception {
 
         Long userId = 3L;
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/user/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -116,7 +134,8 @@ class AccountControllerTest {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 
-        List<AccountBasicDto> actualAccounts = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+        List<AccountBasicDto> actualAccounts = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+        });
 
 
         List<AccountBasicDto> expectedAccounts = List.of(
@@ -145,14 +164,6 @@ class AccountControllerTest {
 
     @Test
     void findBankAccount() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/accounts/bank")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
-        AccountFullDto actual = objectMapper.readValue(jsonResponse,AccountFullDto.class);
 
         UserResponseDto userResponseDto = new UserResponseDto(1L,
                 "BANKAccount",
@@ -172,38 +183,47 @@ class AccountControllerTest {
                 LocalDateTime.of(2024, 11, 21, 9, 30, 00),
                 userResponseDto
         );
+
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/bank")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        AccountFullDto actual = objectMapper.readValue(jsonResponse, AccountFullDto.class);
+
+
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void getTransactionsByAccountId() throws Exception {
 
-        Long accountId = 2L;
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/accounts/{accountId}/transactions",accountId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
-        List<TransactionResponseDto> actualTransactions = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
-
-
         List<TransactionResponseDto> expectedTransactions = List.of(
                 new TransactionResponseDto(
-                        1L, 2L, 3L,-200.00,"Monthly transfer",
+                        1L, 2L, 3L, -200.00, "Monthly transfer",
                         "2024-09-21T11:20",
                         "COMPLETED", TransactionTypeName.TRANSFER
                 ),
-                new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
+                new TransactionResponseDto(2L, 2L, 3L, -500.00, "ATM withdrawal",
                         "2024-11-21T11:30",
-                        "COMPLETED",TransactionTypeName.WITHDRAWAL
+                        "COMPLETED", TransactionTypeName.WITHDRAWAL
                 ),
-                new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED",TransactionTypeName.DEPOSIT
-                        )
-                );
+                new TransactionResponseDto(3L, 3L, 2L, 1500.00, "Salary deposit",
+                        "2024-11-21T11:40", "COMPLETED", TransactionTypeName.DEPOSIT
+                )
+        );
+
+        Long accountId = 2L;
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{accountId}/transactions", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        List<TransactionResponseDto> actualTransactions = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+        });
 
         Assertions.assertEquals(expectedTransactions, actualTransactions);
 
@@ -211,43 +231,41 @@ class AccountControllerTest {
 
     @Test
     void getLastMonthTransactionsByAccount() throws Exception {
-        Long accountId = 2L;
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/accounts/{accountId}/transactions/last-month",accountId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
-        List<TransactionResponseDto> actualTransactions = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
 
         List<TransactionResponseDto> expectedTransactions = List.of(
-                new TransactionResponseDto(3L,3L,2L,1500.00,"Salary deposit",
-                        "2024-11-21T11:40","COMPLETED",TransactionTypeName.DEPOSIT
+                new TransactionResponseDto(3L, 3L, 2L, 1500.00, "Salary deposit",
+                        "2024-11-21T11:40", "COMPLETED", TransactionTypeName.DEPOSIT
                 ),
-                new TransactionResponseDto(2L,2L,3L,-500.00,"ATM withdrawal",
+                new TransactionResponseDto(2L, 2L, 3L, -500.00, "ATM withdrawal",
                         "2024-11-21T11:30",
-                        "COMPLETED",TransactionTypeName.WITHDRAWAL
+                        "COMPLETED", TransactionTypeName.WITHDRAWAL
                 )
         );
 
-        System.out.println(expectedTransactions);
+        Long accountId = 2L;
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{accountId}/transactions/last-month", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        List<TransactionResponseDto> actualTransactions = objectMapper.readValue(jsonResponse, new TypeReference<>() {
+        });
 
-        Assertions.assertEquals(actualTransactions,expectedTransactions);
+        Assertions.assertEquals(actualTransactions, expectedTransactions);
     }
 
     @Test
     void addAccountTest() throws Exception {
-        AccountRequestDto requestDto  = new AccountRequestDto(
+
+        AccountRequestDto requestDto = new AccountRequestDto(
                 Status.ACTIVE,
                 100.00,
                 "DE22345678901234567890",
                 "CAMMDEFF"
-                );
+        );
 
         Long userId = 3L;
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .post("/accounts/add/user/{userId}", userId)
                         .content(objectMapper.writeValueAsString(requestDto))
@@ -257,8 +275,6 @@ class AccountControllerTest {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         AccountBasicDto actual = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
-
-        System.out.println(actual);
 
         Assertions.assertEquals(6L, actual.getId());
         Assertions.assertEquals(Status.ACTIVE, actual.getStatus());
@@ -271,8 +287,8 @@ class AccountControllerTest {
 
     @Test
     void softDeleteAccount() throws Exception {
-        Long accountId = 3L;
 
+        Long accountId = 3L;
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/accounts/{id}", accountId)
                         .contentType(MediaType.APPLICATION_JSON))
