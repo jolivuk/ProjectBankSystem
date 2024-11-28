@@ -30,11 +30,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TransactionControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void getInformationById() throws Exception {
+
+        TransactionResponseDto expectedTransaction = new TransactionResponseDto(
+                2L,2L,3L,500,"ATM withdrawal",
+                "2024-11-21T11:30",
+                "COMPLETED", TransactionTypeName.WITHDRAWAL
+        );
 
         Long transactionId = 2L;
 
@@ -44,16 +51,8 @@ class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-
         String jsonResponse = mvcResult.getResponse().getContentAsString();
-
         TransactionResponseDto actualTransactionJSON = objectMapper.readValue(jsonResponse, TransactionResponseDto.class);
-
-        TransactionResponseDto expectedTransaction = new TransactionResponseDto(
-                2L,2L,3L,500,"ATM withdrawal",
-                "2024-11-21T11:30",
-                "COMPLETED", TransactionTypeName.WITHDRAWAL
-        );
 
         Assertions.assertEquals(actualTransactionJSON, expectedTransaction);
 
@@ -61,6 +60,7 @@ class TransactionControllerTest {
 
     @Test
     void delete() throws Exception {
+
         Long transactionId = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -84,6 +84,7 @@ class TransactionControllerTest {
 
     @Test
     void addTransaction() throws Exception {
+
         TransactionRequestDto requestDto = new TransactionRequestDto(
                 2L,
                 4L,
