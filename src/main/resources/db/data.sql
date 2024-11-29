@@ -1,26 +1,27 @@
 -- Вставляем данные в таблицу users
 INSERT INTO users (username, password, status, role, manager_id) VALUES
-        ('BANKaccount', 'password123', 'ACTIVE', 'BANK', NULL),
-        ('manager1', 'password1', 'ACTIVE', 'MANAGER', NULL),
-        ('customer1', 'password2', 'ACTIVE', 'CUSTOMER', 2),
-        ('customer2', 'password3', 'INACTIVE', 'CUSTOMER', 2),
-        ('customer3', 'password4', 'ACTIVE', 'CUSTOMER', 2);
+        ('BANKaccount', 'password123', 'ACTIVE', 'ROLE_BANK', NULL),
+        ('admin', '1111', 'ACTIVE', 'ROLE_ADMIN', NULL),
+        ('manager1', 'password1', 'ACTIVE', 'ROLE_MANAGER', NULL),
+        ('customer1', 'password2', 'ACTIVE', 'ROLE_CUSTOMER', 2),
+        ('customer2', 'password3', 'INACTIVE', 'ROLE_CUSTOMER', 2),
+        ('customer3', 'password4', 'ACTIVE', 'ROLE_CUSTOMER', 2);
 
 -- Вставляем данные в таблицу private_info
 INSERT INTO private_info (private_info_id,first_name, last_name, email, phone, date_of_birth, document_type, document_number, comment, user_id) VALUES
-        (2,'John', 'Doe', 'john.doe@example.com', '+1234567890', '1990-01-01', 'PASSPORT_EU', 'A12345678', 'Test comment for user1', 2),
-        (3,'Jane', 'Smith', 'jane.smith@example.com', '+9876543210', '1985-05-15', 'ID_CARD', 'B98765432', 'Test comment for user2', 3),
-        (4,'Erika', 'Mustermann', 'erika@example.com','491234567891','1985-05-10', 'PASSPORT_EU', 'D87654321', NULL ,  4),
-        (5,'Hans', 'Müller', 'hans@example.com','491234567892','1975-08-15','ID_CARD', 'ID123456',NULL,5);
+        (3,'John', 'Doe', 'john.doe@example.com', '+1234567890', '1990-01-01', 'PASSPORT_EU', 'A12345678', 'Test comment for user1', 3),
+        (4,'Jane', 'Smith', 'jane.smith@example.com', '+9876543210', '1985-05-15', 'ID_CARD', 'B98765432', 'Test comment for user2', 4),
+        (5,'Erika', 'Mustermann', 'erika@example.com','491234567891','1985-05-10', 'PASSPORT_EU', 'D87654321', NULL ,  5),
+        (6,'Hans', 'Müller', 'hans@example.com','491234567892','1975-08-15','ID_CARD', 'ID123456',NULL,6);
 
 
 -- Вставка данных в таблицу адресов
 INSERT INTO address (address_id, country, city, postcode, street, house_number, info, private_info_id)
 VALUES
-    (2,'Germany', 'Berlin', '10115', 'Marienplatz', 7, NULL, 2),
-    (3,'Germany', 'Berlin', '10115', 'Alexanderplatz', 5, NULL,3),
-    (4,'Germany', 'Munich', '80331', 'Marienplatz', 10, NULL,4),
-    (5,'Germany', 'Frankfurt', '60311', 'Zeil', 20, NULL,5);
+    (3,'Germany', 'Berlin', '10115', 'Marienplatz', 7, NULL, 3),
+    (4,'Germany', 'Berlin', '10115', 'Alexanderplatz', 5, NULL,4),
+    (5,'Germany', 'Munich', '80331', 'Marienplatz', 10, NULL,5),
+    (6,'Germany', 'Frankfurt', '60311', 'Zeil', 20, NULL,6);
 
 -- Вставка данных в таблицу счетов
 -- Акканут банка
@@ -30,10 +31,10 @@ VALUES
 
 INSERT INTO accounts (user_id, iban, swift, status, balance)
 VALUES
-    (3, 'DE12345678901234567890', 'COMMDEFF', 'ACTIVE', 7500.00),
-    (4, 'DE89370400440532013858', 'DEUTDEFF', 'ACTIVE', 3000.00),
-    (5, 'DE89370400440532013001', 'DEUTDEFF', 'ACTIVE', 3000.00),
-    (5, 'DE89370400440532013002', 'DEUTDEFF', 'ACTIVE', 7000.00);
+    (4, 'DE12345678901234567890', 'COMMDEFF', 'ACTIVE', 7500.00),
+    (5, 'DE89370400440532013858', 'DEUTDEFF', 'ACTIVE', 3000.00),
+    (6, 'DE89370400440532013001', 'DEUTDEFF', 'ACTIVE', 3000.00),
+    (6, 'DE89370400440532013002', 'DEUTDEFF', 'ACTIVE', 7000.00);
 
 -- Вставка типов транзакций
 INSERT INTO transaction_type (transaction_type_name, transaction_type_fee, transaction_type_description)

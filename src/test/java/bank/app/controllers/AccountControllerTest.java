@@ -93,7 +93,7 @@ class AccountControllerTest {
                 "client1",
                 "password123",
                 "ACTIVE",
-                "CUSTOMER",
+                "ROLE_CUSTOMER",
                 2L,
                 privateInfo
         );

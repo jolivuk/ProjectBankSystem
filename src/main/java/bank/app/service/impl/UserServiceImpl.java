@@ -12,14 +12,14 @@ import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
-import bank.app.repository.AddressRepository;
 import bank.app.repository.PrivateInfoRepository;
 import bank.app.repository.UserRepository;
-import bank.app.service.AddressService;
 import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +34,12 @@ public class UserServiceImpl implements UserService {
     private final AccountRepository accountRepository;
     private final UserMapper userMapper;
     private final PrivateInfoRepository privateInfoRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with userName " + username + " not found"));
+    }
 
     @Override
     public UserResponseDto getUserById(Long id) {
@@ -212,7 +218,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isManager(User user) {
-        return user.getRole().equals(Role.MANAGER);
+        return user.getRole().equals(Role.ROLE_MANAGER);
     }
+
 
 }

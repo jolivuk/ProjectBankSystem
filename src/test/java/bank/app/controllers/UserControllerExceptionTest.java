@@ -3,6 +3,7 @@ package bank.app.controllers;
 import bank.app.dto.PrivateInfoRequestDto;
 import bank.app.dto.UserRequestDto;
 import bank.app.model.enums.Role;
+import bank.app.utils.UserTestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static bank.app.utils.UserTestData.getPrivateInfoRequestDtoException;
+
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,7 +63,7 @@ public class UserControllerExceptionTest {
                 "client3",
                 "password123",
                 "ACTIVE",
-                Role.CUSTOMER,
+                Role.ROLE_CUSTOMER,
                 2L
         );
 
@@ -77,7 +79,7 @@ public class UserControllerExceptionTest {
     void createPrivateInfoExceptionTest() throws Exception {
 
         Long userId = 5L;
-        PrivateInfoRequestDto privateInfo = getPrivateInfoRequestDtoException();
+        PrivateInfoRequestDto privateInfo = UserTestData.getPrivateInfoRequestDtoException();
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users/{id}/private_info/", userId)

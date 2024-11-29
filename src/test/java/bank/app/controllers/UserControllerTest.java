@@ -40,6 +40,7 @@ class UserControllerTest {
 
 
     @Test
+    @WithMockUser(username = "manager1", password= "password123", roles = "ADMIN")
     void findAllUsersTest() throws Exception {
 
         List<UserResponseDto> expected = getAllUsers();
@@ -143,7 +144,7 @@ class UserControllerTest {
                 "validUser123",
                 "password123",
                 "ACTIVE",
-                Role.CUSTOMER,
+                Role.ROLE_CUSTOMER,
                 2L
         );
 
@@ -211,7 +212,7 @@ class UserControllerTest {
                 "updatedUser",
                 "newPassword123",
                 "ACTIVE",
-                Role.MANAGER,
+                Role.ROLE_MANAGER,
                 null
         );
 
