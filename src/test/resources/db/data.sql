@@ -1,10 +1,10 @@
 INSERT INTO users ( username, password, role, status, manager_id, created_at, last_update)
 VALUES
-    ( 'BANKAccount', 'password123', 'BANK', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'manager1', 'password123', 'MANAGER', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'client1', 'password123', 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'client2', 'password123', 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'client3', 'password3', 'CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
+    ( 'BANKAccount', 'password123', 'ROLE_BANK', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'manager1', 'password123', 'ROLE_ADMIN', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client1', 'password123', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client2', 'password123', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client3', 'password3', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
 
 ---- Вставка личной информации
 INSERT INTO private_info (private_info_id, first_name, last_name, date_of_birth, document_type, document_number, phone, email, created_at, last_update, user_id)

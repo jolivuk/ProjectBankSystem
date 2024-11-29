@@ -73,7 +73,7 @@ public class UserController {
     )
     @GetMapping("/bank")
     public ResponseEntity<UserResponseDto> findByBank() {
-        User user = userService.getUserByStatus(Role.BANK);
+        User user = userService.getUserByStatus(Role.ROLE_BANK);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 

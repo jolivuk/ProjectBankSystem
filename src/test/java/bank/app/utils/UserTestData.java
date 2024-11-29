@@ -36,7 +36,7 @@ public class UserTestData {
                 "manager1",
                 "password123",
                 "ACTIVE",
-                "MANAGER",
+                "ROLE_MANAGER",
                 null,
                 privateInfo
         );
@@ -166,7 +166,7 @@ public class UserTestData {
 
     public static List<UserResponseDto> getAllUsers(){
         UserResponseDto user1 = new UserResponseDto(
-                1L,"BANKAccount", "password123", "ACTIVE", "BANK", null,
+                1L,"BANKAccount", "password123", "ACTIVE", "ROLE_BANK", null,
                 null
         );
 
@@ -191,7 +191,7 @@ public class UserTestData {
                 "manager1",
                 "password123",
                 "ACTIVE",
-                "MANAGER",
+                "ROLE_ADMIN",
                 null,
                 privateInfo2
         );
@@ -218,7 +218,7 @@ public class UserTestData {
                 "client1",
                 "password123",
                 "ACTIVE",
-                "CUSTOMER",
+                "ROLE_CUSTOMER",
                 2L,
                 privateInfo3
         );
@@ -245,13 +245,13 @@ public class UserTestData {
                 "client2",
                 "password123",
                 "ACTIVE",
-                "CUSTOMER",
+                "ROLE_CUSTOMER",
                 2L,
                 privateInfo4
         );
 
         UserResponseDto user5 = new UserResponseDto(
-                5L,"client3", "password3", "ACTIVE", "CUSTOMER", 2L,
+                5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
                 null
         );
 
@@ -282,7 +282,7 @@ public class UserTestData {
                 "client1",
                 "password123",
                 "ACTIVE",
-                "CUSTOMER",
+                "ROLE_CUSTOMER",
                 2L,
                 privateInfo1
         );
@@ -309,14 +309,14 @@ public class UserTestData {
                 "client2",
                 "password123",
                 "ACTIVE",
-                "CUSTOMER",
+                "ROLE_CUSTOMER",
                 2L,
                 privateInfo2
         );
 
         //User3
         UserResponseDto user3 = new UserResponseDto(
-                5L,"client3", "password3", "ACTIVE", "CUSTOMER", 2L,
+                5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
                 null
         );
 

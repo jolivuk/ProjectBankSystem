@@ -3,10 +3,13 @@ package bank.app.service;
 import bank.app.dto.*;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import java.util.List;
 
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
+
     UserResponseDto getUserById(Long id);
     List<UserResponseDto> findAll();
     List<UserResponseDto> findAllByManagerId(Long id);
