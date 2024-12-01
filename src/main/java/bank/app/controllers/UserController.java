@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 @RequiredArgsConstructor
+
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -33,17 +35,9 @@ public class UserController {
             summary = "find All users in database",
             description = "receives nothing in parameters and returns UserResponseDto"
     )
-    @GetMapping()
-    public List<UserResponseDto> findAllUsers(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    System.out.println("JSESSIONID: " + cookie.getValue());
-                }
-            }
-        }
 
+    @GetMapping()
+    public List<UserResponseDto> findAllUsers() {
         return userService.findAll();
     }
 
@@ -57,10 +51,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+
     @Operation(
             summary = "find All users for manager with Id",
             description = "takes user id (manager id) in parameters and returns List<UserResponseDto>"
     )
+    @RolesAllowed("MANAGER")
     @GetMapping("/{id}/customers")
     public List<UserResponseDto> findAllUsersForManager(@PathVariable Long id) {
 
@@ -71,6 +67,7 @@ public class UserController {
             summary = "find the user who is the bank",
             description = "accepts nothing and returns UserResponseDto"
     )
+    @RolesAllowed("MANAGER")
     @GetMapping("/bank")
     public ResponseEntity<UserResponseDto> findByBank() {
         User user = userService.getUserByStatus(Role.ROLE_BANK);
