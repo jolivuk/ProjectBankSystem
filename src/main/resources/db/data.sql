@@ -3,9 +3,9 @@ INSERT INTO users (username, password, status, role, manager_id) VALUES
         ('BANKaccount', 'password123', 'ACTIVE', 'ROLE_BANK', NULL),
         ('admin', '1111', 'ACTIVE', 'ROLE_ADMIN', NULL),
         ('manager1', 'password1', 'ACTIVE', 'ROLE_MANAGER', NULL),
-        ('customer1', 'password2', 'ACTIVE', 'ROLE_CUSTOMER', 2),
-        ('customer2', 'password3', 'INACTIVE', 'ROLE_CUSTOMER', 2),
-        ('customer3', 'password4', 'ACTIVE', 'ROLE_CUSTOMER', 2);
+        ('customer1', 'password2', 'ACTIVE', 'ROLE_CUSTOMER', 3),
+        ('customer2', 'password3', 'INACTIVE', 'ROLE_CUSTOMER', 3),
+        ('customer3', 'password4', 'ACTIVE', 'ROLE_CUSTOMER', 3);
 
 -- Вставляем данные в таблицу private_info
 INSERT INTO private_info (private_info_id,first_name, last_name, email, phone, date_of_birth, document_type, document_number, comment, user_id) VALUES
