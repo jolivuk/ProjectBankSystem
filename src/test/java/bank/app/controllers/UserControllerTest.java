@@ -3,14 +3,18 @@ package bank.app.controllers;
 
 import bank.app.dto.*;
 import bank.app.model.enums.Role;
+import bank.app.security.JwtTokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -30,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("/db/schema.sql")
 @Sql("/db/data.sql")
 @ActiveProfiles("test")
-@WithMockUser(username = "user", password= "user", roles = "user")
+@WithMockUser(username = "admin", roles = "ADMIN")
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -38,15 +42,25 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
+    private String validToken;
+
+    @BeforeEach
+    public void setUp() {
+        validToken = jwtTokenHelper.generateToken("admin", "ROLE_ADMIN");
+    }
+
 
     @Test
-    @WithMockUser(username = "manager1", password= "password123", roles = "ADMIN")
     void findAllUsersTest() throws Exception {
 
         List<UserResponseDto> expected = getAllUsers();
 
         String allUsersJson = mockMvc.perform(MockMvcRequestBuilders
                         .get("/users")
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -68,6 +82,7 @@ class UserControllerTest {
 
         String allUsersJson = mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}/customers", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -90,6 +105,7 @@ class UserControllerTest {
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                             .get("/users/{id}", userId)
+                            .header("Authorization", "Bearer " + validToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status() .isOk())
                     .andReturn();
@@ -109,12 +125,14 @@ class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
 
         MvcResult afterDelete = mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -129,12 +147,13 @@ class UserControllerTest {
 
     @Test
     void createUserTest() throws Exception {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserResponseDto expectedUserDTO = new UserResponseDto(
                 6L,
                 "validUser123",
                 "password123",
                 "ACTIVE",
-                "CUSTOMER",
+                "ROLE_CUSTOMER",
                 2L,
                 null
         );
@@ -149,6 +168,7 @@ class UserControllerTest {
         );
 
         MvcResult mvcResult = mockMvc.perform(post("/users/")
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
@@ -157,7 +177,12 @@ class UserControllerTest {
         String responseJSON = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserJSON = objectMapper.readValue(responseJSON, UserResponseDto.class);
 
-        Assertions.assertEquals(expectedUserDTO, actualUserJSON);
+        Assertions.assertEquals(expectedUserDTO.username(), actualUserJSON.username());
+        Assertions.assertTrue(passwordEncoder.matches(expectedUserDTO.password(), actualUserJSON.password()));
+        Assertions.assertEquals(expectedUserDTO.status(), actualUserJSON.status());
+        Assertions.assertEquals(expectedUserDTO.role(), actualUserJSON.role());
+        Assertions.assertEquals(expectedUserDTO.manager(), actualUserJSON.manager());
+
     }
 
     @Test
@@ -166,14 +191,15 @@ class UserControllerTest {
                 "BANKAccount",
                 "password123",
                 "ACTIVE",
-                "BANK",
+                "ROLE_BANK",
                 null,
                 null);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/users/bank")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn();
 
         String responseJSON = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserJSON = objectMapper.readValue(responseJSON, UserResponseDto.class);
@@ -192,6 +218,7 @@ class UserControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .post("/users/{id}/private_info/", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(privateInfo)))
                 .andExpect(status().isCreated())
@@ -218,6 +245,7 @@ class UserControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .put("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
@@ -239,6 +267,7 @@ class UserControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .put("/users/{id}/private_info", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(privateInfoRequestDto)))
                 .andExpect(status().isOk())
@@ -271,6 +300,7 @@ class UserControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .put("/users/{id}/private_info/address", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(addressDto)))
                 .andExpect(status().isOk())

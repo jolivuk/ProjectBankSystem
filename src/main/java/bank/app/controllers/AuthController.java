@@ -1,6 +1,7 @@
 package bank.app.controllers;
 
 import bank.app.security.JwtTokenHelper;
+import bank.app.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,16 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthController {
-
+    private AuthenticationService authenticationService;
     private AuthenticationManager authenticationManager;
     private JwtTokenHelper jwtTokenHelper;
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password) {
+        if (!authenticationService.authenticateUser(username, password)) {
+            throw new RuntimeException("Invalid credentials");
+        }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
             UserDetails userDetails = (UserDetails) authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)).getPrincipal();
+
             return jwtTokenHelper.generateToken(userDetails.getUsername(), userDetails.getAuthorities().toString());
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid credentials");

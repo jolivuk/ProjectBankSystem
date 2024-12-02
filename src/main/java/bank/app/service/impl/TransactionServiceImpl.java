@@ -2,9 +2,10 @@ package bank.app.service.impl;
 
 import bank.app.dto.TransactionRequestDto;
 import bank.app.dto.TransactionResponseDto;
-import bank.app.exeptions.BalanceException;
-import bank.app.exeptions.TransactionNotFoundException;
-import bank.app.exeptions.TransactionTypeException;
+import bank.app.exeption.BalanceException;
+import bank.app.exeption.TransactionNotFoundException;
+import bank.app.exeption.TransactionTypeException;
+import bank.app.exeption.errorMessage.ErrorMessage;
 import bank.app.mapper.TransactionMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Transaction;
@@ -33,16 +34,16 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction getTransactionById(Long id){
         if(id == null){
-            throw new IllegalArgumentException("Transaction id can not be null");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_TRANSATION_ID);
         }
         return transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + id + " not founded") );
+                .orElseThrow(() -> new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id ));
     }
 
     @Override
     public void delete(Long id) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + id + " not found "));
+                .orElseThrow(() -> new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id ));
         transactionRepository.deleteById(id);
     }
 
@@ -57,8 +58,6 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponseDto> getTransactionsLastMonthByAccountId(Long accountId) {
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(30);
-
-        System.out.println("Searching transactions between: " + startDate + " and " + endDate);
 
         List<Transaction> transactions = transactionRepository.findByDateRangeAndAccount(
                 startDate,
@@ -81,7 +80,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionRequestDto.transactionType())
                 .orElseThrow(() ->
-                        new TransactionTypeException(String.format("Transaction Type %s not found", transactionRequestDto.transactionType())));
+                        new TransactionTypeException(ErrorMessage.INVALID_TRANSATION_TYPE));
 
 
         Transaction transaction = new Transaction(sender, receiver, transactionRequestDto.amount(),
@@ -96,7 +95,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (totalSum > sender.getBalance()) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transaction.setComment(transactionRequestDto.comment() + " - Not enough balance");
-            transactionRepository.save(transaction);  // Save the failed transaction
+            transactionRepository.save(transaction);
             throw new BalanceException("Not enough balance on account " + transactionRequestDto.sender());
         }
 

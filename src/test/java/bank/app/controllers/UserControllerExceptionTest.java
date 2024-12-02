@@ -3,8 +3,10 @@ package bank.app.controllers;
 import bank.app.dto.PrivateInfoRequestDto;
 import bank.app.dto.UserRequestDto;
 import bank.app.model.enums.Role;
+import bank.app.security.JwtTokenHelper;
 import bank.app.utils.UserTestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("/db/schema.sql")
 @Sql("/db/data.sql")
 @ActiveProfiles("test")
-@WithMockUser(username = "user", password= "user", roles = "user")
+@WithMockUser(username = "admin", roles = "ADMIN")
 public class UserControllerExceptionTest {
 
     @Autowired
@@ -36,12 +38,24 @@ public class UserControllerExceptionTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
+    private String validToken;
+
+    @BeforeEach
+    public void setUp() {
+        validToken = jwtTokenHelper.generateToken("admin", "ROLE_ADMIN");
+    }
+
+
     @Test
     void findAllUsersForManagerExceptionTest() throws Exception {
 
         Long userId = 6L;
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}/customers", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -52,6 +66,7 @@ public class UserControllerExceptionTest {
         Long userId = 6L;
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -68,6 +83,7 @@ public class UserControllerExceptionTest {
         );
 
         MvcResult mvcResult = mockMvc.perform(post("/users/")
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isConflict())
@@ -83,6 +99,7 @@ public class UserControllerExceptionTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users/{id}/private_info/", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(privateInfo)))
                 .andExpect(status().isConflict())

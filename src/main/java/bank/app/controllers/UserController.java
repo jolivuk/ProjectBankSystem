@@ -9,9 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,6 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 @RequiredArgsConstructor
-
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -56,7 +52,7 @@ public class UserController {
             summary = "find All users for manager with Id",
             description = "takes user id (manager id) in parameters and returns List<UserResponseDto>"
     )
-    @RolesAllowed("MANAGER")
+    //@RolesAllowed("MANAGER")
     @GetMapping("/{id}/customers")
     public List<UserResponseDto> findAllUsersForManager(@PathVariable Long id) {
 
@@ -67,7 +63,7 @@ public class UserController {
             summary = "find the user who is the bank",
             description = "accepts nothing and returns UserResponseDto"
     )
-    @RolesAllowed("MANAGER")
+    //@RolesAllowed("MANAGER")
     @GetMapping("/bank")
     public ResponseEntity<UserResponseDto> findByBank() {
         User user = userService.getUserByStatus(Role.ROLE_BANK);
@@ -111,8 +107,8 @@ public class UserController {
                                               "username": "customer5",
                                               "password": "sUy9ITt08Q8Mgty",
                                               "status": "ACTIVE",
-                                              "role": "CUSTOMER",
-                                              "manager": 2
+                                              "role": "ROLE_CUSTOMER",
+                                              "manager": "3"
                                             }
                                 """
                             )
@@ -175,8 +171,8 @@ public class UserController {
               "username": "Ra",
               "password": "Fa",
               "status": "ACTIVE",
-              "role": "CUSTOMER",
-              "manager" : "2"
+              "role": "ROLE_CUSTOMER",
+              "manager" : "3"
           }
      */
 
@@ -193,11 +189,11 @@ public class UserController {
                                     name = "Default User Example",
                                     value = """
                                             {
-                                                "username": "Ra",
-                                                "password": "Fa",
+                                                "username": "NewName",
+                                                "password": "NewPassword",
                                                 "status": "ACTIVE",
-                                                "role": "CUSTOMER",
-                                                "manager" : "2"
+                                                "role": "ROLE_CUSTOMER",
+                                                "manager" : "3"
                                             }
                                 """
                             )

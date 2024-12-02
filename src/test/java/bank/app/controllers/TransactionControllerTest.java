@@ -1,12 +1,14 @@
 package bank.app.controllers;
 
 
-import bank.app.controllers.handler.ErrorResponse;
+import bank.app.exeption.handler.ErrorResponse;
 import bank.app.dto.TransactionRequestDto;
 import bank.app.dto.TransactionResponseDto;
 import bank.app.model.enums.TransactionTypeName;
+import bank.app.security.JwtTokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,13 +28,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("/db/schema.sql")
 @Sql("/db/data.sql")
 @ActiveProfiles("test")
-@WithMockUser(username = "admin", password= "admin", roles = "admin")
+@WithMockUser(username = "admin", roles = "ADMIN")
 class TransactionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
+    private String validToken;
+
+    @BeforeEach
+    public void setUp() {
+        validToken = jwtTokenHelper.generateToken("admin", "ROLE_ADMIN");
+    }
 
     @Test
     void getInformationById() throws Exception {
@@ -47,6 +59,7 @@ class TransactionControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/transactions/{id}", transactionId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -65,11 +78,13 @@ class TransactionControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/transactions/{id}", transactionId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/transactions/{id}", transactionId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -94,6 +109,7 @@ class TransactionControllerTest {
         );
 
         MvcResult mvcResult = mockMvc.perform(post("/transactions/")
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
