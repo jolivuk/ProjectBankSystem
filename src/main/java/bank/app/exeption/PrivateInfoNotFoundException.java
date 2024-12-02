@@ -1,4 +1,4 @@
-package bank.app.exeptions;
+package bank.app.exeption;
 
 public class PrivateInfoNotFoundException extends Exception{
     public PrivateInfoNotFoundException(String message) {

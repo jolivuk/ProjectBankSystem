@@ -3,9 +3,10 @@ package bank.app.service.impl;
 import bank.app.dto.AccountBasicDto;
 import bank.app.dto.AccountFullDto;
 import bank.app.dto.AccountRequestDto;
-import bank.app.exeptions.AccountIsBlockedException;
-import bank.app.exeptions.AccountNotFoundException;
-import bank.app.exeptions.UserNotFoundException;
+import bank.app.exeption.AccountIsBlockedException;
+import bank.app.exeption.AccountNotFoundException;
+import bank.app.exeption.UserNotFoundException;
+import bank.app.exeption.errorMessage.ErrorMessage;
 import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.User;
@@ -33,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             return accountRepository.findById(accountId)
                     .orElseThrow(() -> new AccountNotFoundException(
-                            String.format("Account with id %d not found", accountId)
+                            String.format(ErrorMessage.ACCOUNT_NOT_FOUND, accountId)
                     ));
         } catch (AccountNotFoundException e) {
             throw new RuntimeException(e);
@@ -60,7 +61,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountBasicDto createNewAccount(AccountRequestDto accountRequestDto, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("User not found with id: " + userId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException(ErrorMessage.USER_NOT_FOUND + userId));
         
         Account account = new Account(user,accountRequestDto.iban(),
                 accountRequestDto.swift(),accountRequestDto.status(),accountRequestDto.balance());
@@ -71,25 +73,25 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getBankAccount() {
         Account accountBank = accountRepository.findByUserRole(Role.ROLE_BANK).stream().findFirst()
-                .orElseThrow(() -> new UserNotFoundException("Account not found with role: " + Role.ROLE_BANK));;
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.ACCOUNT_BANK_NOT_FOUND));;
         return accountBank;
     }
 
     @Override
     public void checkAccount(Account account) {
         if (account.isDeleted()) {
-            throw new AccountIsBlockedException(String.format("Account with id %d is deleted", account.getId()));
+            throw new AccountIsBlockedException(String.format(ErrorMessage.ACCOUNT_IS_DELETED, account.getId()));
         }
 
         if (account.isBlocked()) {
-            throw new AccountIsBlockedException(String.format("Account with id %d is blocked", account.getId()));
+            throw new AccountIsBlockedException(String.format(ErrorMessage.ACCOUNT_IS_BLOCKED, account.getId()));
         }
     }
 
     @Override
     public void deleteAccount(Long accountId) throws AccountNotFoundException {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(()-> new AccountNotFoundException("Account not found with id: " + accountId));
+                .orElseThrow(()-> new AccountNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND + accountId));
         account.setStatus(Status.DELETED);
         accountRepository.save(account);
     }

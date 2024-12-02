@@ -1,9 +1,10 @@
 package bank.app.service.impl;
 
 import bank.app.dto.*;
-import bank.app.exeptions.UserAlreadyDeletedException;
-import bank.app.exeptions.UserNotFoundException;
-import bank.app.exeptions.UserRoleException;
+import bank.app.exeption.UserAlreadyDeletedException;
+import bank.app.exeption.UserNotFoundException;
+import bank.app.exeption.UserRoleException;
+import bank.app.exeption.errorMessage.ErrorMessage;
 import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
@@ -20,6 +21,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -35,16 +38,18 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PrivateInfoRepository privateInfoRepository;
 
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User with userName " + username + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.USERNAME_NOT_FOUND));
     }
 
     @Override
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.USER_NOT_FOUND));
         return userMapper.toDto(user);
     }
 
@@ -59,10 +64,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> findAllByManagerId(Long id){
         User manager = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Manager with ID " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.MANAGER_ID_NOT_FOUND));
 
         if (!isManager(manager))
-            throw new UserRoleException("User with ID " + id + " is not Manager");
+            throw new UserRoleException(ErrorMessage.MANAGER_ID_HAS_INCORRECT_ROLE);
 
         return userRepository.findAllByManagerId(id)
                 .stream()
@@ -73,12 +78,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User manager = userRepository.findById(userRequestDto.manager())
-                .orElseThrow(() -> new UserNotFoundException("Manager with ID " + userRequestDto.manager() + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.MANAGER_ID_NOT_FOUND));
 
         if (!isManager(manager))
-            throw new UserRoleException("User with ID " + userRequestDto.manager() + " is not Manager");
+            throw new UserRoleException(ErrorMessage.MANAGER_ID_HAS_INCORRECT_ROLE);
 
-        User user = new User(userRequestDto.username(),userRequestDto.password(),
+        String encodedPassword = passwordEncoder.encode(userRequestDto.password());
+        User user = new User(userRequestDto.username(),encodedPassword,
                 Status.ACTIVE, userRequestDto.role(),manager);
         userRepository.save(user);
         return userMapper.toDto(user);

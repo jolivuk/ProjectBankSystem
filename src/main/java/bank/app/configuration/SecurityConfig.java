@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import bank.app.security.JwtAuthenticationFilter;
@@ -36,6 +36,7 @@ public class SecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(au -> au
                             .requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/protected-endpoint").hasRole(Role.ROLE_ADMIN.getShortRole())
                             .requestMatchers("/login_info").permitAll()
                             .requestMatchers("/", "/index.html").hasRole(Role.ROLE_ADMIN.getShortRole()) // добавляем доступ к index.html
                             .requestMatchers("/swagger-ui/**",
@@ -43,10 +44,7 @@ public class SecurityConfig {
                                     "/swagger-ui.html",
                                     "/webjars/**"
                             ).permitAll()
-                            .requestMatchers("/accounts").hasRole(Role.ROLE_ADMIN.getShortRole())
-                            .requestMatchers("/transaction").hasRole(Role.ROLE_ADMIN.getShortRole())
-                            .requestMatchers("/users").hasRole(Role.ROLE_ADMIN.getShortRole())
-                            .anyRequest().authenticated())
+                            .anyRequest().hasRole(Role.ROLE_ADMIN.getShortRole()))
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
     }
@@ -61,8 +59,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+            return new BCryptPasswordEncoder();
     }
 
     @Bean

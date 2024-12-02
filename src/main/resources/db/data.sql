@@ -1,11 +1,11 @@
 -- Вставляем данные в таблицу users
 INSERT INTO users (username, password, status, role, manager_id) VALUES
-        ('BANKaccount', 'password123', 'ACTIVE', 'ROLE_BANK', NULL),
-        ('admin', '1111', 'ACTIVE', 'ROLE_ADMIN', NULL),
-        ('manager1', 'password1', 'ACTIVE', 'ROLE_MANAGER', NULL),
-        ('customer1', 'password2', 'ACTIVE', 'ROLE_CUSTOMER', 3),
-        ('customer2', 'password3', 'INACTIVE', 'ROLE_CUSTOMER', 3),
-        ('customer3', 'password4', 'ACTIVE', 'ROLE_CUSTOMER', 3);
+        ('BANKaccount', '$2a$10$YuOYFnsq1y/OfTceZpEszOJhEJui5B9xng3Lv2XuU.5FO9Z6C/1Tu', 'ACTIVE', 'ROLE_BANK', NULL), --password123
+        ('admin', '$2a$10$CjgqtnrYqG2kSqZ.FQnxReul/iAujzZe47q/7JFR8MM479QWwHdnW', 'ACTIVE', 'ROLE_ADMIN', NULL), --1111
+        ('manager1', '$2a$10$ZnOrQ.rIN82kgj9kc/M8ZeJH3PGM.cT3IASsCRaac3/bps6719czO', 'ACTIVE', 'ROLE_MANAGER', NULL), --password1
+        ('customer1', '$2a$10$Vavpc3Yr0QR5mhO9pd2O4Opwa6FlmdEbKmIPGxuF2UpNDH3I8YFMm', 'ACTIVE', 'ROLE_CUSTOMER', 3), --password2
+        ('customer2', '$2a$10$94hJZuQ4mGZMYND7L.2IY.zPfJe7lsh6nzSbTJOv7NL9pmHDc5xji', 'INACTIVE', 'ROLE_CUSTOMER', 3), --password3
+        ('customer3', '$2a$10$tIa3jdMv3AkG45H.YoToiOlMntlxLafQ9Jtw7xXFFUMkil9ehvtCy', 'ACTIVE', 'ROLE_CUSTOMER', 3);--password4
 
 -- Вставляем данные в таблицу private_info
 INSERT INTO private_info (private_info_id,first_name, last_name, email, phone, date_of_birth, document_type, document_number, comment, user_id) VALUES

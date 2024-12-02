@@ -1,7 +1,7 @@
 package bank.app.controllers;
 
 import bank.app.dto.*;
-import bank.app.exeptions.AccountNotFoundException;
+import bank.app.exeption.AccountNotFoundException;
 import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
 import bank.app.service.AccountService;

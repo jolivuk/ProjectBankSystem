@@ -10,10 +10,10 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-//    @Bean
-//    public OpenAPI api() {
-//        return new OpenAPI()
-//                .servers(List.of(new io.swagger.v3.oas.models.servers.Server().url("http://localhost:8080")))
-//                .info(new Info().title("BankPortal"));
-//    }
+    @Bean
+    public OpenAPI api() {
+        return new OpenAPI()
+                .servers(List.of(new io.swagger.v3.oas.models.servers.Server().url("http://localhost:8080")))
+                .info(new Info().title("BankPortal"));
+    }
 }

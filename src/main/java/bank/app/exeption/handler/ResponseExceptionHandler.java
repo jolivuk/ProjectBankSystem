@@ -1,6 +1,6 @@
-package bank.app.controllers.handler;
+package bank.app.exeption.handler;
 
-import bank.app.exeptions.*;
+import bank.app.exeption.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

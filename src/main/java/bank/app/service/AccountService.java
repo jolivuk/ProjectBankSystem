@@ -3,7 +3,7 @@ package bank.app.service;
 import bank.app.dto.AccountBasicDto;
 import bank.app.dto.AccountFullDto;
 import bank.app.dto.AccountRequestDto;
-import bank.app.exeptions.AccountNotFoundException;
+import bank.app.exeption.AccountNotFoundException;
 import bank.app.model.entity.Account;
 
 import java.util.List;

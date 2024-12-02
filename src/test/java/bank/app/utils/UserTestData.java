@@ -73,7 +73,7 @@ public class UserTestData {
                 "manager1",
                 "password123",
                 "DELETED",
-                "MANAGER",
+                "ROLE_MANAGER",
                 null,
                 privateInfo
         );
@@ -88,7 +88,7 @@ public class UserTestData {
                 "updatedUser",
                 "newPassword123",
                 "ACTIVE",
-                "MANAGER",
+                "ROLE_MANAGER",
                 null,
                 expectedUser.privateInfoResponse()
         );
@@ -157,7 +157,7 @@ public class UserTestData {
                 DocumentType.PASSPORT_EU,"D87654321",null, addressResponseDto);
 
         UserResponseDto user = new UserResponseDto(
-                5L,"client3", "password3", "ACTIVE", "CUSTOMER", 2L,
+                5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
                 privateInfoResponseDto
         );
 
@@ -191,7 +191,7 @@ public class UserTestData {
                 "manager1",
                 "password123",
                 "ACTIVE",
-                "ROLE_ADMIN",
+                "ROLE_MANAGER",
                 null,
                 privateInfo2
         );

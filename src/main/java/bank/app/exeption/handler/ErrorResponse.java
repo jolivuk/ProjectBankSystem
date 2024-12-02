@@ -1,4 +1,4 @@
-package bank.app.controllers.handler;
+package bank.app.exeption.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
