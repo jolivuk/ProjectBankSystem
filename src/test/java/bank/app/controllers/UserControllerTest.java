@@ -3,6 +3,7 @@ package bank.app.controllers;
 
 import bank.app.dto.*;
 import bank.app.model.enums.Role;
+import bank.app.model.enums.Status;
 import bank.app.security.JwtTokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -162,7 +163,7 @@ class UserControllerTest {
         UserRequestDto requestDto = new UserRequestDto(
                 "validUser123",
                 "password123",
-                "ACTIVE",
+                Status.ACTIVE,
                 Role.ROLE_CUSTOMER,
                 2L
         );
@@ -234,7 +235,7 @@ class UserControllerTest {
         UserRequestDto requestDto = new UserRequestDto(
                 "updatedUser",
                 "newPassword123",
-                "ACTIVE",
+                Status.ACTIVE,
                 Role.ROLE_MANAGER,
                 null
         );

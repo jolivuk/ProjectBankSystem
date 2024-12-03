@@ -94,7 +94,7 @@ class TransactionControllerTest {
         ErrorResponse errorResponse = objectMapper.readValue(jsonResponse, ErrorResponse.class);
 
         Assertions.assertEquals(400, errorResponse.getStatus());
-        Assertions.assertEquals("Transaction with id 1 not founded", errorResponse.getMessage());
+        Assertions.assertEquals("Transaction not found ID: 1", errorResponse.getMessage());
     }
 
     @Test

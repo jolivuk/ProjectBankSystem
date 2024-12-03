@@ -3,6 +3,7 @@ package bank.app.controllers;
 import bank.app.dto.PrivateInfoRequestDto;
 import bank.app.dto.UserRequestDto;
 import bank.app.model.enums.Role;
+import bank.app.model.enums.Status;
 import bank.app.security.JwtTokenHelper;
 import bank.app.utils.UserTestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -77,7 +78,7 @@ public class UserControllerExceptionTest {
         UserRequestDto requestDto = new UserRequestDto(
                 "client3",
                 "password123",
-                "ACTIVE",
+                Status.ACTIVE,
                 Role.ROLE_CUSTOMER,
                 2L
         );
