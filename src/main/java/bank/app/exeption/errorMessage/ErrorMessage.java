@@ -40,6 +40,4 @@ public class ErrorMessage {
 
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
 
-    public static final String PRIVATE_INFO_NOT_FOUND = "Private info not found";
-
 }

@@ -93,9 +93,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByStatus(Role role) {
-        User user = userRepository.findByRole(role)
+        return userRepository.findByRole(role)
                 .orElseThrow(() -> new UserNotFoundException(USER_WITH_ROLE_NOT_FOUND + role));
-        return user;
     }
 
     @Override

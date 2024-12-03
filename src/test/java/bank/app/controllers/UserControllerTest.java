@@ -148,7 +148,6 @@ class UserControllerTest {
 
     @Test
     void createUserTest() throws Exception {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserResponseDto expectedUserDTO = new UserResponseDto(
                 6L,
                 "validUser123",

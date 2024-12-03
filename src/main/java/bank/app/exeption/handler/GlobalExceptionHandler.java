@@ -22,11 +22,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String errorMessage = DATA_INTEGRITY_VIOLATION;
-        String errorCode = "";
+        String errorCode;
 
         Throwable rootCause = ex.getRootCause();
-        if (rootCause instanceof SQLException) {
-            SQLException sqlEx = (SQLException) rootCause;
+        if (rootCause instanceof SQLException sqlEx) {
             errorCode = String.valueOf(sqlEx.getErrorCode());
             errorMessage += ": " + sqlEx.getMessage();
             errorMessage += ": SQL error code " + errorCode;
@@ -48,7 +47,7 @@ public class GlobalExceptionHandler {
             errors.put(error.getField(), error.getDefaultMessage());
         }
 
-        String message = "Validation failed for fields: " + errors.toString();
+        String message = "Validation failed for fields: " + errors;
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 message,

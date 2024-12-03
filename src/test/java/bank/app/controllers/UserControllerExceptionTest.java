@@ -83,7 +83,7 @@ public class UserControllerExceptionTest {
                 2L
         );
 
-        MvcResult mvcResult = mockMvc.perform(post("/users/")
+        mockMvc.perform(post("/users/")
                         .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))

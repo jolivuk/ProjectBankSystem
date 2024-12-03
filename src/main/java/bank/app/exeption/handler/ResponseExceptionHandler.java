@@ -89,8 +89,7 @@ public class ResponseExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDuplicateEntryException(DataIntegrityViolationException ex) {
 
-        if (ex.getCause() instanceof SQLException) {
-            SQLException sqlException = (SQLException) ex.getCause();
+        if (ex.getCause() instanceof SQLException sqlException) {
             if (sqlException.getErrorCode() == 1062) {
                 return new ResponseEntity<>(USER_ALREADY_EXISTS, HttpStatus.CONFLICT);
             }
