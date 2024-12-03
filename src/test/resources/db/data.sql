@@ -1,10 +1,10 @@
 INSERT INTO users ( username, password, role, status, manager_id, created_at, last_update)
 VALUES
-    ( 'BANKAccount', 'password123', 'ROLE_BANK', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'manager1', 'password123', 'ROLE_MANAGER', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'client1', 'password123', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'client2', 'password123', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
-    ( 'client3', 'password3', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
+    ( 'BANKAccount', '$2a$10$fVqmJOnphyor5Z2bah9fwObJk4gZlc7VTnt.0nuF3N9l6cp7bZHii', 'ROLE_BANK', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 09:30:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'manager1', '$2a$10$HMS4uMD2FZF6txnTRIk/EOcZbtg7/Ebh0SzuYocNS7UTZjaDj0dv.', 'ROLE_MANAGER', 'ACTIVE', NULL, PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client1', '$2a$10$iXLKavlENdQG9cKDXeU0NOW7bTQ5VIXtEZ2XuLLI4ZbZnVSRNhYbu', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:15:00', 'yyyy-MM-dd HH:mm:ss')),
+    ( 'client2', '$2a$10$Xpai5QMu409RiMTS2fte9OvCJk514t3Ykxs5G7VaV9OeiiTJp0iEu', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
+        ( 'client3', '$2a$10$V7NERIPe9Xm5m3tjf9XILO7CCf8QOTUzRx6knrcge0Hyvwaj.vdRq', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
 
 ---- Вставка личной информации
 INSERT INTO private_info (private_info_id, first_name, last_name, date_of_birth, document_type, document_number, phone, email, created_at, last_update, user_id)

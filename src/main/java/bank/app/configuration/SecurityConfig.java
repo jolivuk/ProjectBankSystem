@@ -4,6 +4,7 @@ import bank.app.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,6 +38,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests(au -> au
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/protected-endpoint").hasRole(Role.ROLE_ADMIN.getShortRole())
+                            .requestMatchers(HttpMethod.POST, "/users/**").hasRole(Role.ROLE_ADMIN.getShortRole())
                             .requestMatchers("/login_info").permitAll()
                             .requestMatchers("/", "/index.html").hasRole(Role.ROLE_ADMIN.getShortRole()) // добавляем доступ к index.html
                             .requestMatchers("/swagger-ui/**",

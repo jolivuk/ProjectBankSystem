@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import static bank.app.exeption.errorMessage.ErrorMessage.DATABASE_ERROR;
+import static bank.app.exeption.errorMessage.ErrorMessage.USER_ALREADY_EXISTS;
+
 @RestControllerAdvice
 public class ResponseExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
@@ -100,10 +103,10 @@ public class ResponseExceptionHandler {
         if (ex.getCause() instanceof SQLException) {
             SQLException sqlException = (SQLException) ex.getCause();
             if (sqlException.getErrorCode() == 1062) {
-                return new ResponseEntity<>("Username already exists.", HttpStatus.CONFLICT);
+                return new ResponseEntity<>(USER_ALREADY_EXISTS, HttpStatus.CONFLICT);
             }
         }
-        return new ResponseEntity<>("Database error.", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(DATABASE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -26,21 +26,20 @@ public class ErrorMessage {
 
     public static final String TRANSATION_NOT_FOUND = "Transaction not found ID: ";
 
-    public static final String USER_WITH_THIS_ROLE_NOT_FOUND = "User with role not found";
+    public static final String NOT_ENOUGH_BALANCE = "Not enough balance on account ";
 
-    public static final String INVALID_EMAIL = "The email is invalid";
+    public static final String USER_DTO_IS_NULL = "UserDto is null";
 
-    public static final String INVALID_PASSWORD = "The password is invalid";
+    public static final String ENABLE_UPDATE_USER = "Enable update user";
 
-    public static final String INVALID_PHONE_NUMBER = "The phone number is invalid";
+    public static final String USER_WITH_ROLE_NOT_FOUND = "User with role not found";
 
-    public static final String INVALID_LASTNAME = "The lastname is invalid";
+    public static final String USER_ALREADY_EXISTS = "User already exists";
 
-    public static final String INVALID_FIRST_NAME = "The first name is invalid";
+    public static final String DATABASE_ERROR = "Database error";
 
-    public static final String INVALID_USERNAME = "The username is invalid";
+    public static final String DATA_INTEGRITY_VIOLATION = "Data integrity violation";
 
-    public static final String INVALID_DATA = "The data is invalid";
+    public static final String INVALID_CREDENTIALS = "Invalid credentials";
 
-    public static final String NO_ACCESS_RIGHTS = "There is no access rights";
 }
