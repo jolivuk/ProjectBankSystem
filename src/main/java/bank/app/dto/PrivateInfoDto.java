@@ -1,6 +1,5 @@
 package bank.app.dto;
 
-import bank.app.model.entity.PrivateInfo;
 import bank.app.model.enums.DocumentType;
 import jakarta.validation.constraints.*;
 

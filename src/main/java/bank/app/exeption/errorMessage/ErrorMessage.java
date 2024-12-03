@@ -1,7 +1,5 @@
 package bank.app.exeption.errorMessage;
 
-import bank.app.model.enums.Role;
-
 public class ErrorMessage {
 
     public static final String USER_NOT_FOUND = "User not found ID: ";
@@ -41,5 +39,7 @@ public class ErrorMessage {
     public static final String DATA_INTEGRITY_VIOLATION = "Data integrity violation";
 
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
+
+    public static final String PRIVATE_INFO_NOT_FOUND = "Private info not found";
 
 }

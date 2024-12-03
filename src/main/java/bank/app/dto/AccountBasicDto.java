@@ -35,36 +35,6 @@ public class AccountBasicDto
          this.lastUpdate = lastUpdate;
      }
 
-
-
-     public Long getId() {
-         return id;
-     }
-
-     public Status getStatus() {
-         return status;
-     }
-
-     public String getIban() {
-         return iban;
-     }
-
-     public String getSwift() {
-         return swift;
-     }
-
-     public Double getBalance() {
-         return balance;
-     }
-
-     public LocalDateTime getCreatedAt() {
-         return createdAt;
-     }
-
-     public LocalDateTime getLastUpdate() {
-         return lastUpdate;
-     }
-
      @Override
      public boolean equals(Object o) {
          if (this == o) return true;

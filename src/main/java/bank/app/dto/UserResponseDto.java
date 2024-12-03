@@ -16,10 +16,6 @@ public record UserResponseDto(
         PrivateInfoResponseDto privateInfoResponse
 ) {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    // Метод для проверки пароля
-    public boolean matchesPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(rawPassword, this.password);
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -35,9 +31,8 @@ public record UserResponseDto(
                 Objects.equals(role, that.role) &&
                 Objects.equals(manager, that.manager) &&
                 Objects.equals(privateInfoResponse, that.privateInfoResponse) &&
-                passwordEncoder.matches(password,that.password );
+                passwordEncoder.matches(password, that.password);
     }
-
 
     @Override
     public int hashCode() {

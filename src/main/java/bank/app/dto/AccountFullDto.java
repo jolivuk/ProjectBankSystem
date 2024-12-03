@@ -25,11 +25,6 @@ public class AccountFullDto extends AccountBasicDto{
         this.user = user;
     }
 
-
-    public UserResponseDto getUser() {
-        return user;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
