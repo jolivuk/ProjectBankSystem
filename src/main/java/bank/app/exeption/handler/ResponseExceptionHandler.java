@@ -10,20 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-import static bank.app.exeption.errorMessage.ErrorMessage.DATABASE_ERROR;
-import static bank.app.exeption.errorMessage.ErrorMessage.USER_ALREADY_EXISTS;
+import static bank.app.exeption.errorMessage.ErrorMessage.*;
 
 @RestControllerAdvice
 public class ResponseExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                exception.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(UserAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleUserAlreadyDeleted(UserAlreadyDeletedException exception) {
@@ -46,9 +36,8 @@ public class ResponseExceptionHandler {
     }
 
 
-
     @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(AccountNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exception.getMessage(),
@@ -100,8 +89,7 @@ public class ResponseExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDuplicateEntryException(DataIntegrityViolationException ex) {
 
-        if (ex.getCause() instanceof SQLException) {
-            SQLException sqlException = (SQLException) ex.getCause();
+        if (ex.getCause() instanceof SQLException sqlException) {
             if (sqlException.getErrorCode() == 1062) {
                 return new ResponseEntity<>(USER_ALREADY_EXISTS, HttpStatus.CONFLICT);
             }

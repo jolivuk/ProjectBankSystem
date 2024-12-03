@@ -13,7 +13,6 @@ import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
-import bank.app.repository.TransactionRepository;
 import bank.app.repository.UserRepository;
 import bank.app.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             return accountRepository.findById(accountId)
                     .orElseThrow(() -> new AccountNotFoundException(
-                            String.format(ErrorMessage.ACCOUNT_NOT_FOUND, accountId)
+                            String.format(ErrorMessage.ACCOUNT_NOT_FOUND + accountId)
                     ));
         } catch (AccountNotFoundException e) {
             throw new RuntimeException(e);
@@ -71,19 +70,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getBankAccount() {
-        Account accountBank = accountRepository.findByUserRole(Role.ROLE_BANK).stream().findFirst()
-                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.ACCOUNT_BANK_NOT_FOUND));;
-        return accountBank;
+        return accountRepository.findByUserRole(Role.ROLE_BANK).stream().findFirst()
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.ACCOUNT_BANK_NOT_FOUND));
     }
 
     @Override
     public void checkAccount(Account account) {
         if (account.isDeleted()) {
-            throw new AccountIsBlockedException(String.format(ErrorMessage.ACCOUNT_IS_DELETED, account.getId()));
+            throw new AccountIsBlockedException(String.format(ErrorMessage.ACCOUNT_IS_DELETED + account.getId()));
         }
 
         if (account.isBlocked()) {
-            throw new AccountIsBlockedException(String.format(ErrorMessage.ACCOUNT_IS_BLOCKED, account.getId()));
+            throw new AccountIsBlockedException(String.format(ErrorMessage.ACCOUNT_IS_BLOCKED + account.getId()));
         }
     }
 

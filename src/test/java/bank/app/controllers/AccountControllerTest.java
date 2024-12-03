@@ -74,8 +74,8 @@ class AccountControllerTest {
                 3000.00,
                 "DE89370400440532013858",
                 "DEUTDEFF",
-                LocalDateTime.of(2024, 11, 21, 11, 05, 00),
-                LocalDateTime.of(2024, 11, 21, 11, 05, 00)
+                LocalDateTime.of(2024, 11, 21, 11, 5, 0),
+                LocalDateTime.of(2024, 11, 21, 11, 5, 0)
         );
 
         Assertions.assertEquals(actualAccount, expectedAccount);
@@ -118,8 +118,8 @@ class AccountControllerTest {
                 3000.00,
                 "DE89370400440532013001",
                 "DEUTDEFF",
-                LocalDateTime.of(2024, 11, 21, 11, 10, 00),
-                LocalDateTime.of(2024, 11, 21, 11, 10, 00),
+                LocalDateTime.of(2024, 11, 21, 11, 10, 0),
+                LocalDateTime.of(2024, 11, 21, 11, 10, 0),
                 userResponseDto);
 
         Long accountId = 4L;
@@ -162,16 +162,16 @@ class AccountControllerTest {
                         3000.00,
                         "DE89370400440532013001",
                         "DEUTDEFF",
-                        LocalDateTime.of(2024, 11, 21, 11, 10, 00),
-                        LocalDateTime.of(2024, 11, 21, 11, 10, 00)),
+                        LocalDateTime.of(2024, 11, 21, 11, 10, 0),
+                        LocalDateTime.of(2024, 11, 21, 11, 10, 0)),
                 new AccountBasicDto(
                         5L,
                         Status.ACTIVE,
                         7000.00,
                         "DE89370400440532013002",
                         "DEUTDEFF",
-                        LocalDateTime.of(2024, 11, 21, 11, 15, 00),
-                        LocalDateTime.of(2024, 11, 21, 11, 15, 00)
+                        LocalDateTime.of(2024, 11, 21, 11, 15, 0),
+                        LocalDateTime.of(2024, 11, 21, 11, 15, 0)
                 )
         );
 
@@ -196,8 +196,8 @@ class AccountControllerTest {
                 0.00,
                 "DE89370400440532013000",
                 "DEUTDEFF",
-                LocalDateTime.of(2024, 11, 21, 9, 30, 00),
-                LocalDateTime.of(2024, 11, 21, 9, 30, 00),
+                LocalDateTime.of(2024, 11, 21, 9, 30, 0),
+                LocalDateTime.of(2024, 11, 21, 9, 30, 0),
                 userResponseDto
         );
 

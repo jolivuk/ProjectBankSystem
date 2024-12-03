@@ -61,8 +61,8 @@ import java.lang.annotation.Target;
                                 {
                                      "firstName": "Vladimir",
                                      "lastName": "Ivanov",
-                                     "email": "vivanov@example.com",
-                                     "phone": "john.doe@example.com",
+                                     "email": "john.doe@example.com",
+                                     "phone": "456456484565",
                                      "dateOfBirth": "1990-01-01",
                                      "documentType": "PASSPORT_EU",
                                      "documentNumber": "1234567890",

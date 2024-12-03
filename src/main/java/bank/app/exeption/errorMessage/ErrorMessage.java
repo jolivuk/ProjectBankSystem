@@ -1,7 +1,5 @@
 package bank.app.exeption.errorMessage;
 
-import bank.app.model.enums.Role;
-
 public class ErrorMessage {
 
     public static final String USER_NOT_FOUND = "User not found ID: ";

@@ -14,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -148,7 +146,6 @@ class UserControllerTest {
 
     @Test
     void createUserTest() throws Exception {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserResponseDto expectedUserDTO = new UserResponseDto(
                 6L,
                 "validUser123",

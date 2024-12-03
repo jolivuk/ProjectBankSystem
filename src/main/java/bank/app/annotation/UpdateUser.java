@@ -2,7 +2,6 @@ package bank.app.annotation;
 
 import bank.app.dto.UserRequestDto;
 import bank.app.exeption.handler.ErrorResponse;
-import bank.app.exeption.handler.ResponseExceptionHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

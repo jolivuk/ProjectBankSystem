@@ -24,8 +24,4 @@ public class UserMapper {
                 user.getPrivateInfo() != null ? privateInfoMapper.toDto(user.getPrivateInfo()) : null
         );
     }
-
-//    public List<AccountBasicDto> toAccountBasicDtoList(List<Account> accounts){
-//        return accounts.stream().map(account -> toAccountBasicDto(account)).toList();
-//    }
 }

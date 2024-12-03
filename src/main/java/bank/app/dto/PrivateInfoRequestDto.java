@@ -2,8 +2,6 @@ package bank.app.dto;
 
 import bank.app.model.enums.DocumentType;
 import jakarta.validation.constraints.*;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 

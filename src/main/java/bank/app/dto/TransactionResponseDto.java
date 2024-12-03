@@ -1,11 +1,9 @@
 package bank.app.dto;
 
-import bank.app.model.entity.TransactionType;
 import bank.app.model.enums.TransactionTypeName;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
