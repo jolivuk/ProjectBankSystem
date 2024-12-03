@@ -1,6 +1,9 @@
 package bank.app.dto;
 
 import bank.app.model.enums.Role;
+import bank.app.model.enums.Status;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
 public record UserRequestDto(
@@ -15,13 +18,13 @@ public record UserRequestDto(
                 message = "Password must be at least 8 characters long")
         String password,
 
+        @Enumerated(EnumType.STRING)
+        @NotNull(message = "Status cannot be null")
+        Status status,
 
-        @NotNull(message = "Role cannot be null")
-        String status,
-
+        @Enumerated(EnumType.STRING)
         @NotNull(message = "Role cannot be null")
         Role role,
 
-        @NotNull(message = "Role cannot be null")
         Long manager
 ) { }

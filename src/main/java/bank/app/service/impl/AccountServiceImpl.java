@@ -28,7 +28,6 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final AccountMapper accountMapper;
-    private final TransactionRepository transactionRepository;
 
     public Account getAccountById(Long accountId) {
         try {

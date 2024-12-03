@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static bank.app.exeption.errorMessage.ErrorMessage.NOT_ENOUGH_BALANCE;
+
 @Service
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
@@ -78,7 +80,8 @@ public class TransactionServiceImpl implements TransactionService {
         accountService.checkAccount(sender);
         accountService.checkAccount(receiver);
 
-        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionRequestDto.transactionType())
+        TransactionType transactionType = transactionTypeRepository
+                .findByTransactionTypeName(transactionRequestDto.transactionType())
                 .orElseThrow(() ->
                         new TransactionTypeException(ErrorMessage.INVALID_TRANSATION_TYPE));
 
@@ -96,7 +99,7 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transaction.setComment(transactionRequestDto.comment() + " - Not enough balance");
             transactionRepository.save(transaction);
-            throw new BalanceException("Not enough balance on account " + transactionRequestDto.sender());
+            throw new BalanceException(NOT_ENOUGH_BALANCE + transactionRequestDto.sender());
         }
 
         sender.setBalance(sender.getBalance() - totalSum);

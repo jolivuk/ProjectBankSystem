@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static bank.app.exeption.errorMessage.ErrorMessage.*;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -37,8 +39,7 @@ public class UserServiceImpl implements UserService {
     private final AccountRepository accountRepository;
     private final UserMapper userMapper;
     private final PrivateInfoRepository privateInfoRepository;
-
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByStatus(Role role) {
         User user = userRepository.findByRole(role)
-                .orElseThrow(() -> new UserNotFoundException("User with role " + role + "not found"));
+                .orElseThrow(() -> new UserNotFoundException(USER_WITH_ROLE_NOT_FOUND + role));
         return user;
     }
 
@@ -143,20 +144,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto userDto) {
         if (userDto == null) {
-            throw new IllegalArgumentException("FullUserDto cannot be null");
+            throw new IllegalArgumentException(USER_DTO_IS_NULL);
         }
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
         try {
 
+            String encodedPassword = passwordEncoder.encode(userDto.password());
+
             existingUser.setUsername(userDto.username());
-            existingUser.setPassword(userDto.password());
-            existingUser.setStatus(Status.valueOf(userDto.status()));
+            existingUser.setPassword(encodedPassword);
+            existingUser.setStatus(userDto.status());
             existingUser.setRole(userDto.role());
 
             if (userDto.manager() != null) {
                 User manager = userRepository.findById(userDto.manager())
-                        .orElseThrow(() -> new EntityNotFoundException("Manager not found with id: " + userDto.manager()));
+                        .orElseThrow(() -> new EntityNotFoundException(MANAGER_ID_NOT_FOUND + userDto.manager()));
                 existingUser.setManager(manager);
             } else {
                 existingUser.setManager(null);
@@ -165,14 +168,14 @@ public class UserServiceImpl implements UserService {
             return userMapper.toDto(existingUser);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error updating user: " + e.getMessage(), e);
+            throw new RuntimeException(ENABLE_UPDATE_USER + e.getMessage(), e);
         }
     }
 
     @Override
     public UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + id));
 
         PrivateInfo privateInfo = user.getPrivateInfo();
         if (privateInfo == null) {
@@ -197,7 +200,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + id));
 
         PrivateInfo privateInfo = user.getPrivateInfo();
         if (privateInfo == null) {

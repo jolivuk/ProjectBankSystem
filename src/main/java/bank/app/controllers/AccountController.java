@@ -1,5 +1,6 @@
 package bank.app.controllers;
 
+import bank.app.annotation.CreateAccount;
 import bank.app.dto.*;
 import bank.app.exeption.AccountNotFoundException;
 import bank.app.mapper.AccountMapper;
@@ -11,9 +12,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
+@Validated
 @RolesAllowed("ADMIN")
 public class AccountController {
     private final AccountService accountService;
@@ -81,40 +85,9 @@ public class AccountController {
                 : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    /**
-     * {
-     *   "status": "ACTIVE",
-     *   "balance": 0,
-     *   "iban": "DE44123456789012345678",
-     *   "swift": "DEUTDEFFXXX"
-     * }
-     */
 
-    @Operation(
-            summary = "Create new account",
-            description = "Create a new account for a specific user",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Account object that needs to be created",
-            required = true,
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = AddressRequestDto.class),
-                    examples = @ExampleObject(
-                            name = "Default Account Example",
-                            value = """
-                                    {
-                                      "status": "ACTIVE",
-                                      "balance": 0,
-                                      "iban": "DE44123456789012345678",
-                                      "swift": "DEUTDEFFXXX"
-                                    }
-                                    """
-                    )
-            )
-    )
-    )
-    @PostMapping("/add/user/{userId}")
-    public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@RequestBody AccountRequestDto accountRequestDto){
+    @CreateAccount(path = "/add/user/{userId}")
+    public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@Valid @RequestBody AccountRequestDto accountRequestDto){
         AccountBasicDto account = accountService.createNewAccount(accountRequestDto,userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
 

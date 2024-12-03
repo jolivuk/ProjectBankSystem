@@ -4,9 +4,11 @@ import bank.app.dto.*;
 import bank.app.model.enums.DocumentType;
 import bank.app.model.enums.Status;
 import bank.app.model.enums.TransactionTypeName;
+import bank.app.security.JwtTokenHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("/db/schema.sql")
 @Sql("/db/data.sql")
 @ActiveProfiles("test")
-@WithMockUser(username = "admin", password = "admin", roles = "admin")
+@WithMockUser(username = "admin", roles = "ADMIN")
 class AccountControllerTest {
 
     @Autowired
@@ -39,12 +41,25 @@ class AccountControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
+    private String validToken;
+
+    @BeforeEach
+    public void setUp() {
+        validToken = jwtTokenHelper.generateToken("admin", "ROLE_ADMIN");
+    }
+
+
+
     @Test
     void getBasicAccountInfo() throws Exception {
 
         Long accountId = 3L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{accountId}", accountId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -110,6 +125,7 @@ class AccountControllerTest {
         Long accountId = 4L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{accountId}?full=true", accountId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -128,6 +144,7 @@ class AccountControllerTest {
         Long userId = 3L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/user/{userId}", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -169,7 +186,7 @@ class AccountControllerTest {
                 "BANKAccount",
                 "password123",
                 "ACTIVE",
-                "BANK",
+                "ROLE_BANK",
                 null,
                 null);
 
@@ -187,6 +204,7 @@ class AccountControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/bank")
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -218,6 +236,7 @@ class AccountControllerTest {
         Long accountId = 2L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{accountId}/transactions", accountId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -245,6 +264,7 @@ class AccountControllerTest {
         Long accountId = 2L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{accountId}/transactions/last-month", accountId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -268,6 +288,7 @@ class AccountControllerTest {
         Long userId = 3L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .post("/accounts/add/user/{userId}", userId)
+                        .header("Authorization", "Bearer " + validToken)
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -291,12 +312,14 @@ class AccountControllerTest {
         Long accountId = 3L;
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/accounts/{id}", accountId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
 
         MvcResult afterDelete = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{id}", accountId)
+                        .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

@@ -114,7 +114,7 @@ class UserControllerTest {
             UserResponseDto actualUserJSON = objectMapper.readValue(jsonResponse, UserResponseDto.class);
 
 
-            Assertions.assertEquals(actualUserJSON, expectedUser);
+            Assertions.assertEquals(expectedUser,actualUserJSON);
     }
 
     @Test
@@ -142,7 +142,7 @@ class UserControllerTest {
 
 
 
-        Assertions.assertEquals(actualAfterDeleteUserJson, expectedDeletedUser);
+        Assertions.assertEquals(expectedDeletedUser,actualAfterDeleteUserJson);
     }
 
     @Test
@@ -177,11 +177,7 @@ class UserControllerTest {
         String responseJSON = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserJSON = objectMapper.readValue(responseJSON, UserResponseDto.class);
 
-        Assertions.assertEquals(expectedUserDTO.username(), actualUserJSON.username());
-        Assertions.assertTrue(passwordEncoder.matches(expectedUserDTO.password(), actualUserJSON.password()));
-        Assertions.assertEquals(expectedUserDTO.status(), actualUserJSON.status());
-        Assertions.assertEquals(expectedUserDTO.role(), actualUserJSON.role());
-        Assertions.assertEquals(expectedUserDTO.manager(), actualUserJSON.manager());
+        Assertions.assertEquals(expectedUserDTO, actualUserJSON);
 
     }
 
