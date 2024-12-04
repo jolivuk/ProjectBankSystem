@@ -7,6 +7,7 @@ import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import bank.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 @RequiredArgsConstructor
+
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -28,7 +30,6 @@ public class UserController {
             summary = "find All users in database",
             description = "receives nothing in parameters and returns UserResponseDto"
     )
-
     @GetMapping()
     public List<UserResponseDto> findAllUsers() {
         return userService.findAll();
@@ -38,7 +39,6 @@ public class UserController {
             summary = "gets 1 user from the database by id",
             description = "takes user id in parameters and returns UserResponseDto"
     )
-
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
@@ -49,7 +49,6 @@ public class UserController {
             summary = "find All users for manager with Id",
             description = "takes user id (manager id) in parameters and returns List<UserResponseDto>"
     )
-    //@RolesAllowed("MANAGER")
     @GetMapping("/{id}/customers")
     public List<UserResponseDto> findAllUsersForManager(@PathVariable Long id) {
 
@@ -60,7 +59,6 @@ public class UserController {
             summary = "find the user who is the bank",
             description = "accepts nothing and returns UserResponseDto"
     )
-    //@RolesAllowed("MANAGER")
     @GetMapping("/bank")
     public ResponseEntity<UserResponseDto> findByBank() {
         User user = userService.getUserByStatus(Role.ROLE_BANK);
@@ -71,6 +69,7 @@ public class UserController {
             summary = "retrieves private information about the user from the database",
             description = "takes user id and returns PrivateInfoResponseDto"
     )
+
     @GetMapping("/{id}/private_info")
     public ResponseEntity<PrivateInfoResponseDto> getPrivateInfo(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getPrivateInfoByUserId(id));
@@ -89,12 +88,14 @@ public class UserController {
     }
 
 
+
     @CreateUser(path = "/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto userDto) {
         UserResponseDto user = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
+
 
     @AddPrivateInfo(path = "/{id}/private_info/")
     @ResponseStatus(HttpStatus.CREATED)
@@ -103,6 +104,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
+
     @UpdateUser(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto userDto) {
@@ -110,11 +112,13 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+
     @UpdatePrivateInfo(path = "/{id}/private_info")
     public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoRequestDto privateInfoDto) {
         UserResponseDto user = userService.updatePrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
+
 
 
     @UpdateAddress(path = "/{id}/private_info/address")
