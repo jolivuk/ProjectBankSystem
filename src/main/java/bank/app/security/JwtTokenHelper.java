@@ -6,13 +6,33 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConfigurationProperties(prefix = "jwt")
+@Getter
+@Setter
 public class JwtTokenHelper {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Генерация ключа // TODO алгоритм шифрования вынести в настройки
-    private final long expiration = 3600000; // Время жизни токена (1 час) // TODO значение вынести в настройки
+    @Value("${jwt.expiration}")
+    private long expiration;
+
+    @Value("${jwt.algorithm}")
+    private String algorithm;
+
+    private Key key;
+
+    @PostConstruct
+    public void init() {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.valueOf(algorithm);
+        key = Keys.secretKeyFor(signatureAlgorithm);
+    }
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
