@@ -48,10 +48,6 @@ public class JwtTokenHelper {
         return parseClaims(token).getSubject();
     }
 
-    public String extractRole(String token) {
-        return parseClaims(token).get("role", String.class);
-    }
-
     public boolean isTokenExpired(String token) {
         return parseClaims(token).getExpiration().before(new Date());
 
