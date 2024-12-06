@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(jsr250Enabled=true)
+@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -32,23 +32,47 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            return http
-                    .cors(AbstractHttpConfigurer::disable)
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .authorizeHttpRequests(au -> au
-                            .requestMatchers("/auth/**").permitAll()
-                            .requestMatchers("/protected-endpoint").hasRole(Role.ROLE_ADMIN.getShortRole())
-                            .requestMatchers(HttpMethod.POST, "/users/**").hasRole(Role.ROLE_ADMIN.getShortRole())
-                            .requestMatchers("/login_info").permitAll()
-                            .requestMatchers("/", "/index.html").hasRole(Role.ROLE_ADMIN.getShortRole()) // добавляем доступ к index.html
-                            .requestMatchers("/swagger-ui/**",
-                                    "/v3/api-docs/**",
-                                    "/swagger-ui.html",
-                                    "/webjars/**"
-                            ).permitAll()
-                            .anyRequest().hasRole(Role.ROLE_ADMIN.getShortRole()))
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                    .build();
+        return http
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(au -> au
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/login_info").permitAll()
+                        .requestMatchers("/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/webjars/**"
+                        ).permitAll()
+
+                        .requestMatchers(HttpMethod.GET,
+                                        "/users/{id}",
+                                "/users/{id}/private_info").hasRole(Role.ROLE_CUSTOMER.getShortRole())
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/users/{id}",
+                                "/users/{id}/private_info",
+                                "/users/{id}/private_info/address").hasRole(Role.ROLE_CUSTOMER.getShortRole())
+                        .requestMatchers(HttpMethod.POST,
+                                "/users/",
+                                "/users/{id}/private_info/").hasRole(Role.ROLE_CUSTOMER.getShortRole())
+
+                        .requestMatchers("/",
+                                "/index.html",
+                                "/users",
+                                "/users/**",
+                                "/accounts/**",
+                                "/transactions/**").hasRole(Role.ROLE_ADMIN.getShortRole())
+
+                        .requestMatchers("/index.html",
+                                "/users",
+                                "/users/**",
+                                "/accounts/**",
+                                "/transactions/**").hasRole(Role.ROLE_MANAGER.getShortRole())
+
+
+                        .anyRequest().hasRole(Role.ROLE_ADMIN.getShortRole()))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
@@ -61,7 +85,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
