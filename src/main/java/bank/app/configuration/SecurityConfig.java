@@ -44,6 +44,12 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
 
+                        .requestMatchers("/",
+                                "/index.html",
+                                "/users",
+                                "/users/**",
+                                "/accounts/**",
+                                "/transactions/**").hasRole(Role.ROLE_ADMIN.getShortRole())
                         .requestMatchers(HttpMethod.GET,
                                         "/users/{id}",
                                 "/users/{id}/private_info").hasRole(Role.ROLE_CUSTOMER.getShortRole())
@@ -56,12 +62,7 @@ public class SecurityConfig {
                                 "/users/",
                                 "/users/{id}/private_info/").hasRole(Role.ROLE_CUSTOMER.getShortRole())
 
-                        .requestMatchers("/",
-                                "/index.html",
-                                "/users",
-                                "/users/**",
-                                "/accounts/**",
-                                "/transactions/**").hasRole(Role.ROLE_ADMIN.getShortRole())
+
 
                         .requestMatchers("/index.html",
                                 "/users",
