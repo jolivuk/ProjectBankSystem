@@ -17,4 +17,6 @@ public interface AccountService {
     Account getBankAccount();
     void checkAccount(Account account);
     void deleteAccount(Long accountId) throws AccountNotFoundException;
+
+    void setAccountBlocked(Long accountId) ;
 }

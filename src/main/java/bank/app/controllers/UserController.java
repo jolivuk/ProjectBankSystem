@@ -51,7 +51,6 @@ public class UserController {
     )
     @GetMapping("/{id}/customers")
     public List<UserResponseDto> findAllUsersForManager(@PathVariable Long id) {
-
         return userService.findAllByManagerId(id);
     }
 

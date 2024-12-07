@@ -87,7 +87,12 @@ public class AccountController {
     public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId,@Valid @RequestBody AccountRequestDto accountRequestDto){
         AccountBasicDto account = accountService.createNewAccount(accountRequestDto,userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
+    }
 
+    @PutMapping("/{id}/blocked")
+    public ResponseEntity<Void> blockAccount(@PathVariable Long id)  {
+        accountService.setAccountBlocked(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

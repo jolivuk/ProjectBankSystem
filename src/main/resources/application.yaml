@@ -7,21 +7,34 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:db/init.sql
-      data-locations: classpath:db/data.sql
-
   jpa:
     hibernate:
       show_sql: true
       format_sql: true
       use_sql_comments: true
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+
+logging:
+  level:
+    root: INFO
+    com.example.myapp: DEBUG
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/myapp.log
+
+logback:
+  rollingpolicy:
+    max-file-size: 10MB
+    total-size-cap: 100MB
+    max-history: 7
 
 jwt:
   expiration: 3600000

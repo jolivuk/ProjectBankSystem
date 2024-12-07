@@ -308,8 +308,15 @@ class AccountControllerTest {
 
     @Test
     void softDeleteAccount() throws Exception {
-
         Long accountId = 3L;
+        AccountBasicDto expectedAccount = new AccountBasicDto(accountId,
+                Status.DELETED,
+                3000.00,
+                "DE89370400440532013858",
+                "DEUTDEFF",
+                LocalDateTime.of(2024, 11, 21, 11, 5, 0),
+                LocalDateTime.now());
+
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/accounts/{id}", accountId)
                         .header("Authorization", "Bearer " + validToken)
@@ -327,11 +334,34 @@ class AccountControllerTest {
         String jsonResponse = afterDelete.getResponse().getContentAsString();
         AccountBasicDto afterDeleteAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
 
-        Assertions.assertEquals(3L, afterDeleteAccountJson.getId());
-        Assertions.assertEquals(3000.00, afterDeleteAccountJson.getBalance());
-        Assertions.assertEquals(Status.DELETED, afterDeleteAccountJson.getStatus());
-        Assertions.assertEquals("DE89370400440532013858", afterDeleteAccountJson.getIban());
-        Assertions.assertEquals("DEUTDEFF", afterDeleteAccountJson.getSwift());
+        Assertions.assertEquals(expectedAccount,afterDeleteAccountJson);
 
+    }
+
+    @Test
+    void isBlocked() throws Exception {
+        Long accountId  = 3L;
+        AccountBasicDto expectedAccount = new AccountBasicDto(accountId,
+                Status.BLOCKED,
+                3000.00,
+                "DE89370400440532013858",
+                "DEUTDEFF",
+                LocalDateTime.of(2024, 11, 21, 11, 5, 0),
+                LocalDateTime.now());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/accounts/{id}/blocked", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        MvcResult afterBlocked = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{id}", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = afterBlocked.getResponse().getContentAsString();
+        AccountBasicDto afterBlockedAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
+
+        Assertions.assertEquals(expectedAccount,afterBlockedAccountJson);
     }
 }
