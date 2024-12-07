@@ -24,6 +24,7 @@ public class AccountBasicDto
      LocalDateTime createdAt;
      LocalDateTime lastUpdate;
 
+
      public AccountBasicDto(Long id, Status status, Double balance, String iban,
                             String swift, LocalDateTime createdAt, LocalDateTime lastUpdate) {
          this.id = id;
@@ -40,7 +41,9 @@ public class AccountBasicDto
          if (this == o) return true;
          if (o == null || getClass() != o.getClass()) return false;
          AccountBasicDto that = (AccountBasicDto) o;
-         return Objects.equals(id, that.id) && status == that.status && Objects.equals(balance, that.balance) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
+         return Objects.equals(id, that.id) && status == that.status && Objects.equals(balance, that.balance)
+                 && Objects.equals(createdAt, that.createdAt)
+                 && Objects.equals(lastUpdate.toLocalDate(), that.lastUpdate.toLocalDate());
      }
 
      @Override

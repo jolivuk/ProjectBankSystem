@@ -12,6 +12,7 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAllByUserId(Long userId);
 
+
     @Query("SELECT a FROM Account a LEFT JOIN FETCH a.user u WHERE u.role = :userRole " +
             "AND u.status = 'ACTIVE' AND a.status = 'ACTIVE'")
     List<Account> findByUserRole(@Param("userRole") Role userRole);

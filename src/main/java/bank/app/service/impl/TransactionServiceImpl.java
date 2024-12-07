@@ -17,7 +17,9 @@ import bank.app.repository.TransactionTypeRepository;
 import bank.app.service.AccountService;
 import bank.app.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import static bank.app.exeption.errorMessage.ErrorMessage.NOT_ENOUGH_BALANCE;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -34,30 +37,41 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
 
     @Override
-    public Transaction getTransactionById(Long id){
-        if(id == null){
+    public Transaction getTransactionById(Long id) {
+        log.info("Attempting to get transaction with ID: {}", id);
+        if (id == null) {
+            log.error("Transaction ID is null");
             throw new IllegalArgumentException(ErrorMessage.INVALID_TRANSATION_ID);
         }
         return transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id ));
+                .orElseThrow(() -> {
+                    log.error("Transaction not found with ID: {}", id);
+                    return new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id);
+                });
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Starting to delete transaction with ID: {}", id);
         transactionRepository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id ));
+                .orElseThrow(() -> {
+                    log.error("Cannot delete - transaction not found with ID: {}", id);
+                    return new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id);
+                });
         transactionRepository.deleteById(id);
+        log.info("Successfully deleted transaction with ID: {}", id);
     }
 
 
     @Override
     public List<TransactionResponseDto> getTransactionsByAccountId(Long accountId) {
         List<Transaction> listTransactions = transactionRepository.findBySenderIdOrReceiverId(accountId, accountId);
-        return transactionMapper.adjustedAmountsInTransactions(listTransactions,accountId);
+        return transactionMapper.adjustedAmountsInTransactions(listTransactions, accountId);
     }
 
     @Override
     public List<TransactionResponseDto> getTransactionsLastMonthByAccountId(Long accountId) {
+        log.info("Fetching transactions for account ID: {}", accountId);
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(30);
 
@@ -66,11 +80,15 @@ public class TransactionServiceImpl implements TransactionService {
                 endDate,
                 accountId
         );
+
+        log.info("Found {} transactions for account ID: {}", transactions.size(), accountId);
         return transactionMapper.adjustedAmountsInTransactions(transactions, accountId);
     }
 
     @Override
     public Transaction addNewTransaction(TransactionRequestDto transactionRequestDto) {
+        log.info("Starting new transaction from account {} to account {}, amount: {}",
+                transactionRequestDto.sender(), transactionRequestDto.receiver(), transactionRequestDto.amount());
 
         Account sender = accountService.getAccountById(transactionRequestDto.sender());
         Account receiver = accountService.getAccountById(transactionRequestDto.receiver());
@@ -82,15 +100,17 @@ public class TransactionServiceImpl implements TransactionService {
 
         TransactionType transactionType = transactionTypeRepository
                 .findByTransactionTypeName(transactionRequestDto.transactionType())
-                .orElseThrow(() ->
-                        new TransactionTypeException(ErrorMessage.INVALID_TRANSATION_TYPE));
+                .orElseThrow(() -> {
+                    log.error("Invalid transaction type: {}", transactionRequestDto.transactionType());
+                    return new TransactionTypeException(ErrorMessage.INVALID_TRANSATION_TYPE);
+                });
 
 
         Transaction transaction = new Transaction(sender, receiver, transactionRequestDto.amount(),
                 transactionRequestDto.comment(), TransactionStatus.INITIALIZED, transactionType);
 
         transaction.setTransactionStatus(TransactionStatus.PROCESSING);
-        transaction.setFee(transactionType.getTransactionFee()* transactionRequestDto.amount()/100);
+        transaction.setFee(transactionType.getTransactionFee() * transactionRequestDto.amount() / 100);
         transactionRepository.save(transaction);
 
         double totalSum = transactionRequestDto.amount() + transaction.getFee();
@@ -99,6 +119,8 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transaction.setComment(transactionRequestDto.comment() + " - Not enough balance");
             transactionRepository.save(transaction);
+            log.error("Transaction failed - insufficient balance. Account: {}, Required: {}, Available: {}",
+                    sender.getId(), totalSum, sender.getBalance());
             throw new BalanceException(NOT_ENOUGH_BALANCE + transactionRequestDto.sender());
         }
 
@@ -112,6 +134,10 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.save(sender);
         accountRepository.save(receiver);
         accountRepository.save(bank);
+
+        log.info("Transaction completed successfully. ID: {}, From: {}, To: {}, Amount: {}, Fee: {}",
+                savedTransaction.getId(), sender.getId(), receiver.getId(),
+                transactionRequestDto.amount(), transaction.getFee());
 
         return savedTransaction;
     }
