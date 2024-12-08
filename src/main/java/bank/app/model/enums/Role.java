@@ -10,8 +10,7 @@ public enum Role {
     ROLE_ADMIN( "ADMIN"),
     ROLE_CUSTOMER("CUSTOMER"),
     ROLE_MANAGER("MANAGER"),
-    ROLE_BANK("BANK"),
-    ROLE_GUEST("GUEST");
+    ROLE_BANK("BANK");
 
     private final String shortRole;
 }

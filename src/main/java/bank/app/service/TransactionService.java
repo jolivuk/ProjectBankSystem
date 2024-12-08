@@ -3,6 +3,8 @@ package bank.app.service;
 import bank.app.dto.TransactionRequestDto;
 import bank.app.dto.TransactionResponseDto;
 import bank.app.model.entity.Transaction;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TransactionService {

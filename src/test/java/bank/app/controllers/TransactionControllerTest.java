@@ -20,6 +20,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,7 +54,7 @@ class TransactionControllerTest {
 
         TransactionResponseDto expectedTransaction = new TransactionResponseDto(
                 2L,2L,3L,500,"ATM withdrawal",
-                "2024-11-21T11:30",
+                LocalDateTime.of(2024, 11, 21, 11, 30),
                 "COMPLETED", TransactionTypeName.WITHDRAWAL
         );
 

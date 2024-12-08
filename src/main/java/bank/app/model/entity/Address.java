@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.Objects;
 
-
 @Entity
 @Getter
 @Setter
@@ -58,14 +57,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", postcode='" + postcode + '\'' +
-                ", street='" + street + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", info='" + info + '\'' +
-                '}';
+        return houseNumber + " " + street + " " + postcode +  " " + city + " " + country;
     }
 }

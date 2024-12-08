@@ -3,6 +3,7 @@ package bank.app.controllers;
 import bank.app.exeption.errorMessage.ErrorMessage;
 import bank.app.security.JwtTokenHelper;
 import bank.app.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
+@Tag(name = "auth-сontroller", description = "API for authentication and authorization")
 public class AuthController {
+
     private AuthenticationService authenticationService;
     private AuthenticationManager authenticationManager;
     private JwtTokenHelper jwtTokenHelper;

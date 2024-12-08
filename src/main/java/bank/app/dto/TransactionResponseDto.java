@@ -4,6 +4,8 @@ import bank.app.model.enums.TransactionTypeName;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 
 @Setter
 @Getter
@@ -16,12 +18,12 @@ public class TransactionResponseDto {
          Long receiver;
          double amount;
          String comment;
-         String transactionDate;
+         LocalDateTime transactionDate;
          String transactionStatus;
          TransactionTypeName transactionType;
 
     public TransactionResponseDto(long transactionId, Long sender, Long receiver, double amount, String comment,
-                                  String transactionDate, String transactionStatus, TransactionTypeName transactionType) {
+                                  LocalDateTime transactionDate, String transactionStatus, TransactionTypeName transactionType) {
         this.transactionId = transactionId;
         this.sender = sender;
         this.receiver = receiver;

@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,7 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -51,7 +49,7 @@ public class SecurityConfig {
                                 "/accounts/**",
                                 "/transactions/**").hasRole(Role.ROLE_ADMIN.getShortRole())
                         .requestMatchers(HttpMethod.GET,
-                                        "/users/{id}",
+                                "/users/{id}",
                                 "/users/{id}/private_info").hasRole(Role.ROLE_CUSTOMER.getShortRole())
 
                         .requestMatchers(HttpMethod.PUT,
@@ -61,8 +59,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/users/",
                                 "/users/{id}/private_info/").hasRole(Role.ROLE_CUSTOMER.getShortRole())
-
-
 
                         .requestMatchers("/index.html",
                                 "/users",

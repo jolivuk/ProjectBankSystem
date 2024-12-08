@@ -37,5 +37,5 @@ logback:
     max-history: 7
 
 jwt:
-  expiration: 3600000
+  expiration: 600000
   algorithm: HS256

@@ -14,6 +14,8 @@ public class SwaggerConfig {
     public OpenAPI api() {
         return new OpenAPI()
                 .servers(List.of(new io.swagger.v3.oas.models.servers.Server().url("http://localhost:8080")))
-                .info(new Info().title("BankPortal"));
+                .info(new Info().title("BankPortal"))
+                .addTagsItem(new io.swagger.v3.oas.models.tags.Tag().name("auth-сontroller")
+                        .description("Authentication and Authorization API"));
     }
 }

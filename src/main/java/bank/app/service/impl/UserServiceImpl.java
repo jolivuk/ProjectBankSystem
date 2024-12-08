@@ -15,7 +15,6 @@ import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
 import bank.app.repository.PrivateInfoRepository;
 import bank.app.repository.UserRepository;
-import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static bank.app.exeption.errorMessage.ErrorMessage.*;
+import static bank.app.util.PrivateInfoUtil.createPrivateInfo;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +37,6 @@ import static bank.app.exeption.errorMessage.ErrorMessage.*;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PrivateInfoService privateInfoService;
     private final AccountRepository accountRepository;
     private final UserMapper userMapper;
     private final PrivateInfoRepository privateInfoRepository;
@@ -162,7 +161,7 @@ public class UserServiceImpl implements UserService {
                     return new UserNotFoundException("User with ID " + id + " not found");
                 });
 
-        PrivateInfo privateInfo = privateInfoService.createPrivateInfo(privateInfoRequestDto,user);
+        PrivateInfo privateInfo = createPrivateInfo(privateInfoRequestDto,user);
 
         privateInfoRepository.save(privateInfo);
 

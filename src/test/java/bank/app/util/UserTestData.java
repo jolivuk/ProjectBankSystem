@@ -1,4 +1,4 @@
-package bank.app.utils;
+package bank.app.util;
 
 import bank.app.dto.*;
 import bank.app.model.enums.DocumentType;
@@ -31,7 +31,7 @@ public class UserTestData {
                 address
         );
 
-        UserResponseDto expectedUser = new UserResponseDto(
+        return new UserResponseDto(
                 2L,
                 "manager1",
                 "password123",
@@ -40,8 +40,6 @@ public class UserTestData {
                 null,
                 privateInfo
         );
-
-        return expectedUser;
     }
 
     public static UserResponseDto getDeletedUserResponseDto(){
@@ -68,7 +66,7 @@ public class UserTestData {
                 address
         );
 
-        UserResponseDto expectedUser = new UserResponseDto(
+        return new UserResponseDto(
                 2L,
                 "manager1",
                 "password123",
@@ -77,13 +75,11 @@ public class UserTestData {
                 null,
                 privateInfo
         );
-
-        return expectedUser;
     }
 
     public static UserResponseDto getUserResponseDtoUpdate(){
         UserResponseDto expectedUser = getUserResponseDto();
-        UserResponseDto responseUpdatedDto = new UserResponseDto(
+        return new UserResponseDto(
                 2L,
                 "updatedUser",
                 "newPassword123",
@@ -92,7 +88,6 @@ public class UserTestData {
                 null,
                 expectedUser.privateInfoResponse()
         );
-        return responseUpdatedDto;
     }
 
     public static PrivateInfoRequestDto getPrivateInfoRequestDto(){
@@ -156,12 +151,10 @@ public class UserTestData {
                 LocalDate.of(1985, 6, 15),
                 DocumentType.PASSPORT_EU,"D87654321",null, addressResponseDto);
 
-        UserResponseDto user = new UserResponseDto(
+        return new UserResponseDto(
                 5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
                 privateInfoResponseDto
         );
-
-        return user;
     }
 
     public static List<UserResponseDto> getAllUsers(){

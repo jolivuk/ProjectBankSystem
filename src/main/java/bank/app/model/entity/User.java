@@ -43,9 +43,8 @@ public class User implements UserDetails {
 
     @OneToOne(
             mappedBy = "user",
-            cascade = CascadeType.ALL,
-            optional = true,
-            fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL
+    )
     @JoinColumn(name = "private_info_id")
     private PrivateInfo privateInfo;
 
@@ -57,11 +56,11 @@ public class User implements UserDetails {
     @JoinColumn(name="manager_id", referencedColumnName = "user_id")
     private User manager;
 
-
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     private List<Account> accounts = new ArrayList<>();
 

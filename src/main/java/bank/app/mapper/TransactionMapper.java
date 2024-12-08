@@ -19,7 +19,7 @@ public class TransactionMapper {
                 transaction.getReceiver().getId(),
                 transaction.getAmount(),
                 transaction.getComment(),
-                transaction.getTransactionDate().toString(),
+                transaction.getTransactionDate(),
                 transaction.getTransactionStatus().toString(),
                 transaction.getTransactionType().getTransactionTypeName()
         );
@@ -38,7 +38,7 @@ public class TransactionMapper {
                             transaction.getReceiver().getId(),
                             adjustedAmount,
                             transaction.getComment(),
-                            transaction.getTransactionDate().toString(),
+                            transaction.getTransactionDate(),
                             transaction.getTransactionStatus().toString(),
                             transaction.getTransactionType().getTransactionTypeName()
                     );

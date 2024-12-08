@@ -1,28 +1,32 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AccountBasicDto;
-import bank.app.dto.AccountFullDto;
-import bank.app.dto.AccountRequestDto;
+import bank.app.dto.*;
 import bank.app.exeption.AccountAlreadyDeletedException;
 import bank.app.exeption.AccountIsBlockedException;
 import bank.app.exeption.AccountNotFoundException;
 import bank.app.exeption.UserNotFoundException;
 import bank.app.exeption.errorMessage.ErrorMessage;
 import bank.app.mapper.AccountMapper;
+import bank.app.mapper.TransactionMapper;
 import bank.app.model.entity.Account;
+import bank.app.model.entity.Transaction;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
+import bank.app.repository.TransactionRepository;
 import bank.app.repository.UserRepository;
 import bank.app.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
+import static bank.app.util.TransactionUtil.calculateTotalExpenses;
+import static bank.app.util.TransactionUtil.calculateTotalIncome;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +35,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final AccountMapper accountMapper;
+    private final TransactionRepository transactionRepository;
+    private final TransactionMapper transactionMapper;
 
     public Account getAccountById(Long accountId) {
         log.info("Fetching account with ID: {}", accountId);
@@ -53,6 +59,7 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.toAccountBasicDto(account);
     }
 
+    // todo проверить сколько запросов приходит в базу данных
     @Override
     public AccountFullDto getFullAccountInfo(Long accountId) {
         log.info("Fetching full info for account with ID: {}", accountId);
@@ -141,4 +148,34 @@ public class AccountServiceImpl implements AccountService {
         log.info("Successfully blocked account ID: {}", accountId);
     }
 
+    @Override
+    public AccountReportDto generateAccountPdfBetweenDates(Long accountId, LocalDate startDate, LocalDate endDate) {
+        Account account = getAccountById(accountId);
+        User user = account.getUser();
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        List<Transaction> transactions = transactionRepository
+                .findByDateRangeAndAccount(startDateTime,endDateTime,accountId);
+
+        List<TransactionResponseDto> transactionResponseDtoList =
+                transactionMapper.adjustedAmountsInTransactions(transactions,accountId);
+
+        return new AccountReportDto(
+                account.getId(),
+                account.getStatus(),
+                account.getBalance(),
+                account.getIban(),
+                account.getSwift(),
+                account.getCreatedAt(),
+                account.getLastUpdate(),
+                transactionResponseDtoList,
+                user.getPrivateInfo().getFirstName(),
+                user.getPrivateInfo().getLastName(),
+                user.getPrivateInfo().getAddress().toString(),
+                calculateTotalIncome(transactions,accountId),
+                calculateTotalExpenses(transactions,accountId)
+        );
+    }
 }
