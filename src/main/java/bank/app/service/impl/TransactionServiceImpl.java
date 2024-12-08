@@ -142,20 +142,4 @@ public class TransactionServiceImpl implements TransactionService {
 
         return savedTransaction;
     }
-
-    @Override
-    public List<TransactionResponseDto> getTransactionsBetweenDates(Long accountId, LocalDate startDate, LocalDate endDate) {
-        log.info("Fetching transactions for account ID: {} between {} and {}", accountId,startDate,endDate);
-
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
-        List<Transaction> transactions = transactionRepository.findByDateRangeAndAccount(
-                startDateTime,
-                endDateTime,
-                accountId
-        );
-
-        log.info("Found {} transactions for account ID: {} between {} and {}", transactions.size(), accountId,startDate,endDate);
-        return transactionMapper.adjustedAmountsInTransactions(transactions, accountId);
-    }
 }
