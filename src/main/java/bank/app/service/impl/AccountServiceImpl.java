@@ -28,7 +28,6 @@ import java.util.List;
 import static bank.app.util.TransactionUtil.calculateTotalExpenses;
 import static bank.app.util.TransactionUtil.calculateTotalIncome;
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j

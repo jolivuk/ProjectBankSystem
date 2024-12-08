@@ -25,6 +25,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("endDate") LocalDateTime endDate,
             @Param("accountId") Long accountId
     );
-
 }
 

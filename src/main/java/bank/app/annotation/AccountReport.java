@@ -1,7 +1,6 @@
 package bank.app.annotation;
 
 import bank.app.dto.AccountReportDto;
-import bank.app.dto.UserRequestDto;
 import bank.app.exeption.handler.ResponseExceptionHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

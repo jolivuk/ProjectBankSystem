@@ -1,6 +1,5 @@
 package bank.app.controllers;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
