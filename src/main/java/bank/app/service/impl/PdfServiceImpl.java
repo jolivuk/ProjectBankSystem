@@ -117,7 +117,7 @@ public class PdfServiceImpl implements PdfService {
         cell = new PdfPCell(new Phrase("Total Income:"));
         table1.addCell(cell);
         if (accountPdfDto.getTotalIncome()>0) {
-            table1.addCell("+" + accountPdfDto.getTotalIncome().toString());
+            table1.addCell("+" + accountPdfDto.getTotalIncome());
         }
         else {
             table1.addCell(accountPdfDto.getTotalIncome().toString());

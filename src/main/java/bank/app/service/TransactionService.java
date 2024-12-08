@@ -13,5 +13,4 @@ public interface TransactionService {
     List<TransactionResponseDto> getTransactionsByAccountId(Long accountId);
     List<TransactionResponseDto> getTransactionsLastMonthByAccountId(Long accountId);
     Transaction addNewTransaction(TransactionRequestDto transactionRequestDto);
-    List<TransactionResponseDto> getTransactionsBetweenDates(Long accountId, LocalDate startDate, LocalDate endDate);
 }

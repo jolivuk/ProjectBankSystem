@@ -97,7 +97,7 @@ public class AccountController {
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
 
-        byte[] pdfContent = null;
+        byte[] pdfContent;
         try {
             pdfContent = pdfService.generateAccountPdf(accountId, startDate, endDate);
         } catch (DocumentException | IOException e) {

@@ -43,9 +43,8 @@ public class User implements UserDetails {
 
     @OneToOne(
             mappedBy = "user",
-            cascade = CascadeType.ALL,
-            optional = true,
-            fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL
+    )
     @JoinColumn(name = "private_info_id")
     private PrivateInfo privateInfo;
 

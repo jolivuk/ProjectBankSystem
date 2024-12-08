@@ -1,6 +1,5 @@
 package bank.app.repository;
 
-import bank.app.model.entity.Account;
 import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
