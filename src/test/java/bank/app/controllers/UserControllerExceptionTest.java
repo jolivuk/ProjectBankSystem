@@ -5,7 +5,7 @@ import bank.app.dto.UserRequestDto;
 import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.security.JwtTokenHelper;
-import bank.app.utils.UserTestData;
+import bank.app.util.UserTestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

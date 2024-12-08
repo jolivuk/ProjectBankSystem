@@ -1,4 +1,4 @@
-package bank.app.utils;
+package bank.app.util;
 
 import bank.app.dto.*;
 import bank.app.model.enums.DocumentType;

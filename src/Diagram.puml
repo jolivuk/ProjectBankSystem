@@ -45,11 +45,6 @@ entity Address {
    + info : varchar(64)
 }
 
-entity Role {
-   + PK id : INT
-   + role_name : varchar(128)
-}
-
 ' Домен счетов
 entity Account {
    + PK id : INT
@@ -96,12 +91,10 @@ entity TransactionType {
 
 ' Связи базового домена
 User ||--|| PrivateInfo : private_info_id
-User ||--|| Role : role_id
 User ||--o{ User : manager_id
 User ||--o{ Account : user_id
 PrivateInfo ||--|| Address : address_id
 PrivateInfo }|--|| documentType : documentType_id
-Account ||--|| Transaction : account_id
 
 ' Связи транзакционного домена
 Transaction }|--|| Account : sender >

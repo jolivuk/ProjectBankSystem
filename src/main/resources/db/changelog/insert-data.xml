@@ -196,6 +196,7 @@
             <column name="fee">2.50</column>
             <column name="comment">Monthly transfer</column>
             <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-09-01T09:00:00</column>
         </insert>
         <insert tableName="transactions">
             <column name="sender_id">3</column>
@@ -205,6 +206,7 @@
             <column name="fee">3.00</column>
             <column name="comment">ATM withdrawal</column>
             <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-09-15T14:30:00</column>
         </insert>
         <insert tableName="transactions">
             <column name="sender_id">2</column>
@@ -214,6 +216,7 @@
             <column name="fee">0.00</column>
             <column name="comment">Salary deposit</column>
             <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-10-01T10:00:00</column>
         </insert>
         <insert tableName="transactions">
             <column name="sender_id">4</column>
@@ -223,6 +226,7 @@
             <column name="fee">2.50</column>
             <column name="comment">Bill payment</column>
             <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-10-15T18:45:00</column>
         </insert>
         <insert tableName="transactions">
             <column name="sender_id">2</column>
@@ -232,6 +236,7 @@
             <column name="fee">3.00</column>
             <column name="comment">Cash withdrawal</column>
             <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-11-01T08:20:00</column>
         </insert>
         <insert tableName="transactions">
             <column name="sender_id">2</column>
@@ -241,6 +246,7 @@
             <column name="fee">1.50</column>
             <column name="comment">Service fee</column>
             <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-12-01T11:55:00</column>
         </insert>
     </changeSet>
 </databaseChangeLog>

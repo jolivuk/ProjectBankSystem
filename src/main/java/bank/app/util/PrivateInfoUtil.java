@@ -1,26 +1,23 @@
-package bank.app.service.impl;
+package bank.app.util;
 
 import bank.app.dto.AddressRequestDto;
 import bank.app.dto.PrivateInfoRequestDto;
 import bank.app.model.entity.Address;
 import bank.app.model.entity.PrivateInfo;
 import bank.app.model.entity.User;
-import bank.app.service.AddressService;
-import bank.app.service.PrivateInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
-@Service
 @RequiredArgsConstructor
-public class PrivateInfoServiceImpl implements PrivateInfoService {
-    private final AddressService addressService;
+@Slf4j
+public class PrivateInfoUtil{
 
-    @Override
-    public PrivateInfo createPrivateInfo(PrivateInfoRequestDto privateInfoRequestDto, User user) {
+    public static PrivateInfo createPrivateInfo(PrivateInfoRequestDto privateInfoRequestDto, User user) {
 
         AddressRequestDto addressRequestDto = privateInfoRequestDto.address();
-        Address address = addressService.createAddress(addressRequestDto);
+        Address address = createAddress(addressRequestDto);
 
+        log.info("Creating new PrivateInfo for user: {}", user.getId());
         PrivateInfo privateInfo = PrivateInfo.builder()
                 .firstName(privateInfoRequestDto.firstName())
                 .lastName(privateInfoRequestDto.lastName())
@@ -36,6 +33,18 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
 
         address.setPrivateInfo(privateInfo);
         return privateInfo;
+    }
+
+    public static Address createAddress(AddressRequestDto addressRequestDto) {
+        log.info("Creating new address for city: {}", addressRequestDto.city());
+        return Address.builder()
+                .country(addressRequestDto.country())
+                .city(addressRequestDto.city())
+                .street(addressRequestDto.street())
+                .houseNumber(addressRequestDto.houseNumber())
+                .postcode(addressRequestDto.postcode())
+                .info(addressRequestDto.info())
+                .build();
     }
 
 }

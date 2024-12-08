@@ -9,4 +9,8 @@ public record AddressResponseDto(
         String houseNumber,
         String info
 ) {
+    @Override
+    public String toString() {
+        return houseNumber + " " + street + " " + postcode +  " " + city + " " + country;
+    }
 }

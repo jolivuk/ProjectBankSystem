@@ -57,11 +57,11 @@ public class User implements UserDetails {
     @JoinColumn(name="manager_id", referencedColumnName = "user_id")
     private User manager;
 
-
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     private List<Account> accounts = new ArrayList<>();
 

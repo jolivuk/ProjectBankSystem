@@ -7,7 +7,6 @@ import bank.app.model.entity.User;
 import bank.app.model.enums.Role;
 import bank.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

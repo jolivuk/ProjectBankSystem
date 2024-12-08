@@ -13,6 +13,7 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     List<Transaction> findBySenderIdOrReceiverId(Long accountId, Long accountId1);
+
     @Query("SELECT t FROM Transaction t " +
             "LEFT JOIN FETCH t.sender s " +
             "LEFT JOIN FETCH t.receiver r " +

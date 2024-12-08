@@ -23,7 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -51,7 +50,7 @@ public class SecurityConfig {
                                 "/accounts/**",
                                 "/transactions/**").hasRole(Role.ROLE_ADMIN.getShortRole())
                         .requestMatchers(HttpMethod.GET,
-                                        "/users/{id}",
+                                "/users/{id}",
                                 "/users/{id}/private_info").hasRole(Role.ROLE_CUSTOMER.getShortRole())
 
                         .requestMatchers(HttpMethod.PUT,
@@ -61,8 +60,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/users/",
                                 "/users/{id}/private_info/").hasRole(Role.ROLE_CUSTOMER.getShortRole())
-
-
 
                         .requestMatchers("/index.html",
                                 "/users",

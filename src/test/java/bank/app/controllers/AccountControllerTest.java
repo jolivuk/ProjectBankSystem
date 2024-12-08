@@ -5,27 +5,34 @@ import bank.app.model.enums.DocumentType;
 import bank.app.model.enums.Status;
 import bank.app.model.enums.TransactionTypeName;
 import bank.app.security.JwtTokenHelper;
+import bank.app.service.PdfService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,6 +50,9 @@ class AccountControllerTest {
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
+
+    @MockBean
+    private PdfService pdfService;
 
     private String validToken;
 
@@ -221,15 +231,15 @@ class AccountControllerTest {
         List<TransactionResponseDto> expectedTransactions = List.of(
                 new TransactionResponseDto(
                         1L, 2L, 3L, -200.00, "Monthly transfer",
-                        "2024-09-21T11:20",
+                        LocalDateTime.of(2024, 9, 21, 11, 20),
                         "COMPLETED", TransactionTypeName.TRANSFER
                 ),
                 new TransactionResponseDto(2L, 2L, 3L, -500.00, "ATM withdrawal",
-                        "2024-11-21T11:30",
+                        LocalDateTime.of(2024, 11, 21, 11, 30),
                         "COMPLETED", TransactionTypeName.WITHDRAWAL
                 ),
                 new TransactionResponseDto(3L, 3L, 2L, 1500.00, "Salary deposit",
-                        "2024-11-21T11:40", "COMPLETED", TransactionTypeName.DEPOSIT
+                        LocalDateTime.of(2024, 11, 21, 11, 40), "COMPLETED", TransactionTypeName.DEPOSIT
                 )
         );
 
@@ -253,10 +263,10 @@ class AccountControllerTest {
 
         List<TransactionResponseDto> expectedTransactions = List.of(
                 new TransactionResponseDto(3L, 3L, 2L, 1500.00, "Salary deposit",
-                        "2024-11-21T11:40", "COMPLETED", TransactionTypeName.DEPOSIT
+                        LocalDateTime.of(2024, 11, 21, 11, 40), "COMPLETED", TransactionTypeName.DEPOSIT
                 ),
                 new TransactionResponseDto(2L, 2L, 3L, -500.00, "ATM withdrawal",
-                        "2024-11-21T11:30",
+                        LocalDateTime.of(2024, 11, 21, 11, 30),
                         "COMPLETED", TransactionTypeName.WITHDRAWAL
                 )
         );
@@ -363,5 +373,29 @@ class AccountControllerTest {
         AccountBasicDto afterBlockedAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
 
         Assertions.assertEquals(expectedAccount,afterBlockedAccountJson);
+    }
+
+    @Test
+    public void generatePdfReportBetweenDates_ShouldReturnPdf() throws Exception {
+        // Arrange
+        Long accountId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 9, 1);
+        LocalDate endDate = LocalDate.of(2024, 9, 30);
+        byte[] pdfContent = "Sample PDF Content".getBytes();
+
+        Mockito.when(pdfService.generateAccountPdf(eq(accountId), eq(startDate), eq(endDate)))
+                .thenReturn(pdfContent);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{accountId}/pdf", accountId)
+                        .param("startDate", "01-09-2024")
+                        .param("endDate", "30-09-2024")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "inline; filename=account_report_id_" + accountId + ".pdf"))
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+                .andExpect(content().bytes(pdfContent));
     }
 }
