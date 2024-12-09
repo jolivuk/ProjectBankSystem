@@ -6,7 +6,6 @@ entity User {
    + PK id : INT
    + username : varchar(64)
    + password : varchar(64)
-   + privateInfo : PrivateInfo
    + role : Role
    + status : Status
    + manager : User
@@ -25,7 +24,7 @@ entity PrivateInfo {
    + phone : varchar(15)
    + email : varchar(64)
    + comment : varchar(255)
-   + address : Address
+   + user : User
    + createdAt : timestamp
    + lastUpdate : timestamp
 }
@@ -42,10 +41,10 @@ entity Address {
    + postcode : varchar(6)
    + street : varchar(64)
    + houseNumber : INT
+   + privateInfo : PrivateInfo
    + info : varchar(64)
 }
 
-' Домен счетов
 entity Account {
    + PK id : INT
    + user : User
@@ -53,7 +52,6 @@ entity Account {
    + swift : varchar(16)
    + status : Status
    + balance : DECIMAL(10,2)
-   + currency : varchar(3)
    + createdAt : timestamp
    + lastUpdate : timestamp
 }
@@ -62,7 +60,6 @@ entity Status{
     + statusName : varchar(16)
 }
 
-' Домен транзакций
 entity Transaction {
    + PK id : INT
    + sender : account
@@ -89,20 +86,18 @@ entity TransactionType {
    + description : varchar(64)
 }
 
-' Связи базового домена
 User ||--|| PrivateInfo : private_info_id
 User ||--o{ User : manager_id
 User ||--o{ Account : user_id
 PrivateInfo ||--|| Address : address_id
 PrivateInfo }|--|| documentType : documentType_id
 
-' Связи транзакционного домена
 Transaction }|--|| Account : sender >
 Transaction }|--|| Account : receiver >
-Transaction ||--|| TransactionStatus : transaction_status_id
-Transaction ||--|| TransactionType : transaction_type_id
+Transaction }|--|| TransactionStatus : transaction_status_id
+Transaction }|--|| TransactionType : transaction_type_id
 
-Status ||--|| Account : status_id
-Status ||--|| User : status_id
+Status ||--|{ Account : status_id
+Status ||--|{ User : status_id
 
 @enduml

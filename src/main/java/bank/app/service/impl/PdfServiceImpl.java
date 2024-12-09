@@ -25,7 +25,7 @@ public class PdfServiceImpl implements PdfService {
     @Override
     public byte[] generateAccountPdf(Long accountId, LocalDate startDate, LocalDate endDate) throws DocumentException {
 
-        AccountReportDto account = accountService.generateAccountPdfBetweenDates(accountId, startDate,endDate);
+        AccountReportDto account = accountService.generateAccountPdfBetweenDates(accountId, startDate, endDate);
 
         Document document = new Document();
 
@@ -48,7 +48,7 @@ public class PdfServiceImpl implements PdfService {
         document.add(new Paragraph("from " + startDate + " to " + endDate));
 
         float currentY = document.getPageSize().getHeight() - 77;
-        drawLine(canvas,currentY);
+        drawLine(canvas, currentY);
 
         //PrivateInfo
         document.add(new Paragraph("First Name: " + account.getFirstName()));
@@ -56,7 +56,7 @@ public class PdfServiceImpl implements PdfService {
         document.add(new Paragraph("Address : " + account.getAddress()));
 
         currentY = document.getPageSize().getHeight() - 131;
-        drawLine(canvas,currentY);
+        drawLine(canvas, currentY);
 
         //AccountInfo
         document.add(new Paragraph("IBAN: " + account.getIban()));
@@ -109,27 +109,24 @@ public class PdfServiceImpl implements PdfService {
         table1.setWidths(new float[]{1f, 1f});
         table1.setWidthPercentage(40);
 
-
         PdfPCell cell = new PdfPCell(new Phrase("Start Balance:"));
         table1.addCell(cell);
         table1.addCell(accountPdfDto.getStartBalance().toString());
 
         cell = new PdfPCell(new Phrase("Total Income:"));
         table1.addCell(cell);
-        if (accountPdfDto.getTotalIncome()>0) {
+        if (accountPdfDto.getTotalIncome() > 0) {
             table1.addCell("+" + accountPdfDto.getTotalIncome());
-        }
-        else {
+        } else {
             table1.addCell(accountPdfDto.getTotalIncome().toString());
         }
 
         cell = new PdfPCell(new Phrase("Total Expenses:"));
         table1.addCell(cell);
-        if (accountPdfDto.getTotalExpenses()>0) {
-            table1.addCell("-" + accountPdfDto.getTotalExpenses().toString());
-        }
-        else {
-            table1.addCell( accountPdfDto.getTotalExpenses().toString());
+        if (accountPdfDto.getTotalExpenses() > 0) {
+            table1.addCell("-" + accountPdfDto.getTotalExpenses());
+        } else {
+            table1.addCell(accountPdfDto.getTotalExpenses().toString());
         }
 
         cell = new PdfPCell(new Phrase("END BALANCE:", boldFont));

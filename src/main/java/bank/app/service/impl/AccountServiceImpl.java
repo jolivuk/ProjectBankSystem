@@ -59,7 +59,6 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.toAccountBasicDto(account);
     }
 
-    // todo проверить сколько запросов приходит в базу данных
     @Override
     public AccountFullDto getFullAccountInfo(Long accountId) {
         log.info("Fetching full info for account with ID: {}", accountId);

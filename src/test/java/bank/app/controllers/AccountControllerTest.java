@@ -376,7 +376,7 @@ class AccountControllerTest {
 
     @Test
     public void generatePdfReportBetweenDates_ShouldReturnPdf() throws Exception {
-        // Arrange
+
         Long accountId = 1L;
         LocalDate startDate = LocalDate.of(2024, 9, 1);
         LocalDate endDate = LocalDate.of(2024, 9, 30);
@@ -385,7 +385,6 @@ class AccountControllerTest {
         Mockito.when(pdfService.generateAccountPdf(eq(accountId), eq(startDate), eq(endDate)))
                 .thenReturn(pdfContent);
 
-        // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/{accountId}/pdf", accountId)
                         .param("startDate", "01-09-2024")
@@ -393,7 +392,8 @@ class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(status().isOk())
-                .andExpect(header().string("Content-Disposition", "inline; filename=account_report_id_" + accountId + ".pdf"))
+                .andExpect(header().string("Content-Disposition", "attachment; filename=account_report_id_"
+                        + accountId + "_" + LocalDate.now()+".pdf"))
                 .andExpect(content().contentType(MediaType.APPLICATION_PDF))
                 .andExpect(content().bytes(pdfContent));
     }
