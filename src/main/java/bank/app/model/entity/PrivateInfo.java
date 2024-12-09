@@ -17,27 +17,27 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="private_info")
+@Table(name = "private_info")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PrivateInfo {
 
     @Id
-    @Column(name="private_info_id")
+    @Column(name = "private_info_id")
     private Long id;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="phone")
+    @Column(name = "phone")
     private String phone;
 
-    @Column(name="date_of_birth")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
@@ -47,19 +47,18 @@ public class PrivateInfo {
     @Column(name = "document_number")
     private String documentNumber;
 
-    @Column(name="comment")
+    @Column(name = "comment")
     private String comment;
 
 
     @OneToOne(
             mappedBy = "privateInfo",
             cascade = CascadeType.ALL,
-            optional = false,
-            fetch = FetchType.LAZY)
+            optional = false)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @Column(name="created_at",updatable = false)
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 

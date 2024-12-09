@@ -5,13 +5,13 @@ import bank.app.annotation.AccountReportPdf;
 import bank.app.annotation.CreateAccount;
 import bank.app.dto.*;
 import bank.app.exeption.AccountNotFoundException;
+import bank.app.exeption.StartDateAfterEndDateException;
 import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
 import bank.app.service.AccountService;
 import bank.app.service.PdfService;
 import bank.app.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,11 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 
+import static bank.app.exeption.errorMessage.ErrorMessage.START_DATE_AFTER_END_DATE;
+
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
 @Validated
-@RolesAllowed("ADMIN")
 public class AccountController {
     private final AccountService accountService;
     private final PdfService pdfService;
@@ -47,7 +48,6 @@ public class AccountController {
                                                           @RequestParam(name = "full", required = false) boolean isFull) {
         return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));
     }
-
 
     @Operation(
             summary = "Get basic account information",
@@ -97,6 +97,10 @@ public class AccountController {
     public ResponseEntity<byte[]> generatePdfReportBetweenDates(@PathVariable Long accountId,
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
+            throw new StartDateAfterEndDateException(START_DATE_AFTER_END_DATE);
+        }
+
         try {
             byte[] pdfBytes = pdfService.generateAccountPdf(accountId, startDate, endDate);
 
@@ -116,6 +120,10 @@ public class AccountController {
     public ResponseEntity<AccountReportDto> generateStatisticsDataBetweenDates(@PathVariable Long accountId,
                                                                                @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
                                                                                @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
+
+        if (startDate.isAfter(endDate)) {
+            throw new StartDateAfterEndDateException(START_DATE_AFTER_END_DATE);
+        }
 
         return ResponseEntity.ok(accountService.generateAccountPdfBetweenDates(accountId, startDate, endDate));
     }
@@ -138,5 +146,4 @@ public class AccountController {
         accountService.deleteAccount(id);
         return ResponseEntity.noContent().build();
     }
-
 }

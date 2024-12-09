@@ -76,8 +76,6 @@ import java.lang.annotation.Target;
                 )
         }
 )
-
-
 public @interface CreateAccount {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};

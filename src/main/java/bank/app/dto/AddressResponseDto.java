@@ -11,6 +11,7 @@ public record AddressResponseDto(
 ) {
     @Override
     public String toString() {
-        return houseNumber + " " + street + " " + postcode +  " " + city + " " + country;
+        return houseNumber + " " + street + " " + postcode +
+                " " + city + " " + country;
     }
 }

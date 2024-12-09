@@ -80,7 +80,6 @@ import java.lang.annotation.Target;
 
         }
 )
-
 public @interface UpdateAddress {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};

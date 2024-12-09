@@ -66,7 +66,6 @@ public class SecurityConfig {
                                 "/accounts/**",
                                 "/transactions/**").hasRole(Role.ROLE_MANAGER.getShortRole())
 
-
                         .anyRequest().hasRole(Role.ROLE_ADMIN.getShortRole()))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

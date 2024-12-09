@@ -32,7 +32,6 @@ public class TransactionController {
         return ResponseEntity.ok(transactionMapper.toDto(transaction));
     }
 
-
     @Operation(
             summary = "Delete transaction by id",
             description = "accept transaction id and return ResponseEntity\\<Void\\>"

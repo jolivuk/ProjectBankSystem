@@ -1,98 +1,101 @@
-# ProjectBankSystem
+# Technical Specification for Developing the Backend of a Banking Application
 
-## Техническое задание для разработки серверной части банковского приложения
-## 1.	Введение
-### 1.1 Цель документа
-Этот документ представляет собой техническое задание для разработки бэкенда страницы банковского приложения с использованием Java Spring. ТЗ предназначено для команды студентов-бэкенд разработчиков, работающих над финальным проектом. Основной целью является создание безопасного и удобного приложения для пользователей банка с функционалом просмотра баланса, переводов средств, управления счетами и просмотра истории транзакций.
+## Project Description
+This project is a banking application designed to manage bank accounts and facilitate interactions 
+between users and the bank. It enables clients to manage their accounts, perform transfers, check 
+balances, and generate account statements for specified date ranges.
 
-## 2.	Общее описание
-### 2.1 Обзор
-Бэкэнд-разработка банковского приложения получает, обрабатывает и передает все данные фронтенду, чтобы предоставлять клиентам возможность управлять своими банковскими счетами, выполнять переводы и проверять баланс. Администраторам необходимо предоставлять инструменты для управления пользователями, счетами и отчетностью. _(Часть фронтенда в проекте не рассматривается: на нашем потоке нет фронтэндов)_
-Идеи названий : PayFlow
-### 2.2 Функции продукта
-*	Система авторизации и аутентификации клиентов.
-*	Управление банковскими счетами (просмотр баланса, создание новых счетов, закрытие счетов, блокирование счета клиента).
-*	Переводы средств между счетами внутри банка и на внешние счета.
-*	Просмотр истории транзакций с фильтрацией.
-*	Управление профилем пользователя (создание, внесение изменений).
-*	Уведомления о транзакциях и активностях по счету
-### 2.3 Классы пользователей и характеристики
-*	Клиенты: физические лица, которые используют приложение для управления своими счетами и выполнения транзакций.
-*	Администраторы: банковские сотрудники, управляющие счетами, транзакциями и отчетностью, уровни доступа (1 - все возможности: просмотр, фильтрация, редактирование, удаление, 2 - просмотр, фильтрация)
+## Key Features
+- **Authentication and Authorization System**: Supports roles (Admin, Manager, Client).
+- **Bank Account Management**: Create new accounts, block accounts, view balances, and close accounts.
+- **Money Transfers**: Facilitate transfers between accounts.
+- **Transaction History**: View transaction history with date filters and export data to PDF.
+- **User Profile Management**: Create and edit profiles.
+- **Notifications**: Notify users about operations and account activities.
+- **Integration with Third-Party Services**: Support for payments through external services.
 
-## 3.	Требования к функциональности
-### 3.1 Управление учетными записями пользователей
-*	Регистрация новых клиентов с вводом имени, фамилии, электронной почты, телефона, пароля и других необходимых данных, отправка подтверждающих документов.
-*	Валидация данных пользователя при регистрации или внесении изменений (проверка администратором и подтверждение валидации)
-*	Внесение изменений контактной информации (имени, фамилии, домашнего адреса, даты рождения, паспортных данных, адреса электронной почты и номера телефона). 
-*	Авторизация по email и паролю для безопасности.
-*	Возможность восстановления доступа через email.
-*	Возможность удалять учетную запись клиента. (два типа удаления - УЗ, отметить запись удаленной в базе данных, но сохранить всю информацию, полное удаление - удаляет всю персональную информацию из базы данных)
-*	Смена пароля и аутентификация 
-*	Возможность привязки карт для пополнения счета или оплаты услуг.
-*	Возможность подключить накопительный счет (процент накопительного счета, как долго сумма должна быть на счете, автоматическое списание на счет)
+## Technologies Used
+- **Spring Boot**: Core framework for building the web application, creating REST APIs, managing 
+dependencies, ensuring security, and validating data.
+- **JPA + MySQL**: For database operations using Java Persistence API and MySQL as the database.
+- **Liquibase**: Manages database migrations and schema version control.
+- **JWT (JSON Web Token)**: Provides secure user authentication and authorization.
+- **SpringDoc OpenAPI**: Automatically generates API documentation using Swagger.
+- **Lombok**: Reduces boilerplate code by generating getters, setters, constructors, etc.
+- **iText PDF**: Generates PDF documents, such as reports and transaction histories.
+- **H2**: Lightweight database used for testing and development.
+- **Jackson**: Handles JSON data during REST API exchanges.
+- **Testing Tools**:
+    - **JUnit**: For unit testing.
+    - **Mockito**: For creating mock objects.
+    - **Spring Security Test**: For testing security features.
 
-### 3.2 Управление банковскими счетами
-*	Клиенты могут создавать новые счета (например, сберегательные, расчетные).
-*	Возможность закрытия счета клиентом.
-*	Просмотр баланса счета в реальном времени.
-*	Просмотр списков счетов
-*	Выбор типа счета (обычный, накопительный)
-   
-### 3.3 Переводы средств
-*	Переводы между собственными счетами клиента.
-*	Переводы на счета других клиентов банка.
-*	Переводы на внешние счета (необходимо предусмотреть валидацию банковских реквизитов).
-*	За внешние переводы высчитывается комиссия, которая переходит на счет заказчика приложения.
-*	Ввод суммы перевода, выбор счета отправителя и получателя, подтверждение транзакции с использованием одноразового пароля (OTP).
-*	Введение комиссий за переводы и расчет итоговой суммы.
-  
-### 3.4 Получение оплаты от сторонних сервисов
-*	Публичный API для оплаты сервисов
-*	Получение данных для проведения оплаты 
-    *	номер карты клиента
-    *	дата действия карты
-    *	код CVC
-    *	сумма
-    *	комментарий для транцакции 
-    *	номер счета получателя (интернет-магазина, зарегестрированного в банковской системе)
+## User Classes and Characteristics
+- **Clients**:
+    - Individual users managing their accounts.
+    - Can create accounts, perform transfers, and generate statistics for a selected period.
+- **Managers**:
+    - Bank staff managing accounts, transactions, and associated users.
+    - Responsible for adding and removing clients.
+- **Administrator**:
+    - Staff with full access and the ability to manage permissions.
+    - Can view and manage all clients, not limited to their own.
 
-Ответ возвращает результат выполения операции перевода – 
-    *	результат операции – успешно/отклонено
-    *	номер транзакции (уникальный идентификатор перевода)
-    *	статус перевода (код ошибки, в случае неуспешной транзакции)
+## Functional Requirements
+- **User Account Management**:
+    - Registration, authorization, profile editing, and the ability to block or delete accounts.
+- **Bank Account Management**:
+    - Create, close, view balances, and list all client accounts.
+    - Create new transactions.
+- **Money Transfers**:
+    - Transfers between the user’s own accounts.
+    - Transfers to other clients’ accounts within the bank.
+- **Transaction History**:
+    - Filter transactions by date.
+    - Export transaction history to PDF.
 
- __код ошибки__ в случае невозможности проведения оплаты:
-    *	не действительная карта клиента
-    *	не совпадает CVC
-    *	не достаточно средств у клиента
-    *	не действителен счет получателя
-    *	техническая ошибка платежной системе
-*	Проверка достатка средств для оплаты заказа при списывании со счета
-*	Код проверки, который будет отправляться заказчику через емэйл (телеграм-бот) при введении оплаты 
-### 3.5 История транзакций
-*	Пользователь должен иметь возможность просматривать историю транзакций по каждому счету.
-*	Фильтрация по дате, сумме, типу транзакции (перевод, платеж, пополнение).
-*	Возможность экспорта истории транзакций в формате CSV или PDF.
-### 3.6 Уведомления
-*	Уведомления в реальном времени при поступлении средств на счет или выполнении операции.
-*	Возможность выбора типа уведомлений: по SMS, электронной почте или push-уведомлениям или через телеграм-бота
-### 3.7 Функционал для администраторов
-*	Возможность просматривать счет клиента
-*	Просмотр и обработка пула от клиентов (список запросов, валидация, вопросы) 
-## 4.	Требования к технологическому стеку
-### 4.1 Язык программирования и фреймворки
-    *	Язык программирования: Java 17 и выше.
-    *	Основной фреймворк: Spring Boot 3.x.
-    *	Безопасность: Spring Security.
-    *	Работа с данными: Spring Data JPA/Hibernate.
-    *	СУБД: MySQL.
-    *	Docker: для контейнеризации компонентов приложения.
+## Technology Stack Requirements
+- **Programming Language**: Java 17 or later.
+- **Framework**: Spring Boot 3.x.
+- **Security**: Spring Security.
+- **Data Management**: Spring Data JPA/Hibernate.
+- **Database**: MySQL.
+- **Containerization**: Docker.
 
-## 5.	Требования к интерфейсу
-### 5.1 Внешние интерфейсы (API для фронтенда)
-○	RESTful API: приложение должно предоставлять REST API для взаимодействия с фронтендом. Поддержка основных HTTP методов (GET, POST, PUT, DELETE).
-○	Формат данных: обмен данными осуществляется в формате JSON.
-○	Аутентификация и авторизация: использование JWT для безопасности.
-○	Документация API: подробное описание всех доступных эндпоинтов, параметров и ответов. Использование Swagger для автоматизации документации.
- 
+## Interfaces and Documentation
+- **RESTful API**: Interaction with the frontend via HTTP methods (GET, POST, PUT, DELETE) using
+JSON format.
+- **Authentication and Authorization**: JWT for security.
+- **API Documentation**: Automatically generated with Swagger using SpringDoc OpenAPI.
+
+## Additional Technologies and Tools
+- **Liquibase**: Tracks and manages database schema changes, ensuring compatibility across development 
+- stages.
+- **H2**: Used as a test database during development and testing.
+- **Testing**:
+    - **JUnit** and **Mockito** for unit tests and mock objects.
+    - **Spring Security Test** for security testing.
+
+## Future Project Development
+
+### Planned Features
+1. **Enhanced Confirmation System**:
+    - Implement confirmation of critical actions (e.g., transactions, profile updates) through:
+        - SMS notifications.
+        - Email verification.
+        - Telegram bot integration for real-time confirmations.
+
+2. **Integration of Credit Card Entities**:
+    - Add support for credit cards linked to bank accounts.
+    - Features include:
+        - Viewing linked credit cards and their details.
+        - Managing credit card limits and transactions.
+        - Supporting credit card payments and balance checks.
+
+3. **External Bank Transfers**:
+    - Enable transfers to accounts in external banks.
+    - Include:
+        - Validation of external bank account details (e.g., IBAN, SWIFT).
+        - Support for transfer fees and exchange rates where applicable.
+        - Secure processing of external transfers with user confirmation mechanisms.
+

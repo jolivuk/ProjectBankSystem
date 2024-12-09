@@ -36,8 +36,18 @@ public class ResponseExceptionHandler {
     }
 
 
-    @ExceptionHandler(AccountNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotFoundException(AccountNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exception.getMessage(),
@@ -56,6 +66,16 @@ public class ResponseExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.LOCKED);
     }
 
+    @ExceptionHandler(AccountAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleAccountAlreadyDeletedException(AccountAlreadyDeletedException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(BalanceException.class)
     public ResponseEntity<ErrorResponse> handleBalanceException(BalanceException exception) {
         ErrorResponse error = new ErrorResponse(
@@ -68,6 +88,16 @@ public class ResponseExceptionHandler {
 
     @ExceptionHandler(TransactionTypeException.class)
     public ResponseEntity<ErrorResponse> handleTransactionTypeException(TransactionTypeException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StartDateAfterEndDateException.class)
+    public ResponseEntity<ErrorResponse> handleStartDateAfterEndDateException(StartDateAfterEndDateException exception) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 exception.getMessage(),

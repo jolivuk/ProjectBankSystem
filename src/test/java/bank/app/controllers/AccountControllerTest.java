@@ -61,7 +61,6 @@ class AccountControllerTest {
     }
 
 
-
     @Test
     void getBasicAccountInfo() throws Exception {
 
@@ -94,6 +93,34 @@ class AccountControllerTest {
     @Test
     void getFullAccountInfo() throws Exception {
 
+        UserResponseDto userResponseDto = getUserResponseDto();
+        AccountFullDto expectedAccount = new AccountFullDto(
+                4L,
+                Status.ACTIVE,
+                3000.00,
+                "DE89370400440532013001",
+                "DEUTDEFF",
+                LocalDateTime.of(2024, 11, 21, 11, 10, 0),
+                LocalDateTime.of(2024, 11, 21, 11, 10, 0),
+                userResponseDto);
+
+        Long accountId = 4L;
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{accountId}?full=true", accountId)
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+
+        AccountFullDto actualAccount = objectMapper.readValue(jsonResponse, AccountFullDto.class);
+
+
+        Assertions.assertEquals(expectedAccount, actualAccount);
+    }
+
+    private static UserResponseDto getUserResponseDto() {
         AddressResponseDto address = new AddressResponseDto(3L,
                 "Germany",
                 "Berlin",
@@ -121,30 +148,7 @@ class AccountControllerTest {
                 2L,
                 privateInfo
         );
-        AccountFullDto expectedAccount = new AccountFullDto(
-                4L,
-                Status.ACTIVE,
-                3000.00,
-                "DE89370400440532013001",
-                "DEUTDEFF",
-                LocalDateTime.of(2024, 11, 21, 11, 10, 0),
-                LocalDateTime.of(2024, 11, 21, 11, 10, 0),
-                userResponseDto);
-
-        Long accountId = 4L;
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/accounts/{accountId}?full=true", accountId)
-                        .header("Authorization", "Bearer " + validToken)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
-
-        AccountFullDto actualAccount = objectMapper.readValue(jsonResponse, AccountFullDto.class);
-
-
-        Assertions.assertEquals(expectedAccount, actualAccount);
+        return userResponseDto;
     }
 
     @Test
@@ -343,13 +347,13 @@ class AccountControllerTest {
         String jsonResponse = afterDelete.getResponse().getContentAsString();
         AccountBasicDto afterDeleteAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
 
-        Assertions.assertEquals(expectedAccount,afterDeleteAccountJson);
+        Assertions.assertEquals(expectedAccount, afterDeleteAccountJson);
 
     }
 
     @Test
     void isBlocked() throws Exception {
-        Long accountId  = 3L;
+        Long accountId = 3L;
         AccountBasicDto expectedAccount = new AccountBasicDto(accountId,
                 Status.BLOCKED,
                 3000.00,
@@ -371,7 +375,7 @@ class AccountControllerTest {
         String jsonResponse = afterBlocked.getResponse().getContentAsString();
         AccountBasicDto afterBlockedAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
 
-        Assertions.assertEquals(expectedAccount,afterBlockedAccountJson);
+        Assertions.assertEquals(expectedAccount, afterBlockedAccountJson);
     }
 
     @Test
@@ -393,7 +397,7 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Disposition", "attachment; filename=account_report_id_"
-                        + accountId + "_" + LocalDate.now()+".pdf"))
+                        + accountId + "_" + LocalDate.now() + ".pdf"))
                 .andExpect(content().contentType(MediaType.APPLICATION_PDF))
                 .andExpect(content().bytes(pdfContent));
     }
