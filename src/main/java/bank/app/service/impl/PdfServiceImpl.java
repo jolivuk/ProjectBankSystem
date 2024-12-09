@@ -124,7 +124,7 @@ public class PdfServiceImpl implements PdfService {
         cell = new PdfPCell(new Phrase("Total Expenses:"));
         table1.addCell(cell);
         if (accountPdfDto.getTotalExpenses() > 0) {
-            table1.addCell("-" + accountPdfDto.getTotalExpenses().toString());
+            table1.addCell("-" + accountPdfDto.getTotalExpenses());
         } else {
             table1.addCell(accountPdfDto.getTotalExpenses().toString());
         }
