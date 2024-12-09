@@ -12,9 +12,9 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @ToString
-public class AccountFullDto extends AccountBasicDto{
+public class AccountFullDto extends AccountBasicDto {
     UserResponseDto user;
 
     public AccountFullDto(Long id, Status status, Double balance, String iban,

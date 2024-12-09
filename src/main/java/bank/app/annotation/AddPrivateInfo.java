@@ -35,48 +35,48 @@ import java.lang.annotation.Target;
                                 @ExampleObject(
                                         name = "Default User Example - Response 201",
                                         value = """
-                                {
-                                     "firstName": "Vladimir",
-                                     "lastName": "Ivanov",
-                                     "email": "vivanov@example.com",
-                                     "phone": "+4915257666666",
-                                     "dateOfBirth": "1990-01-01",
-                                     "documentType": "PASSPORT_EU",
-                                     "documentNumber": "1234567890",
-                                     "comment": "string",
-                                     "address": {
-                                                "country": "USA",
-                                                "city": "New York",
-                                                "postcode": "10001",
-                                                "street": "Main St",
-                                                "houseNumber": "123",
-                                                "info": "string"
-                                     }
-                                }
-                                """
+                                                {
+                                                     "firstName": "Vladimir",
+                                                     "lastName": "Ivanov",
+                                                     "email": "vivanov@example.com",
+                                                     "phone": "+4915257666666",
+                                                     "dateOfBirth": "1990-01-01",
+                                                     "documentType": "PASSPORT_EU",
+                                                     "documentNumber": "1234567890",
+                                                     "comment": "string",
+                                                     "address": {
+                                                                "country": "USA",
+                                                                "city": "New York",
+                                                                "postcode": "10001",
+                                                                "street": "Main St",
+                                                                "houseNumber": "123",
+                                                                "info": "string"
+                                                     }
+                                                }
+                                                """
                                 ),
                                 @ExampleObject(
                                         name = "User with existed email Example - Response 403 ",
                                         value = """
-                                {
-                                     "firstName": "Vladimir",
-                                     "lastName": "Ivanov",
-                                     "email": "john.doe@example.com",
-                                     "phone": "456456484565",
-                                     "dateOfBirth": "1990-01-01",
-                                     "documentType": "PASSPORT_EU",
-                                     "documentNumber": "1234567890",
-                                     "comment": "string",
-                                     "address": {
-                                                "country": "USA",
-                                                "city": "New York",
-                                                "postcode": "10001",
-                                                "street": "Main St",
-                                                "houseNumber": "123",
-                                                "info": "string"
-                                     }
-                                }
-                                """
+                                                {
+                                                     "firstName": "Vladimir",
+                                                     "lastName": "Ivanov",
+                                                     "email": "john.doe@example.com",
+                                                     "phone": "456456484565",
+                                                     "dateOfBirth": "1990-01-01",
+                                                     "documentType": "PASSPORT_EU",
+                                                     "documentNumber": "1234567890",
+                                                     "comment": "string",
+                                                     "address": {
+                                                                "country": "USA",
+                                                                "city": "New York",
+                                                                "postcode": "10001",
+                                                                "street": "Main St",
+                                                                "houseNumber": "123",
+                                                                "info": "string"
+                                                     }
+                                                }
+                                                """
                                 )
                         }
                 )
@@ -101,6 +101,6 @@ import java.lang.annotation.Target;
         }
 )
 public @interface AddPrivateInfo {
-    @AliasFor(annotation = RequestMapping.class,attribute = "path")
+    @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }

@@ -35,9 +35,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String getEncodedPasswordFromDatabase(String username) {
         log.info("Retrieving encoded password for user: {}", username);
-        String password =  userRepository.findPasswordByUsername(username);
+        String password = userRepository.findPasswordByUsername(username);
 
-        if (password == null ) {
+        if (password == null) {
             log.error("User not found : {}", username);
         }
         return password;

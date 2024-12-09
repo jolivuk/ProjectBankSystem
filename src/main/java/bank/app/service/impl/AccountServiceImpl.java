@@ -120,7 +120,7 @@ public class AccountServiceImpl implements AccountService {
                     log.error("Cannot delete account - account not found with ID: {}", accountId);
                     return new AccountNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND + accountId);
                 });
-        if(account.getStatus().equals(Status.DELETED)) {
+        if (account.getStatus().equals(Status.DELETED)) {
             throw new AccountAlreadyDeletedException(String.format(ErrorMessage.ACCOUNT_IS_DELETED + account));
         }
         account.setStatus(Status.DELETED);
@@ -156,10 +156,10 @@ public class AccountServiceImpl implements AccountService {
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
         List<Transaction> transactions = transactionRepository
-                .findByDateRangeAndAccount(startDateTime,endDateTime,accountId);
+                .findByDateRangeAndAccount(startDateTime, endDateTime, accountId);
 
         List<TransactionResponseDto> transactionResponseDtoList =
-                transactionMapper.adjustedAmountsInTransactions(transactions,accountId);
+                transactionMapper.adjustedAmountsInTransactions(transactions, accountId);
 
         return new AccountReportDto(
                 account.getId(),
@@ -173,8 +173,8 @@ public class AccountServiceImpl implements AccountService {
                 user.getPrivateInfo().getFirstName(),
                 user.getPrivateInfo().getLastName(),
                 user.getPrivateInfo().getAddress().toString(),
-                calculateTotalIncome(transactions,accountId),
-                calculateTotalExpenses(transactions,accountId)
+                calculateTotalIncome(transactions, accountId),
+                calculateTotalExpenses(transactions, accountId)
         );
     }
 }

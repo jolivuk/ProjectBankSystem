@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Account{
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,7 @@ public class Account{
     @Column(name = "balance")
     private Double balance;
 
-    @Column(name="created_at",updatable = false)
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -59,27 +59,11 @@ public class Account{
         this.balance = balance;
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
-
-    public boolean isBlocked(){
+    public boolean isBlocked() {
         return status == Status.BLOCKED;
     }
 
-    public boolean isDeleted(){
+    public boolean isDeleted() {
         return status == Status.DELETED;
     }
 

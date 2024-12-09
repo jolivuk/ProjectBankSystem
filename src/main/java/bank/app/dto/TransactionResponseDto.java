@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode
 @ToString
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TransactionResponseDto {
-         Long transactionId;
-         Long sender;
-         Long receiver;
-         double amount;
-         String comment;
-         LocalDateTime transactionDate;
-         String transactionStatus;
-         TransactionTypeName transactionType;
+    Long transactionId;
+    Long sender;
+    Long receiver;
+    double amount;
+    String comment;
+    LocalDateTime transactionDate;
+    String transactionStatus;
+    TransactionTypeName transactionType;
 
     public TransactionResponseDto(long transactionId, Long sender, Long receiver, double amount, String comment,
                                   LocalDateTime transactionDate, String transactionStatus, TransactionTypeName transactionType) {

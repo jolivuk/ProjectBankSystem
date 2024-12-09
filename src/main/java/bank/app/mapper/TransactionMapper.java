@@ -11,9 +11,6 @@ import java.util.stream.Collectors;
 public class TransactionMapper {
 
     public TransactionResponseDto toDto(Transaction transaction) {
-        System.out.println("--------------------------------------------------");
-        System.out.println(transaction.getTransactionType().getTransactionTypeName());
-        System.out.println("--------------------------------------------------");
         return new TransactionResponseDto(transaction.getId(),
                 transaction.getSender().getId(),
                 transaction.getReceiver().getId(),
@@ -45,5 +42,4 @@ public class TransactionMapper {
                 })
                 .collect(Collectors.toList());
     }
-
 }

@@ -24,17 +24,17 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="users")
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(name="username")
+    @Column(name = "username")
     private String username;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +53,7 @@ public class User implements UserDetails {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="manager_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "manager_id", referencedColumnName = "user_id")
     private User manager;
 
     @OneToMany(
@@ -64,7 +64,7 @@ public class User implements UserDetails {
     )
     private List<Account> accounts = new ArrayList<>();
 
-    @Column(name="created_at",updatable = false)
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -86,7 +86,11 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && status == user.status && Objects.equals(privateInfo, user.privateInfo) && role == user.role && Objects.equals(manager, user.manager) && Objects.equals(createdAt, user.createdAt) && Objects.equals(lastUpdate, user.lastUpdate);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username)
+                && Objects.equals(password, user.password) && status == user.status
+                && Objects.equals(privateInfo, user.privateInfo) && role == user.role
+                && Objects.equals(manager, user.manager) && Objects.equals(createdAt, user.createdAt)
+                && Objects.equals(lastUpdate, user.lastUpdate);
     }
 
     @Override
@@ -103,6 +107,7 @@ public class User implements UserDetails {
     public boolean isAccountNonLocked() {
         return !Status.BLOCKED.equals(status);
     }
+
     @Override
     public boolean isEnabled() {
         return status.equals(Status.ACTIVE);

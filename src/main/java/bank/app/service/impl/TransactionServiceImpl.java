@@ -41,12 +41,12 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("Attempting to get transaction with ID: {}", id);
         if (id == null) {
             log.error("Transaction ID is null");
-            throw new IllegalArgumentException(ErrorMessage.INVALID_TRANSATION_ID);
+            throw new IllegalArgumentException(ErrorMessage.INVALID_TRANSACTION_ID);
         }
         return transactionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Transaction not found with ID: {}", id);
-                    return new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id);
+                    return new TransactionNotFoundException(ErrorMessage.TRANSACTION_NOT_FOUND_ID + id);
                 });
     }
 
@@ -56,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Cannot delete - transaction not found with ID: {}", id);
-                    return new TransactionNotFoundException(ErrorMessage.TRANSATION_NOT_FOUND + id);
+                    return new TransactionNotFoundException(ErrorMessage.TRANSACTION_NOT_FOUND_ID + id);
                 });
         transactionRepository.deleteById(id);
         log.info("Successfully deleted transaction with ID: {}", id);
@@ -102,7 +102,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .findByTransactionTypeName(transactionRequestDto.transactionType())
                 .orElseThrow(() -> {
                     log.error("Invalid transaction type: {}", transactionRequestDto.transactionType());
-                    return new TransactionTypeException(ErrorMessage.INVALID_TRANSATION_TYPE);
+                    return new TransactionTypeException(ErrorMessage.INVALID_TRANSACTION_TYPE);
                 });
 
 

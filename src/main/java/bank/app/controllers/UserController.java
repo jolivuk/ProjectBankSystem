@@ -22,8 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class UserController {
+
     private final UserService userService;
     private final UserMapper userMapper;
+
 
     @Operation(
             summary = "find All users in database",
@@ -33,6 +35,7 @@ public class UserController {
     public List<UserResponseDto> findAllUsers() {
         return userService.findAll();
     }
+
 
     @Operation(
             summary = "gets 1 user from the database by id",
@@ -53,6 +56,7 @@ public class UserController {
         return userService.findAllByManagerId(id);
     }
 
+
     @Operation(
             summary = "find the user who is the bank",
             description = "accepts nothing and returns UserResponseDto"
@@ -63,15 +67,16 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
+
     @Operation(
             summary = "retrieves private information about the user from the database",
             description = "takes user id and returns PrivateInfoResponseDto"
     )
-
     @GetMapping("/{id}/private_info")
     public ResponseEntity<PrivateInfoResponseDto> getPrivateInfo(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getPrivateInfoByUserId(id));
     }
+
 
     @Operation(
             summary = "delete user from the database",
@@ -84,7 +89,6 @@ public class UserController {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
     }
-
 
 
     @CreateUser(path = "/")
@@ -105,22 +109,21 @@ public class UserController {
 
     @UpdateUser(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto userDto) {
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @Valid @RequestBody UserRequestDto userDto) {
         UserResponseDto user = userService.updateUser(id, userDto);
         return ResponseEntity.ok(user);
     }
 
 
     @UpdatePrivateInfo(path = "/{id}/private_info")
-    public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoRequestDto privateInfoDto) {
+    public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoRequestDto privateInfoDto) {
         UserResponseDto user = userService.updatePrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
 
 
-
     @UpdateAddress(path = "/{id}/private_info/address")
-    public ResponseEntity<UserResponseDto> updateAddress(@PathVariable Long id, @RequestBody AddressRequestDto AddressRequestDto) {
+    public ResponseEntity<UserResponseDto> updateAddress(@PathVariable Long id, @Valid @RequestBody AddressRequestDto AddressRequestDto) {
         UserResponseDto user = userService.updateAddress(id, AddressRequestDto);
         return ResponseEntity.ok(user);
     }
