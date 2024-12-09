@@ -1,36 +1,33 @@
-FROM openjdk:17-jdk-slim as build
-
+FROM eclipse-temurin:17-jdk-jammy as build
 WORKDIR /app
 
+# Копируем только необходимые файлы для Maven сначала
 COPY .mvn/ .mvn
-
 COPY mvnw pom.xml ./
 
-RUN ./mvnw dependency:go-offline -B
-#скачать все зависимости
+# Устанавливаем права и проверяем Maven wrapper
+RUN chmod +x mvnw
+RUN echo "distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.5/apache-maven-3.9.5-bin.zip" > .mvn/wrapper/maven-wrapper.properties
 
+# Копируем исходный код
 COPY src ./src
 
+RUN ./mvnw dependency:go-offline
 RUN ./mvnw clean package -DskipTests
-#собрать все приложение
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
+FROM eclipse-temurin:17-jre-jammy
 
-# 2 stage
-#FROM openjdk:17-jre-slim не находит причина не понятна
-FROM openjdk:17-jdk-slim
+VOLUME /tmp
+ARG DEPENDENCY=/app/target/dependency
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
-WORKDIR /app
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/BankSystem
+ENV SPRING_DATASOURCE_USERNAME=root
+ENV SPRING_DATASOURCE_PASSWORD=1111
 
-COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
-# app.jar мы переименовали наш demo 0.01-snapshot.jar
+ENTRYPOINT ["java","-cp","app:app/lib/*","bank.app.BankApplication"]
 
-ENV DB_URL=jdbc:mysql://localhost:3306/BankSystem
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=1111
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "app.jar"]
-
-# $ docker build -t bankapp .       cборка
-# docker run -d -p 8080:8080 bankapp     запуск
+# docker-compose up --build
