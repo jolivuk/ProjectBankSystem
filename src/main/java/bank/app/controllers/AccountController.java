@@ -18,9 +18,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -96,20 +105,19 @@ public class AccountController {
     public ResponseEntity<byte[]> generatePdfReportBetweenDates(@PathVariable Long accountId,
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
-
-        byte[] pdfContent;
         try {
-            pdfContent = pdfService.generateAccountPdf(accountId, startDate, endDate);
-        } catch (DocumentException | IOException e) {
-            throw new RuntimeException(e);
+            byte[] pdfBytes = pdfService.generateAccountPdf(accountId, startDate, endDate);
+
+            String filename = "account_report_id_" + accountId + "_" + LocalDate.now() + ".pdf";
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                    .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
+                    .body(pdfBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
         }
-
-        HttpHeaders headers = new HttpHeaders();
-        String fileName = "account_report_id_" + accountId + ".pdf";
-        headers.add("Content-Disposition", "inline; filename=" + fileName);
-        headers.add("Content-Type", "application/pdf");
-
-        return ResponseEntity.ok().headers(headers).body(pdfContent);
     }
 
     @AccountReport(path = "/{accountId}/report")

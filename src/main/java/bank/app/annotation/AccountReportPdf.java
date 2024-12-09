@@ -41,7 +41,8 @@ import java.lang.annotation.Target;
         responses = {
                 @ApiResponse(
                         responseCode = "200",
-                        description = "Account ReportPdf created"
+                        description = "Account ReportPdf created",
+                        content = @Content(mediaType = "application/pdf")
                 ),
                 @ApiResponse(
                         responseCode = "409",
