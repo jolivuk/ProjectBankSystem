@@ -1,6 +1,5 @@
 package bank.app.annotation;
 
-
 import bank.app.dto.UserRequestDto;
 import bank.app.exeption.handler.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,10 +76,8 @@ import java.lang.annotation.Target;
                 )
         }
 )
-
-
 public @interface CreateUser {
-    @AliasFor(annotation = RequestMapping.class,attribute = "path")
+    @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }
 

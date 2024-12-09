@@ -18,11 +18,11 @@ public class ErrorMessage {
 
     public static final String ACCOUNT_IS_BLOCKED = "Account is blocked, ID: ";
 
-    public static final String INVALID_TRANSATION_ID = "Invalid transaction ID";
+    public static final String INVALID_TRANSACTION_ID = "Invalid transaction ID";
 
-    public static final String INVALID_TRANSATION_TYPE = "Invalid transaction Type";
+    public static final String INVALID_TRANSACTION_TYPE = "Invalid transaction Type";
 
-    public static final String TRANSATION_NOT_FOUND = "Transaction not found ID: ";
+    public static final String TRANSACTION_NOT_FOUND_ID = "Transaction not found ID: ";
 
     public static final String NOT_ENOUGH_BALANCE = "Not enough balance on account ";
 
@@ -39,5 +39,9 @@ public class ErrorMessage {
     public static final String DATA_INTEGRITY_VIOLATION = "Data integrity violation";
 
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
+
+    public static final String START_DATE_AFTER_END_DATE = "Start date cannot be after end date";
+
+
 
 }

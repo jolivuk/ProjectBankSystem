@@ -12,13 +12,22 @@ import java.util.List;
 
 public interface AccountService {
     Account getAccountById(Long accountId);
+
     AccountBasicDto getBasicAccountInfo(Long accountId);
+
     AccountFullDto getFullAccountInfo(Long accountId);
+
     List<AccountBasicDto> findByUserId(Long userId);
+
     AccountBasicDto createNewAccount(AccountRequestDto account, Long userId);
+
     Account getBankAccount();
+
     void checkAccount(Account account);
+
     void deleteAccount(Long accountId) throws AccountNotFoundException;
+
     AccountReportDto generateAccountPdfBetweenDates(Long accountId, LocalDate startDate, LocalDate endDate);
-    void setAccountBlocked(Long accountId) ;
+
+    void setAccountBlocked(Long accountId);
 }

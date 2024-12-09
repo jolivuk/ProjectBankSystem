@@ -52,7 +52,7 @@ public class AccountMapper {
         );
     }
 
-    public List<AccountBasicDto> toAccountBasicDtoList(List<Account> accounts){
-        return accounts.stream().map(account -> toBasicDto(account)).toList();
+    public List<AccountBasicDto> toAccountBasicDtoList(List<Account> accounts) {
+        return accounts.stream().map(this::toBasicDto).toList();
     }
 }

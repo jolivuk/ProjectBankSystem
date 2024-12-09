@@ -1,7 +1,5 @@
 @startuml
 
-
-' Домен управления пользователями
 entity User {
    + PK id : INT
    + username : varchar(64)

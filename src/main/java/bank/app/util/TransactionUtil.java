@@ -12,7 +12,7 @@ public class TransactionUtil {
                 .sum();
     }
 
-    public static Double calculateTotalExpenses(List<Transaction> transactions,Long accountId) {
+    public static Double calculateTotalExpenses(List<Transaction> transactions, Long accountId) {
         return transactions.stream()
                 .filter(transaction -> transaction.getSender().getId().equals(accountId))
                 .mapToDouble(Transaction::getAmount)

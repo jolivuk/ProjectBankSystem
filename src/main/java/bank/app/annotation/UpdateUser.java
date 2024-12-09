@@ -64,9 +64,9 @@ import java.lang.annotation.Target;
                                                                 "manager" : "3"
                                                             }
                                                 """)
-                                }
-                        )
-                ),
+                        }
+                )
+        ),
 
         responses = {
                 @ApiResponse(

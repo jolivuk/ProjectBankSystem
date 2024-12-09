@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> findAllByManagerId(Long id){
+    public List<UserResponseDto> findAllByManagerId(Long id) {
         log.info("Finding users for manager ID: {}", id);
         User manager = userRepository.findById(id)
                 .orElseThrow(() -> {
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
         log.info("Starting to create new user with username: {}", userRequestDto.username());
 
         User manager = userRepository.findById(userRequestDto.manager())
-                .orElseThrow(() ->{
+                .orElseThrow(() -> {
                     log.error("Manager with ID {} not found", userRequestDto.manager());
                     return new UserNotFoundException(ErrorMessage.MANAGER_ID_NOT_FOUND);
                 });
@@ -104,8 +105,8 @@ public class UserServiceImpl implements UserService {
             throw new UserRoleException(ErrorMessage.MANAGER_ID_HAS_INCORRECT_ROLE);
         }
         String encodedPassword = passwordEncoder.encode(userRequestDto.password());
-        User user = new User(userRequestDto.username(),encodedPassword,
-                Status.ACTIVE, userRequestDto.role(),manager);
+        User user = new User(userRequestDto.username(), encodedPassword,
+                Status.ACTIVE, userRequestDto.role(), manager);
         userRepository.save(user);
 
         log.info("Successfully created new user with username: {}", user.getUsername());
@@ -161,7 +162,7 @@ public class UserServiceImpl implements UserService {
                     return new UserNotFoundException("User with ID " + id + " not found");
                 });
 
-        PrivateInfo privateInfo = createPrivateInfo(privateInfoRequestDto,user);
+        PrivateInfo privateInfo = createPrivateInfo(privateInfoRequestDto, user);
 
         privateInfoRepository.save(privateInfo);
 
@@ -183,7 +184,7 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Update failed - User not found with ID: {}", id);
-                    return new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND);
+                    return new UserNotFoundException(ErrorMessage.USER_NOT_FOUND);
                 });
 
         try {
@@ -197,9 +198,9 @@ public class UserServiceImpl implements UserService {
             if (userDto.manager() != null) {
                 User manager = userRepository.findById(userDto.manager())
                         .orElseThrow(() -> {
-                                log.error("Update failed - Manager not found with ID: {}", userDto.manager());
-                                return new EntityNotFoundException(MANAGER_ID_NOT_FOUND + userDto.manager());
-                                });
+                            log.error("Update failed - Manager not found with ID: {}", userDto.manager());
+                            return new EntityNotFoundException(MANAGER_ID_NOT_FOUND + userDto.manager());
+                        });
                 existingUser.setManager(manager);
             } else {
                 existingUser.setManager(null);
@@ -215,7 +216,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto){
+    public UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto) {
         log.info("Starting to update private info for user ID: {}", id);
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -254,7 +255,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> {
                     log.error("User not found with ID: {}", id);
                     return new EntityNotFoundException(USER_NOT_FOUND + id);
-                        });
+                });
 
         PrivateInfo privateInfo = user.getPrivateInfo();
         if (privateInfo == null) {

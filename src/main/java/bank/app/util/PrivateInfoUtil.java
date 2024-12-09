@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class PrivateInfoUtil{
+public class PrivateInfoUtil {
 
     public static PrivateInfo createPrivateInfo(PrivateInfoRequestDto privateInfoRequestDto, User user) {
 

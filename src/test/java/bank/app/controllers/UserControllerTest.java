@@ -21,7 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.junit.jupiter.api.Assertions;
+
 import java.util.List;
+
 import static bank.app.util.UserTestData.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -68,7 +70,7 @@ class UserControllerTest {
 
         List<UserResponseDto> actualUsers = objectMapper.readValue(allUsersJson,
                 new TypeReference<>() {
-        });
+                });
 
         Assertions.assertEquals(expected, actualUsers);
     }
@@ -100,20 +102,20 @@ class UserControllerTest {
     void findUserByIdTest() throws Exception {
         UserResponseDto expectedUser = getUserResponseDto();
 
-            Long userId = expectedUser.id();
+        Long userId = expectedUser.id();
 
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                            .get("/users/{id}", userId)
-                            .header("Authorization", "Bearer " + validToken)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status() .isOk())
-                    .andReturn();
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
 
-            String jsonResponse = mvcResult.getResponse().getContentAsString();
-            UserResponseDto actualUserJSON = objectMapper.readValue(jsonResponse, UserResponseDto.class);
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        UserResponseDto actualUserJSON = objectMapper.readValue(jsonResponse, UserResponseDto.class);
 
 
-            Assertions.assertEquals(expectedUser,actualUserJSON);
+        Assertions.assertEquals(expectedUser, actualUserJSON);
     }
 
     @Test
@@ -140,8 +142,7 @@ class UserControllerTest {
         UserResponseDto actualAfterDeleteUserJson = objectMapper.readValue(jsonResponse, UserResponseDto.class);
 
 
-
-        Assertions.assertEquals(expectedDeletedUser,actualAfterDeleteUserJson);
+        Assertions.assertEquals(expectedDeletedUser, actualAfterDeleteUserJson);
     }
 
     @Test
@@ -192,8 +193,8 @@ class UserControllerTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/users/bank")
                         .header("Authorization", "Bearer " + validToken)
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
         String responseJSON = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserJSON = objectMapper.readValue(responseJSON, UserResponseDto.class);
@@ -269,7 +270,7 @@ class UserControllerTest {
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         UserResponseDto actualUserResponseDto = objectMapper.readValue(jsonResponse, UserResponseDto.class);
 
-        PrivateInfoResponseDto actualPrivateInfoResponseDto =actualUserResponseDto.privateInfoResponse();
+        PrivateInfoResponseDto actualPrivateInfoResponseDto = actualUserResponseDto.privateInfoResponse();
 
         Assertions.assertEquals(expectedPrivateInfoResponseDto, actualPrivateInfoResponseDto);
     }
@@ -305,7 +306,7 @@ class UserControllerTest {
 
         AddressResponseDto actualAddressResponseDto = actualUserJSON.privateInfoResponse().address();
 
-        Assertions.assertEquals(expectedAddressDto, actualAddressResponseDto );
+        Assertions.assertEquals(expectedAddressDto, actualAddressResponseDto);
     }
 }
 

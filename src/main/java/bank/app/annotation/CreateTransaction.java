@@ -32,40 +32,40 @@ import java.lang.annotation.Target;
                         schema = @Schema(implementation = TransactionRequestDto.class),
                         examples = {
                                 @ExampleObject(
-                                name = "Correct Transaction Example",
-                                value = """
-                                                {
-                                                       "sender":5,
-                                                       "receiver":4,
-                                                       "amount": 500.0,
-                                                       "transactionType": "DEPOSIT",
-                                                       "comment": "Salary deposit"
-                                                  }
-                                            """
+                                        name = "Correct Transaction Example",
+                                        value = """
+                                                    {
+                                                           "sender":5,
+                                                           "receiver":4,
+                                                           "amount": 500.0,
+                                                           "transactionType": "DEPOSIT",
+                                                           "comment": "Salary deposit"
+                                                      }
+                                                """
                                 ),
                                 @ExampleObject(
                                         name = "Error: not enough balance",
                                         value = """
-                                                {
-                                                       "sender":3,
-                                                       "receiver":4,
-                                                       "amount": 3500.0,
-                                                       "transactionType": "DEPOSIT",
-                                                       "comment": "Salary deposit"
-                                                  }
-                                            """
+                                                    {
+                                                           "sender":3,
+                                                           "receiver":4,
+                                                           "amount": 3500.0,
+                                                           "transactionType": "DEPOSIT",
+                                                           "comment": "Salary deposit"
+                                                      }
+                                                """
                                 ),
                                 @ExampleObject(
                                         name = "Error: no receiver exists",
                                         value = """
-                                                {
-                                                       "sender":3,
-                                                       "receiver":8,
-                                                       "amount": 3500.0,
-                                                       "transactionType": "DEPOSIT",
-                                                       "comment": "Salary deposit"
-                                                  }
-                                            """
+                                                    {
+                                                           "sender":3,
+                                                           "receiver":8,
+                                                           "amount": 3500.0,
+                                                           "transactionType": "DEPOSIT",
+                                                           "comment": "Salary deposit"
+                                                      }
+                                                """
                                 )
 
                         }
@@ -99,10 +99,8 @@ import java.lang.annotation.Target;
 
         }
 )
-
-
 public @interface CreateTransaction {
-    @AliasFor(annotation = RequestMapping.class,attribute = "path")
+    @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }
 

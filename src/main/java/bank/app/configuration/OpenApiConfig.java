@@ -18,11 +18,11 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
         ),
         security = @SecurityRequirement(name = "BearerAuth")
 )
-@SecurityScheme( name = "BearerAuth",
+@SecurityScheme(name = "BearerAuth",
         type = SecuritySchemeType.HTTP,
         scheme = "bearer",
         bearerFormat = "JWT",
-        description = "Enter your JWT token here" )
+        description = "Enter your JWT token here")
 public class OpenApiConfig {
 
 }

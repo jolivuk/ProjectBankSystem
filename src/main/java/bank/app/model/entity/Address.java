@@ -3,6 +3,7 @@ package bank.app.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.Objects;
 
 @Entity
@@ -11,30 +12,30 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Table(name="address")
+@Table(name = "address")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address {
 
     @Id
-    @Column(name="address_id")
+    @Column(name = "address_id")
     private Long id;
 
-    @Column(name="country")
+    @Column(name = "country")
     private String country;
 
-    @Column(name="city")
+    @Column(name = "city")
     private String city;
 
-    @Column(name="postcode")
+    @Column(name = "postcode")
     private String postcode;
 
-    @Column(name="street")
+    @Column(name = "street")
     private String street;
 
-    @Column(name="house_number")
+    @Column(name = "house_number")
     private String houseNumber;
 
-    @Column(name="info")
+    @Column(name = "info")
     private String info;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -47,7 +48,10 @@ public class Address {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return Objects.equals(id, address.id) && Objects.equals(country, address.country) && Objects.equals(city, address.city) && Objects.equals(postcode, address.postcode) && Objects.equals(street, address.street) && Objects.equals(houseNumber, address.houseNumber) && Objects.equals(info, address.info);
+        return Objects.equals(id, address.id) && Objects.equals(country, address.country)
+                && Objects.equals(city, address.city) && Objects.equals(postcode, address.postcode)
+                && Objects.equals(street, address.street) && Objects.equals(houseNumber, address.houseNumber)
+                && Objects.equals(info, address.info);
     }
 
     @Override
@@ -57,6 +61,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return houseNumber + " " + street + " " + postcode +  " " + city + " " + country;
+        return houseNumber + " " + street + " " + postcode + " " + city + " " + country;
     }
 }

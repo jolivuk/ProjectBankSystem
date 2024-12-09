@@ -55,6 +55,6 @@ import java.lang.annotation.Target;
         }
 )
 public @interface AccountReportPdf {
-    @AliasFor(annotation = RequestMapping.class,attribute = "path")
+    @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }
