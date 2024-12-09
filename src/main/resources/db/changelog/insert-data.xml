@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="002" author="claude">
+        <!-- Insert users -->
+        <insert tableName="users">
+            <column name="username">BANKaccount</column>
+            <column name="password">$2a$10$YuOYFnsq1y/OfTceZpEszOJhEJui5B9xng3Lv2XuU.5FO9Z6C/1Tu</column>
+            <column name="status">ACTIVE</column>
+            <column name="role">ROLE_BANK</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">admin</column>
+            <column name="password">$2a$10$CjgqtnrYqG2kSqZ.FQnxReul/iAujzZe47q/7JFR8MM479QWwHdnW</column>
+            <column name="status">ACTIVE</column>
+            <column name="role">ROLE_ADMIN</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">manager1</column>
+            <column name="password">$2a$10$ZnOrQ.rIN82kgj9kc/M8ZeJH3PGM.cT3IASsCRaac3/bps6719czO</column>
+            <column name="status">ACTIVE</column>
+            <column name="role">ROLE_MANAGER</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">customer1</column>
+            <column name="password">$2a$10$Vavpc3Yr0QR5mhO9pd2O4Opwa6FlmdEbKmIPGxuF2UpNDH3I8YFMm</column>
+            <column name="status">ACTIVE</column>
+            <column name="role">ROLE_CUSTOMER</column>
+            <column name="manager_id">3</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">customer2</column>
+            <column name="password">$2a$10$94hJZuQ4mGZMYND7L.2IY.zPfJe7lsh6nzSbTJOv7NL9pmHDc5xji</column>
+            <column name="status">INACTIVE</column>
+            <column name="role">ROLE_CUSTOMER</column>
+            <column name="manager_id">3</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">customer3</column>
+            <column name="password">$2a$10$tIa3jdMv3AkG45H.YoToiOlMntlxLafQ9Jtw7xXFFUMkil9ehvtCy</column>
+            <column name="status">ACTIVE</column>
+            <column name="role">ROLE_CUSTOMER</column>
+            <column name="manager_id">3</column>
+        </insert>
+
+        <!-- Insert private_info -->
+        <insert tableName="private_info">
+            <column name="private_info_id">3</column>
+            <column name="first_name">John</column>
+            <column name="last_name">Doe</column>
+            <column name="email">john.doe@example.com</column>
+            <column name="phone">+1234567890</column>
+            <column name="date_of_birth">1990-01-01</column>
+            <column name="document_type">PASSPORT_EU</column>
+            <column name="document_number">A12345678</column>
+            <column name="comment">Test comment for user1</column>
+            <column name="user_id">3</column>
+        </insert>
+        <insert tableName="private_info">
+            <column name="private_info_id">4</column>
+            <column name="first_name">Jane</column>
+            <column name="last_name">Smith</column>
+            <column name="email">jane.smith@example.com</column>
+            <column name="phone">+9876543210</column>
+            <column name="date_of_birth">1985-05-15</column>
+            <column name="document_type">ID_CARD</column>
+            <column name="document_number">B98765432</column>
+            <column name="comment">Test comment for user2</column>
+            <column name="user_id">4</column>
+        </insert>
+        <insert tableName="private_info">
+            <column name="private_info_id">5</column>
+            <column name="first_name">Erika</column>
+            <column name="last_name">Mustermann</column>
+            <column name="email">erika@example.com</column>
+            <column name="phone">491234567891</column>
+            <column name="date_of_birth">1985-05-10</column>
+            <column name="document_type">PASSPORT_EU</column>
+            <column name="document_number">D87654321</column>
+            <column name="user_id">5</column>
+        </insert>
+        <insert tableName="private_info">
+            <column name="private_info_id">6</column>
+            <column name="first_name">Hans</column>
+            <column name="last_name">Müller</column>
+            <column name="email">hans@example.com</column>
+            <column name="phone">491234567892</column>
+            <column name="date_of_birth">1975-08-15</column>
+            <column name="document_type">ID_CARD</column>
+            <column name="document_number">ID123456</column>
+            <column name="user_id">6</column>
+        </insert>
+
+        <!-- Insert addresses -->
+        <insert tableName="address">
+            <column name="address_id">3</column>
+            <column name="country">Germany</column>
+            <column name="city">Berlin</column>
+            <column name="postcode">10115</column>
+            <column name="street">Marienplatz</column>
+            <column name="house_number">7</column>
+            <column name="private_info_id">3</column>
+        </insert>
+        <insert tableName="address">
+            <column name="address_id">4</column>
+            <column name="country">Germany</column>
+            <column name="city">Berlin</column>
+            <column name="postcode">10115</column>
+            <column name="street">Alexanderplatz</column>
+            <column name="house_number">5</column>
+            <column name="private_info_id">4</column>
+        </insert>
+        <insert tableName="address">
+            <column name="address_id">5</column>
+            <column name="country">Germany</column>
+            <column name="city">Munich</column>
+            <column name="postcode">80331</column>
+            <column name="street">Marienplatz</column>
+            <column name="house_number">10</column>
+            <column name="private_info_id">5</column>
+        </insert>
+        <insert tableName="address">
+            <column name="address_id">6</column>
+            <column name="country">Germany</column>
+            <column name="city">Frankfurt</column>
+            <column name="postcode">60311</column>
+            <column name="street">Zeil</column>
+            <column name="house_number">20</column>
+            <column name="private_info_id">6</column>
+        </insert>
+
+        <!-- Insert accounts -->
+        <insert tableName="accounts">
+            <column name="account_id">1</column>
+            <column name="user_id">1</column>
+            <column name="iban">DE89370400440532013000</column>
+            <column name="swift">DEUTDEFF</column>
+            <column name="status">ACTIVE</column>
+            <column name="balance">0.00</column>
+        </insert>
+        <insert tableName="accounts">
+            <column name="user_id">4</column>
+            <column name="iban">DE12345678901234567890</column>
+            <column name="swift">COMMDEFF</column>
+            <column name="status">ACTIVE</column>
+            <column name="balance">7500.00</column>
+        </insert>
+        <insert tableName="accounts">
+            <column name="user_id">5</column>
+            <column name="iban">DE89370400440532013858</column>
+            <column name="swift">DEUTDEFF</column>
+            <column name="status">ACTIVE</column>
+            <column name="balance">3000.00</column>
+        </insert>
+        <insert tableName="accounts">
+            <column name="user_id">6</column>
+            <column name="iban">DE89370400440532013001</column>
+            <column name="swift">DEUTDEFF</column>
+            <column name="status">ACTIVE</column>
+            <column name="balance">3000.00</column>
+        </insert>
+        <insert tableName="accounts">
+            <column name="user_id">6</column>
+            <column name="iban">DE89370400440532013002</column>
+            <column name="swift">DEUTDEFF</column>
+            <column name="status">ACTIVE</column>
+            <column name="balance">7000.00</column>
+        </insert>
+
+        <!-- Insert transaction types -->
+        <insert tableName="transaction_type">
+            <column name="transaction_type_name">TRANSFER</column>
+            <column name="transaction_type_fee">2.50</column>
+            <column name="transaction_type_description">Standard bank transfer</column>
+        </insert>
+        <insert tableName="transaction_type">
+            <column name="transaction_type_name">WITHDRAWAL</column>
+            <column name="transaction_type_fee">3.00</column>
+            <column name="transaction_type_description">Cash withdrawal</column>
+        </insert>
+        <insert tableName="transaction_type">
+            <column name="transaction_type_name">DEPOSIT</column>
+            <column name="transaction_type_fee">0.00</column>
+            <column name="transaction_type_description">Account deposit</column>
+        </insert>
+
+        <!-- Insert transactions -->
+        <insert tableName="transactions">
+            <column name="sender_id">4</column>
+            <column name="receiver_id">2</column>
+            <column name="transaction_type_id">1</column>
+            <column name="amount">200.00</column>
+            <column name="fee">2.50</column>
+            <column name="comment">Monthly transfer</column>
+            <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-09-01T09:00:00</column>
+        </insert>
+        <insert tableName="transactions">
+            <column name="sender_id">3</column>
+            <column name="receiver_id">4</column>
+            <column name="transaction_type_id">2</column>
+            <column name="amount">500.00</column>
+            <column name="fee">3.00</column>
+            <column name="comment">ATM withdrawal</column>
+            <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-09-15T14:30:00</column>
+        </insert>
+        <insert tableName="transactions">
+            <column name="sender_id">2</column>
+            <column name="receiver_id">4</column>
+            <column name="transaction_type_id">3</column>
+            <column name="amount">1500.00</column>
+            <column name="fee">0.00</column>
+            <column name="comment">Salary deposit</column>
+            <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-10-01T10:00:00</column>
+        </insert>
+        <insert tableName="transactions">
+            <column name="sender_id">4</column>
+            <column name="receiver_id">3</column>
+            <column name="transaction_type_id">1</column>
+            <column name="amount">300.00</column>
+            <column name="fee">2.50</column>
+            <column name="comment">Bill payment</column>
+            <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-10-15T18:45:00</column>
+        </insert>
+        <insert tableName="transactions">
+            <column name="sender_id">2</column>
+            <column name="receiver_id">4</column>
+            <column name="transaction_type_id">2</column>
+            <column name="amount">700.00</column>
+            <column name="fee">3.00</column>
+            <column name="comment">Cash withdrawal</column>
+            <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-11-01T08:20:00</column>
+        </insert>
+        <insert tableName="transactions">
+            <column name="sender_id">2</column>
+            <column name="receiver_id">3</column>
+            <column name="transaction_type_id">1</column>
+            <column name="amount">450.00</column>
+            <column name="fee">1.50</column>
+            <column name="comment">Service fee</column>
+            <column name="transaction_status">COMPLETED</column>
+            <column name="transaction_date">2024-12-01T11:55:00</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

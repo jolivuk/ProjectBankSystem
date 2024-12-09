@@ -2,24 +2,30 @@ package bank.app.model.entity;
 
 import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="users")
-public class User {
-
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
@@ -35,7 +41,10 @@ public class User {
     @Column(name = "status")
     private Status status;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
     @JoinColumn(name = "private_info_id")
     private PrivateInfo privateInfo;
 
@@ -45,8 +54,15 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="manager_id", referencedColumnName = "user_id")
-    @JsonIgnore
     private User manager;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Account> accounts = new ArrayList<>();
 
     @Column(name="created_at",updatable = false)
     @CreationTimestamp
@@ -65,32 +81,30 @@ public class User {
     }
 
 
-    public void setStatus(Status status) {
-        this.status = status;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && status == user.status && Objects.equals(privateInfo, user.privateInfo) && role == user.role && Objects.equals(manager, user.manager) && Objects.equals(createdAt, user.createdAt) && Objects.equals(lastUpdate, user.lastUpdate);
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, status, privateInfo, role, manager, createdAt, lastUpdate);
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return !Status.BLOCKED.equals(status);
     }
-
-    public void setPrivateInfo(PrivateInfo privateInfo) {
-        this.privateInfo = privateInfo;
+    @Override
+    public boolean isEnabled() {
+        return status.equals(Status.ACTIVE);
     }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setManager(User manager) {
-        this.manager = manager;
-    }
-
 }

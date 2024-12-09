@@ -1,36 +1,77 @@
 package bank.app.controllers;
 
+import bank.app.annotation.AccountReport;
+import bank.app.annotation.AccountReportPdf;
+import bank.app.annotation.CreateAccount;
 import bank.app.dto.*;
+import bank.app.exeption.AccountNotFoundException;
+import bank.app.mapper.AccountMapper;
 import bank.app.model.entity.Account;
-import bank.app.model.entity.Transaction;
 import bank.app.service.AccountService;
+import bank.app.service.PdfService;
 import bank.app.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
+@Validated
+@RolesAllowed("ADMIN")
 public class AccountController {
     private final AccountService accountService;
-
+    private final PdfService pdfService;
     private final TransactionService transactionService;
+    private final AccountMapper accountMapper;
+
+    @Operation(
+            summary = "Get basic account information",
+            description = "Get basic and full account information by account id"
+    )
     @GetMapping("/{id}")
-    public ResponseEntity<AccountBasicDto> getBasicAccountInfo(@PathVariable Long id,
-                                                               @RequestParam (name = "full",required = false) boolean isFull) {
-        return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));}
+    public ResponseEntity<AccountBasicDto> getAccountInfo(@PathVariable Long id,
+                                                          @RequestParam(name = "full", required = false) boolean isFull) {
+        return ResponseEntity.ok(isFull ? accountService.getFullAccountInfo(id) : accountService.getBasicAccountInfo(id));
+    }
 
 
+    @Operation(
+            summary = "Get basic account information",
+            description = "Get basic or full account information by account ID and return List<AccountBasicDto>"
+    )
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Account>> findAccountsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<AccountBasicDto>> findAccountsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(accountService.findByUserId(userId));
     }
 
+    @Operation(
+            summary = "find the user who is the bank",
+            description = "accepts nothing and returns UserResponseDto"
+    )
+    @GetMapping("/bank")
+    public ResponseEntity<AccountFullDto> findBankAccount() {
+        Account account = accountService.getBankAccount();
+        return ResponseEntity.ok(accountMapper.toFullDto(account));
+    }
+
+    @Operation(
+            summary = "Get all transactions in the bank by id",
+            description = "takes an accountId and returns List<TransactionResponseDto>"
+    )
     @GetMapping("/{accountId}/transactions")
     public ResponseEntity<List<TransactionResponseDto>> getTransactionsByAccountId(@PathVariable Long accountId) {
         List<TransactionResponseDto> transactions = transactionService.getTransactionsByAccountId(accountId);
@@ -39,6 +80,10 @@ public class AccountController {
                 : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get last month transactions",
+            description = "Get all transactions for a specific account within the last month"
+    )
     @GetMapping("/{accountId}/transactions/last-month")
     public ResponseEntity<List<TransactionResponseDto>> getLastMonthTransactionsByAccount(@PathVariable Long accountId) {
         List<TransactionResponseDto> transactions = transactionService.getTransactionsLastMonthByAccountId(accountId);
@@ -47,16 +92,51 @@ public class AccountController {
                 : new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @PostMapping("/add/user/{userId}")
-    public ResponseEntity<Account> add(@PathVariable Long userId,@RequestBody AccountBasicDto accountBasicDto){
-        Account account = accountService.createNewAccount(accountBasicDto,userId);
-        return ResponseEntity.ok(account);
-    }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) {
-//        accountService.softDeleteAccount(id);
-//        return ResponseEntity.noContent().build();
-//    }
 
+    @AccountReportPdf(path = "/{accountId}/pdf")
+    public ResponseEntity<byte[]> generatePdfReportBetweenDates(@PathVariable Long accountId,
+                                                                @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
+                                                                @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
+        try {
+            byte[] pdfBytes = pdfService.generateAccountPdf(accountId, startDate, endDate);
+
+            String filename = "account_report_id_" + accountId + "_" + LocalDate.now() + ".pdf";
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                    .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
+                    .body(pdfBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @AccountReport(path = "/{accountId}/report")
+    public ResponseEntity<AccountReportDto> generateStatisticsDataBetweenDates(@PathVariable Long accountId,
+                                                                               @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
+                                                                               @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
+
+        return ResponseEntity.ok(accountService.generateAccountPdfBetweenDates(accountId, startDate, endDate));
+    }
+
+
+    @CreateAccount(path = "/add/user/{userId}")
+    public ResponseEntity<AccountBasicDto> add(@PathVariable Long userId, @Valid @RequestBody AccountRequestDto accountRequestDto) {
+        AccountBasicDto account = accountService.createNewAccount(accountRequestDto, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(account);
+    }
+
+    @PutMapping("/{id}/blocked")
+    public ResponseEntity<Void> blockAccount(@PathVariable Long id) {
+        accountService.setAccountBlocked(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) throws AccountNotFoundException {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

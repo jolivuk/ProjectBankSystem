@@ -1,17 +1,14 @@
 package bank.app.controllers;
 
-
-import bank.app.dto.AddressDto;
-import bank.app.dto.PrivateInfoDto;
-import bank.app.dto.UserBasicDto;
-import bank.app.model.entity.Account;
+import bank.app.annotation.*;
+import bank.app.dto.*;
+import bank.app.mapper.UserMapper;
 import bank.app.model.entity.User;
-import bank.app.service.AddressService;
-import bank.app.service.PrivateInfoService;
+import bank.app.model.enums.Role;
 import bank.app.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,52 +20,108 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 @RequiredArgsConstructor
+
 public class UserController {
     private final UserService userService;
+    private final UserMapper userMapper;
 
+    @Operation(
+            summary = "find All users in database",
+            description = "receives nothing in parameters and returns UserResponseDto"
+    )
     @GetMapping()
-    public List<User> findAllUsers() {
+    public List<UserResponseDto> findAllUsers() {
         return userService.findAll();
     }
 
+    @Operation(
+            summary = "gets 1 user from the database by id",
+            description = "takes user id in parameters and returns UserResponseDto"
+    )
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return ResponseEntity.ok("user with id :" + id + " was deleted");
+
+    @Operation(
+            summary = "find All users for manager with Id",
+            description = "takes user id (manager id) in parameters and returns List<UserResponseDto>"
+    )
+    @GetMapping("/{id}/customers")
+    public List<UserResponseDto> findAllUsersForManager(@PathVariable Long id) {
+        return userService.findAllByManagerId(id);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<User> create(@Valid @RequestBody UserBasicDto userDto) {
-        User user = userService.createUser(userDto);
+    @Operation(
+            summary = "find the user who is the bank",
+            description = "accepts nothing and returns UserResponseDto"
+    )
+    @GetMapping("/bank")
+    public ResponseEntity<UserResponseDto> findByBank() {
+        User user = userService.getUserByStatus(Role.ROLE_BANK);
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @Operation(
+            summary = "retrieves private information about the user from the database",
+            description = "takes user id and returns PrivateInfoResponseDto"
+    )
+
+    @GetMapping("/{id}/private_info")
+    public ResponseEntity<PrivateInfoResponseDto> getPrivateInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getPrivateInfoByUserId(id));
+    }
+
+    @Operation(
+            summary = "delete user from the database",
+            description = "takes the user ID and deletes it from the database, and if the user is not created," +
+                    " throws an exception that the user is not found"
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        userService.deleteUserById(id);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+    @CreateUser(path = "/")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto userDto) {
+        UserResponseDto user = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @PostMapping("/{id}/private_info/add")
-    public ResponseEntity<User> addPrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoDto privateInfoDto) {
-        User user = userService.addPrivateInfo(id, privateInfoDto);
+
+    @AddPrivateInfo(path = "/{id}/private_info/")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UserResponseDto> addPrivateInfo(@PathVariable Long id, @Valid @RequestBody PrivateInfoRequestDto privateInfoRequestDto) {
+        UserResponseDto user = userService.addPrivateInfo(id, privateInfoRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+
+
+    @UpdateUser(path = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto userDto) {
+        UserResponseDto user = userService.updateUser(id, userDto);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserBasicDto userDto) {
-        User user = userService.updateUser(id, userDto);
+
+    @UpdatePrivateInfo(path = "/{id}/private_info")
+    public ResponseEntity<UserResponseDto> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoRequestDto privateInfoDto) {
+        UserResponseDto user = userService.updatePrivateInfo(id, privateInfoDto);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/{id}/private_info")
-    public ResponseEntity<User> updatePrivateInfo(@PathVariable Long id, @RequestBody PrivateInfoDto privateInfoDto) {
-        User user = userService.updatePrivateInfo(id, privateInfoDto);
-        return ResponseEntity.ok(user);
-    }
 
-    @PutMapping("/{id}/private_info/address")
-    public ResponseEntity<User> updateAddress(@PathVariable Long id, @RequestBody AddressDto AddressDto) {
-        User user = userService.updateAddress(id, AddressDto);
+
+    @UpdateAddress(path = "/{id}/private_info/address")
+    public ResponseEntity<UserResponseDto> updateAddress(@PathVariable Long id, @RequestBody AddressRequestDto AddressRequestDto) {
+        UserResponseDto user = userService.updateAddress(id, AddressRequestDto);
         return ResponseEntity.ok(user);
     }
 }

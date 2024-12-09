@@ -1,32 +1,36 @@
 package bank.app.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import bank.app.model.enums.TransactionTypeName;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
+
 
 @Setter
 @Getter
+@EqualsAndHashCode
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class TransactionResponseDto {
-        private final long transactionId;
-        private final Long sender;
-        private final Long receiver;
-        private final double amount;
-        private final String comment;
-        private final String transactionTime;
-        private final String transactionStatus;
-        private final String  transactionType;
+         Long transactionId;
+         Long sender;
+         Long receiver;
+         double amount;
+         String comment;
+         LocalDateTime transactionDate;
+         String transactionStatus;
+         TransactionTypeName transactionType;
 
     public TransactionResponseDto(long transactionId, Long sender, Long receiver, double amount, String comment,
-                                  String transactionTime, String transactionStatus, String transactionType) {
+                                  LocalDateTime transactionDate, String transactionStatus, TransactionTypeName transactionType) {
         this.transactionId = transactionId;
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
         this.comment = comment;
-        this.transactionTime = transactionTime;
+        this.transactionDate = transactionDate;
         this.transactionStatus = transactionStatus;
         this.transactionType = transactionType;
     }
-
-
-
 }

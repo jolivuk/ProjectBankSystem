@@ -1,135 +1,232 @@
 package bank.app.service.impl;
 
-import bank.app.dto.AddressDto;
-import bank.app.dto.PrivateInfoDto;
-import bank.app.dto.UserBasicDto;
-import bank.app.exeptions.UserAlreadyDeletedException;
-import bank.app.exeptions.UserNotFoundException;
+import bank.app.dto.*;
+import bank.app.exeption.UserAlreadyDeletedException;
+import bank.app.exeption.UserNotFoundException;
+import bank.app.exeption.UserRoleException;
+import bank.app.exeption.errorMessage.ErrorMessage;
+import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
 import bank.app.model.entity.Address;
 import bank.app.model.entity.PrivateInfo;
 import bank.app.model.entity.User;
+import bank.app.model.enums.Role;
 import bank.app.model.enums.Status;
 import bank.app.repository.AccountRepository;
+import bank.app.repository.PrivateInfoRepository;
 import bank.app.repository.UserRepository;
-import bank.app.service.AddressService;
-import bank.app.service.PrivateInfoService;
 import bank.app.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static bank.app.exeption.errorMessage.ErrorMessage.*;
+import static bank.app.util.PrivateInfoUtil.createPrivateInfo;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PrivateInfoService privateInfoService;
-    private final AddressService addressService;
     private final AccountRepository accountRepository;
-
+    private final UserMapper userMapper;
+    private final PrivateInfoRepository privateInfoRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessage.USERNAME_NOT_FOUND));
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("User with ID {} not found", id);
+                    return new UserNotFoundException(ErrorMessage.USER_NOT_FOUND);
+                });
+        log.info("Successfully retrieved user with ID: {}", id);
+        return userMapper.toDto(user);
     }
 
     @Override
-    public User createUser(UserBasicDto newUserDto) {
-        User manager = getUserById(newUserDto.manager());
+    public List<UserResponseDto> findAll() {
+        log.info("Fetching all users");
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
-        User user = new User(newUserDto.username(),newUserDto.password(),
-                Status.ACTIVE, newUserDto.role(),manager);
+    @Override
+    public List<UserResponseDto> findAllByManagerId(Long id){
+        log.info("Finding users for manager ID: {}", id);
+        User manager = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Manager with ID {} not found", id);
+                    return new UserNotFoundException(ErrorMessage.MANAGER_ID_NOT_FOUND);
+                });
+
+        if (!isManager(manager)) {
+            log.error("User with ID {} has incorrect role (not a manager)", id);
+            throw new UserRoleException(ErrorMessage.MANAGER_ID_HAS_INCORRECT_ROLE);
+
+        }
+        return userRepository.findAllByManagerId(id)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        log.info("Starting to create new user with username: {}", userRequestDto.username());
+
+        User manager = userRepository.findById(userRequestDto.manager())
+                .orElseThrow(() ->{
+                    log.error("Manager with ID {} not found", userRequestDto.manager());
+                    return new UserNotFoundException(ErrorMessage.MANAGER_ID_NOT_FOUND);
+                });
+
+
+        if (!isManager(manager)) {
+            log.error("User with ID {} has incorrect role (not a manager)", userRequestDto.manager());
+            throw new UserRoleException(ErrorMessage.MANAGER_ID_HAS_INCORRECT_ROLE);
+        }
+        String encodedPassword = passwordEncoder.encode(userRequestDto.password());
+        User user = new User(userRequestDto.username(),encodedPassword,
+                Status.ACTIVE, userRequestDto.role(),manager);
         userRepository.save(user);
-        return user;
+
+        log.info("Successfully created new user with username: {}", user.getUsername());
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public User getUserByStatus(Role role) {
+        return userRepository.findByRole(role)
+                .orElseThrow(() -> new UserNotFoundException(USER_WITH_ROLE_NOT_FOUND + role));
     }
 
     @Override
     public void deleteUserById(Long id) {
+        log.info("Attempting to delete user with ID: {}", id);
         Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
-            try {
-                throw new UserNotFoundException("User with ID " + id + " not found");
-            } catch (UserNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+        if (userOptional.isEmpty()) {
+            log.error("Failed to delete - user with ID: {} not found", id);
+            throw new UserNotFoundException("User with ID " + id + " not found");
         }
         User user = userOptional.get();
         if (user.getStatus().equals(Status.DELETED)) {
-            try {
-                throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
-            } catch (UserAlreadyDeletedException e) {
-                throw new RuntimeException(e);
-            }
+            log.error("Failed to delete - user with ID: {} already has deleted status", id);
+            throw new UserAlreadyDeletedException("User with ID " + id + " is already deleted");
         }
         user.setStatus(Status.DELETED);
 
         List<Account> accounts = accountRepository.findAllByUserId(id);
+        log.info("Found {} accounts to delete for user ID: {}", accounts.size(), id);
         for (Account account : accounts) {
             account.setStatus(Status.DELETED);
         }
 
         accountRepository.saveAll(accounts);
         userRepository.save(user);
+        log.info("Successfully deleted user with ID: {} and their {} accounts", id, accounts.size());
+    }
+
+
+    @Override
+    public PrivateInfoResponseDto getPrivateInfoByUserId(Long id) {
+        log.info("Retrieving private info for user ID: {}", id);
+        return getUserById(id).privateInfoResponse();
     }
 
     @Override
-    public User addPrivateInfo(Long id, PrivateInfoDto privateInfoDto) {
-        User user = getUserById(id);
-        Address savedAddress = addressService.createAddress(privateInfoDto.address());
-        PrivateInfo savedPrivateInfo = privateInfoService.createPrivateInfo(privateInfoDto, savedAddress);
-        user.setPrivateInfo(savedPrivateInfo);
+    public UserResponseDto addPrivateInfo(Long id, PrivateInfoRequestDto privateInfoRequestDto) {
+        log.info("Adding private info for user ID: {}", id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                {
+                    log.error("User with ID {} not found while adding private info", id);
+                    return new UserNotFoundException("User with ID " + id + " not found");
+                });
+
+        PrivateInfo privateInfo = createPrivateInfo(privateInfoRequestDto,user);
+
+        privateInfoRepository.save(privateInfo);
+
+        user.setPrivateInfo(privateInfo);
         userRepository.save(user);
-        return user;
+        log.info("Successfully added private info for user ID: {}", id);
+
+        return userMapper.toDto(user);
     }
 
 
-
     @Override
-    public User updateUser(Long id,UserBasicDto userDto) {
+    public UserResponseDto updateUser(Long id, UserRequestDto userDto) {
+        log.info("Starting update for user with ID: {}", id);
         if (userDto == null) {
-            throw new IllegalArgumentException("FullUserDto cannot be null");
+            log.error("Update failed - UserRequestDto is null for user ID: {}", id);
+            throw new IllegalArgumentException(USER_DTO_IS_NULL);
         }
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Update failed - User not found with ID: {}", id);
+                    return new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND);
+                });
+
         try {
+            String encodedPassword = passwordEncoder.encode(userDto.password());
 
             existingUser.setUsername(userDto.username());
-            existingUser.setPassword(userDto.password());
-            existingUser.setStatus(Status.valueOf(userDto.status()));
+            existingUser.setPassword(encodedPassword);
+            existingUser.setStatus(userDto.status());
             existingUser.setRole(userDto.role());
 
             if (userDto.manager() != null) {
                 User manager = userRepository.findById(userDto.manager())
-                        .orElseThrow(() -> new EntityNotFoundException("Manager not found with id: " + userDto.manager()));
+                        .orElseThrow(() -> {
+                                log.error("Update failed - Manager not found with ID: {}", userDto.manager());
+                                return new EntityNotFoundException(MANAGER_ID_NOT_FOUND + userDto.manager());
+                                });
                 existingUser.setManager(manager);
             } else {
                 existingUser.setManager(null);
             }
-
-            return userRepository.save(existingUser);
+            userRepository.save(existingUser);
+            log.info("Successfully updated user with ID: {}", id);
+            return userMapper.toDto(existingUser);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error updating user: " + e.getMessage(), e);
+            log.error("Failed to update user with ID: {}. Error: {}", id, e.getMessage(), e);
+            throw new RuntimeException(ENABLE_UPDATE_USER + e.getMessage(), e);
         }
     }
 
     @Override
-    public User updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto){
+    public UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto){
+        log.info("Starting to update private info for user ID: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() ->
+                {
+                    log.error("Failed to update private info - user not found with ID: {}", id);
+                    return new EntityNotFoundException(USER_NOT_FOUND + id);
+                });
 
         PrivateInfo privateInfo = user.getPrivateInfo();
         if (privateInfo == null) {
+            log.info("Creating new private info for user ID: {}", id);
             privateInfo = new PrivateInfo();
             user.setPrivateInfo(privateInfo);
         }
@@ -143,35 +240,53 @@ public class UserServiceImpl implements UserService {
         privateInfo.setDocumentNumber(privateInfoDto.documentNumber());
         privateInfo.setComment(privateInfoDto.comment());
 
-        privateInfoService.savePrivateInfo(privateInfo);
-        return userRepository.save(user);
+        privateInfoRepository.save(privateInfo);
+        userRepository.save(user);
+
+        log.info("Successfully updated private info for user ID: {}", id);
+        return userMapper.toDto(user);
     }
 
     @Override
-    public User updateAddress(Long id, AddressDto AddressDto) {
+    public UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto) {
+        log.info("Starting to update address for user ID: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("User not found with ID: {}", id);
+                    return new EntityNotFoundException(USER_NOT_FOUND + id);
+                        });
 
         PrivateInfo privateInfo = user.getPrivateInfo();
         if (privateInfo == null) {
-            throw new EntityNotFoundException("PrivateInfo not found for user with id: " + id);
+            log.info("Creating new PrivateInfo for user ID: {}", id);
+            privateInfo = new PrivateInfo();
+            user.setPrivateInfo(privateInfo);
         }
 
         Address address = privateInfo.getAddress();
         if (address == null) {
+            log.info("Creating new Address for user ID: {}", id);
             address = new Address();
             privateInfo.setAddress(address);
         }
 
-        address.setCountry(AddressDto.country());
-        address.setCity(AddressDto.city());
-        address.setPostcode(AddressDto.postcode());
-        address.setStreet(AddressDto.street());
-        address.setHouseNumber(AddressDto.houseNumber());
-        address.setInfo(AddressDto.info());
+        address.setCountry(AddressRequestDto.country());
+        address.setCity(AddressRequestDto.city());
+        address.setPostcode(AddressRequestDto.postcode());
+        address.setStreet(AddressRequestDto.street());
+        address.setHouseNumber(AddressRequestDto.houseNumber());
+        address.setInfo(AddressRequestDto.info());
 
-        addressService.saveAddress(address);
-        return userRepository.save(user);
+        userRepository.save(user);
+        log.info("Successfully updated address for user ID: {}", id);
+        return userMapper.toDto(user);
     }
+
+    @Override
+    public boolean isManager(User user) {
+        log.debug("Checking if user ID: {} has manager role. Current role: {}", user.getId(), user.getRole());
+        return user.getRole().equals(Role.ROLE_MANAGER);
+    }
+
 
 }

@@ -2,11 +2,11 @@ package bank.app.model.entity;
 
 
 import bank.app.model.enums.Status;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "accounts")
 @NoArgsConstructor
 @Getter
+@Setter
 @AllArgsConstructor
 public class Account{
 
@@ -25,9 +26,8 @@ public class Account{
     @Column(name = "account_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     @Column(name = "iban")

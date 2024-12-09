@@ -1,20 +1,26 @@
 package bank.app.service;
 
-import bank.app.dto.AddressDto;
-import bank.app.dto.UserBasicDto;
-import bank.app.model.entity.Account;
+import bank.app.dto.*;
 import bank.app.model.entity.User;
-import bank.app.dto.PrivateInfoDto;
+import bank.app.model.enums.Role;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import java.util.List;
 
-public interface UserService {
-    User getUserById(Long id);
-    List<User> findAll();
-    User createUser(UserBasicDto newUserDto);
+
+public interface UserService extends UserDetailsService {
+
+    UserResponseDto getUserById(Long id);
+    List<UserResponseDto> findAll();
+    List<UserResponseDto> findAllByManagerId(Long id);
+    UserResponseDto createUser(UserRequestDto newUserDto);
+    User getUserByStatus(Role role);
     void deleteUserById(Long id);
-    User addPrivateInfo(Long id, PrivateInfoDto privateInfoDto);
-    User updateUser(Long id, UserBasicDto userDto);
-    User updatePrivateInfo(Long id, PrivateInfoDto privateInfoDto);
-    User updateAddress(Long id, AddressDto AddressDto);
-    }
+    PrivateInfoResponseDto getPrivateInfoByUserId(Long id);
+    UserResponseDto addPrivateInfo(Long id, PrivateInfoRequestDto privateInfoRequestDto);
+    UserResponseDto updateUser(Long id, UserRequestDto userDto);
+    UserResponseDto updatePrivateInfo(Long id, PrivateInfoRequestDto privateInfoDto);
+    UserResponseDto updateAddress(Long id, AddressRequestDto AddressRequestDto);
+    boolean isManager(User user);
+}
 
