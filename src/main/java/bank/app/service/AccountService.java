@@ -29,5 +29,8 @@ public interface AccountService {
 
     AccountReportDto generateAccountPdfBetweenDates(Long accountId, LocalDate startDate, LocalDate endDate);
 
-    void setAccountBlocked(Long accountId);
+    void blockAccount(Long accountId);
+
+    void unblockAccount(Long accountId);
+
 }

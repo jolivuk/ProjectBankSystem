@@ -34,6 +34,12 @@ public class ErrorMessage {
 
     public static final String USER_ALREADY_EXISTS = "User already exists";
 
+    public static final String USER_ALREADY_DELETED = "User already deleted";
+
+    public static final String USER_ALREADY_BLOCKED = "User already blocked";
+
+    public static final String USER_WRONG_STATUS = "User wrong status";
+
     public static final String DATABASE_ERROR = "Database error";
 
     public static final String DATA_INTEGRITY_VIOLATION = "Data integrity violation";

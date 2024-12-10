@@ -1,9 +1,7 @@
 package bank.app.service.impl;
 
 import bank.app.dto.*;
-import bank.app.exeption.UserAlreadyDeletedException;
-import bank.app.exeption.UserNotFoundException;
-import bank.app.exeption.UserRoleException;
+import bank.app.exeption.*;
 import bank.app.exeption.errorMessage.ErrorMessage;
 import bank.app.mapper.UserMapper;
 import bank.app.model.entity.Account;
@@ -142,10 +140,62 @@ public class UserServiceImpl implements UserService {
 
         accountRepository.saveAll(accounts);
         userRepository.save(user);
-        log.info("Successfully deleted user with ID: {} and their {} accounts", id, accounts.size());
+        log.info("Successfully deleted user with ID: {} and his {} accounts", id, accounts.size());
+    }
+
+    @Override
+    public void blockUserById(Long id) {
+        log.info("Attempting to block user with ID: {}", id);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            log.error("Failed to block - user with ID: {} not found", id);
+            throw new UserNotFoundException(USER_NOT_FOUND + id);
+        }
+        User user = userOptional.get();
+        if (user.getStatus().equals(Status.DELETED)) {
+            log.error("Failed to block - user with ID: {} already has deleted status", id);
+            throw new UserAlreadyDeletedException(ErrorMessage.USER_ALREADY_DELETED);
+        }
+
+        if (user.getStatus().equals(Status.BLOCKED)) {
+            log.error("Failed to block - user with ID: {} already has blocked status", id);
+            throw new UserAlreadyBlockedException(ErrorMessage.USER_ALREADY_BLOCKED);
+        }
+        user.setStatus(Status.BLOCKED);
+
+        List<Account> accounts = accountRepository.findAllByUserId(id);
+        log.info("Found {} accounts to block for user ID: {}", accounts.size(), id);
+        for (Account account : accounts) {
+            if(!account.getStatus().equals(Status.DELETED)) {
+                account.setStatus(Status.BLOCKED);
+            }
+        }
+
+        accountRepository.saveAll(accounts);
+        userRepository.save(user);
+        log.info("Successfully block user with ID: {} and his {} accounts", id, accounts.size());
     }
 
 
+    @Override
+    public void unblockUserById(Long id) {
+        log.info("Attempting to unblock user with ID: {}", id);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            log.error("Failed to unblock - user with ID: {} not found", id);
+            throw new UserNotFoundException(USER_NOT_FOUND + id);
+        }
+        User user = userOptional.get();
+        if (!user.getStatus().equals(Status.BLOCKED)) {
+            log.error("Failed to block - status of user with ID: {} is not BLOCKED", id);
+            throw new UserWrongStatusException(ErrorMessage.USER_WRONG_STATUS);
+        }
+
+        user.setStatus(Status.ACTIVE);
+
+        userRepository.save(user);
+        log.info("Successfully unblock user with ID: {}", id);
+    }
     @Override
     public PrivateInfoResponseDto getPrivateInfoByUserId(Long id) {
         log.info("Retrieving private info for user ID: {}", id);

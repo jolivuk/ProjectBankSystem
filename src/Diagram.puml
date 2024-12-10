@@ -53,10 +53,7 @@ entity Account {
    + createdAt : timestamp
    + lastUpdate : timestamp
 }
-entity Status{
-    + PK id : INT
-    + statusName : varchar(16)
-}
+
 
 entity Transaction {
    + PK id : INT
@@ -70,11 +67,6 @@ entity Transaction {
    + transaction_type : TransactionType
    + createdAt : timestamp
    + lastUpdate : timestamp
-}
-
-entity TransactionStatus {
-   + PK id : INT
-   + description : varchar(64)
 }
 
 entity TransactionType {
@@ -92,10 +84,6 @@ PrivateInfo }|--|| documentType : documentType_id
 
 Transaction }|--|| Account : sender >
 Transaction }|--|| Account : receiver >
-Transaction }|--|| TransactionStatus : transaction_status_id
 Transaction }|--|| TransactionType : transaction_type_id
-
-Status ||--|{ Account : status_id
-Status ||--|{ User : status_id
 
 @enduml
