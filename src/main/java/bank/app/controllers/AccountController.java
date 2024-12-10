@@ -135,18 +135,30 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
     }
 
+    @Operation(
+            summary = "block account from the database",
+            description = "takes the account ID and block it"
+    )
     @PutMapping("/{id}/block")
     public ResponseEntity<Void> blockAccount(@PathVariable Long id) {
         accountService.blockAccount(id);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "unblock account from the database",
+            description = "takes the account ID and unblock it if it is blocked"
+    )
     @PutMapping("/{id}/unblock")
     public ResponseEntity<Void> unblockAccount(@PathVariable Long id) {
         accountService.unblockAccount(id);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "delete account from the database",
+            description = "takes the account ID and delete it"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteAccount(@PathVariable Long id) throws AccountNotFoundException {
         accountService.deleteAccount(id);

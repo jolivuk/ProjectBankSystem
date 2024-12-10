@@ -90,6 +90,10 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "block user from the database",
+            description = "takes the user ID and block him and all his active accounts in the database"
+    )
     @PutMapping("/{id}/block")
     public ResponseEntity<Void> block(@PathVariable Long id) {
 
@@ -97,6 +101,10 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "unblock user from the database",
+            description = "takes the user ID and unblock him if he is blocked"
+    )
     @PutMapping("/{id}/unblock")
     public ResponseEntity<Void> unblock(@PathVariable Long id) {
 
