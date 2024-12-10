@@ -353,6 +353,7 @@ class AccountControllerTest {
 
     @Test
     void blockeAccountTest() throws Exception {
+
         Long accountId = 3L;
         AccountBasicDto expectedAccount = new AccountBasicDto(accountId,
                 Status.BLOCKED,

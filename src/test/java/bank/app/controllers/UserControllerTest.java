@@ -197,6 +197,7 @@ class UserControllerTest {
 
 
         Assertions.assertEquals(expectedUnblockUser, actualAfterUnblockUserJson);
+
     }
 
     @Test

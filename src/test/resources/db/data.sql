@@ -6,6 +6,7 @@ VALUES
     ( 'client2', '$2a$10$Xpai5QMu409RiMTS2fte9OvCJk514t3Ykxs5G7VaV9OeiiTJp0iEu', 'ROLE_CUSTOMER', 'ACTIVE', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss')),
     ( 'client3', '$2a$10$V7NERIPe9Xm5m3tjf9XILO7CCf8QOTUzRx6knrcge0Hyvwaj.vdRq', 'ROLE_CUSTOMER', 'BLOCKED', 2, PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:30:00', 'yyyy-MM-dd HH:mm:ss'));
 
+
 INSERT INTO private_info (private_info_id, first_name, last_name, date_of_birth, document_type, document_number, phone, email, created_at, last_update, user_id)
 VALUES
     (2, 'Max', 'Mustermann', PARSEDATETIME('1980-01-01', 'yyyy-MM-dd'), 'PASSPORT_EU', 'D12345678', '491234567890', 'max@example.com', PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2024-11-21 10:00:00', 'yyyy-MM-dd HH:mm:ss'), 2),

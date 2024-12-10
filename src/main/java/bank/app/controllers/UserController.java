@@ -104,7 +104,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
     @CreateUser(path = "/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto userDto) {
