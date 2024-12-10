@@ -27,10 +27,7 @@ entity PrivateInfo {
    + lastUpdate : timestamp
 }
 
-entity documentType{
-    + PR id : INT
-    + document_type_name : varchar(16)
-}
+
 
 entity Address {
    + PK id : INT
@@ -80,7 +77,6 @@ User ||--|| PrivateInfo : private_info_id
 User ||--o{ User : manager_id
 User ||--o{ Account : user_id
 PrivateInfo ||--|| Address : address_id
-PrivateInfo }|--|| documentType : documentType_id
 
 Transaction }|--|| Account : sender >
 Transaction }|--|| Account : receiver >
