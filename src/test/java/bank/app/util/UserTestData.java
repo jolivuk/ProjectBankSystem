@@ -77,6 +77,53 @@ public class UserTestData {
         );
     }
 
+    public static UserResponseDto getBlockUserResponseDto(){
+        AddressResponseDto address = new AddressResponseDto(
+                2L,
+                "Germany",
+                "Berlin",
+                "10115",
+                "Marienplatz",
+                "7",
+                null
+        );
+
+        PrivateInfoResponseDto privateInfo = new PrivateInfoResponseDto(
+                2L,
+                "Max",
+                "Mustermann",
+                "max@example.com",
+                "491234567890",
+                LocalDate.parse("1980-01-01"),
+                DocumentType.PASSPORT_EU,
+                "D12345678",
+                null,
+                address
+        );
+
+        return new UserResponseDto(
+                2L,
+                "manager1",
+                "password123",
+                "BLOCKED",
+                "ROLE_MANAGER",
+                null,
+                privateInfo
+        );
+    }
+
+    public static UserResponseDto getUnblockUserResponseDto(){
+        return new UserResponseDto(
+                5L,
+                "client3",
+                "password3",
+                "ACTIVE",
+                "ROLE_CUSTOMER",
+                2L,
+                null
+        );
+    }
+
     public static UserResponseDto getUserResponseDtoUpdate(){
         UserResponseDto expectedUser = getUserResponseDto();
         return new UserResponseDto(
@@ -152,7 +199,7 @@ public class UserTestData {
                 DocumentType.PASSPORT_EU,"D87654321",null, addressResponseDto);
 
         return new UserResponseDto(
-                5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
+                5L,"client3", "password3", "BLOCKED", "ROLE_CUSTOMER", 2L,
                 privateInfoResponseDto
         );
     }
@@ -244,7 +291,7 @@ public class UserTestData {
         );
 
         UserResponseDto user5 = new UserResponseDto(
-                5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
+                5L,"client3", "password3", "BLOCKED", "ROLE_CUSTOMER", 2L,
                 null
         );
 
@@ -309,7 +356,7 @@ public class UserTestData {
 
         //User3
         UserResponseDto user3 = new UserResponseDto(
-                5L,"client3", "password3", "ACTIVE", "ROLE_CUSTOMER", 2L,
+                5L,"client3", "password3", "BLOCKED", "ROLE_CUSTOMER", 2L,
                 null
         );
 

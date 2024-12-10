@@ -129,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void setAccountBlocked(Long accountId) {
+    public void blockAccount(Long accountId) {
         log.info("Attempting to block account ID: {}", accountId);
         Account account;
         try {
@@ -145,6 +145,31 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(account);
         log.info("Successfully blocked account ID: {}", accountId);
+    }
+
+    @Override
+    public void unblockAccount(Long accountId) {
+        log.info("Attempting to unblock account ID: {}", accountId);
+        Account account;
+        try {
+            account = accountRepository.findById(accountId)
+                    .orElseThrow(() -> {
+                        log.error("Cannot unblock account - account not found with ID: {}", accountId);
+                        return new AccountNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND);
+                    });
+        } catch (AccountNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(account.getStatus().equals(Status.BLOCKED)) {
+            account.setStatus(Status.ACTIVE);
+        }
+        if(account.getStatus().equals(Status.DELETED)) {
+            throw new AccountAlreadyDeletedException(String.format(ErrorMessage.ACCOUNT_IS_DELETED + account));
+        }
+
+        accountRepository.save(account);
+        log.info("Successfully unblocked account ID: {}", accountId);
     }
 
     @Override
