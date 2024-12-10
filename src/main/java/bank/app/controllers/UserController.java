@@ -90,6 +90,19 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{id}/block")
+    public ResponseEntity<Void> block(@PathVariable Long id) {
+
+        userService.blockUserById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/unblock")
+    public ResponseEntity<Void> unblock(@PathVariable Long id) {
+
+        userService.unblockUserById(id);
+        return ResponseEntity.ok().build();
+    }
 
     @CreateUser(path = "/")
     @ResponseStatus(HttpStatus.CREATED)

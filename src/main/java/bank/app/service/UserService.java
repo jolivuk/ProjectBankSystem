@@ -22,6 +22,10 @@ public interface UserService extends UserDetailsService {
 
     void deleteUserById(Long id);
 
+    void blockUserById(Long id);
+
+    void unblockUserById(Long id);
+
     PrivateInfoResponseDto getPrivateInfoByUserId(Long id);
 
     UserResponseDto addPrivateInfo(Long id, PrivateInfoRequestDto privateInfoRequestDto);

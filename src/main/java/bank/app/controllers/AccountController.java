@@ -135,9 +135,15 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
     }
 
-    @PutMapping("/{id}/blocked")
+    @PutMapping("/{id}/block")
     public ResponseEntity<Void> blockAccount(@PathVariable Long id) {
-        accountService.setAccountBlocked(id);
+        accountService.blockAccount(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/unblock")
+    public ResponseEntity<Void> unblockAccount(@PathVariable Long id) {
+        accountService.unblockAccount(id);
         return ResponseEntity.ok().build();
     }
 

@@ -154,6 +154,26 @@ class AccountControllerTest {
     @Test
     void findAccountsByUserId() throws Exception {
 
+        List<AccountBasicDto> expectedAccounts = List.of(
+                new AccountBasicDto(
+                        4L,
+                        Status.ACTIVE,
+                        3000.00,
+                        "DE89370400440532013001",
+                        "DEUTDEFF",
+                        LocalDateTime.of(2024, 11, 21, 11, 10, 0),
+                        LocalDateTime.of(2024, 11, 21, 11, 10, 0)),
+                new AccountBasicDto(
+                        5L,
+                        Status.BLOCKED,
+                        7000.00,
+                        "DE89370400440532013002",
+                        "DEUTDEFF",
+                        LocalDateTime.of(2024, 11, 21, 11, 15, 0),
+                        LocalDateTime.of(2024, 11, 21, 11, 15, 0)
+                )
+        );
+
         Long userId = 3L;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/accounts/user/{userId}", userId)
@@ -167,26 +187,6 @@ class AccountControllerTest {
         List<AccountBasicDto> actualAccounts = objectMapper.readValue(jsonResponse, new TypeReference<>() {
         });
 
-
-        List<AccountBasicDto> expectedAccounts = List.of(
-                new AccountBasicDto(
-                        4L,
-                        Status.ACTIVE,
-                        3000.00,
-                        "DE89370400440532013001",
-                        "DEUTDEFF",
-                        LocalDateTime.of(2024, 11, 21, 11, 10, 0),
-                        LocalDateTime.of(2024, 11, 21, 11, 10, 0)),
-                new AccountBasicDto(
-                        5L,
-                        Status.ACTIVE,
-                        7000.00,
-                        "DE89370400440532013002",
-                        "DEUTDEFF",
-                        LocalDateTime.of(2024, 11, 21, 11, 15, 0),
-                        LocalDateTime.of(2024, 11, 21, 11, 15, 0)
-                )
-        );
 
         Assertions.assertEquals(expectedAccounts, actualAccounts);
     }
@@ -352,7 +352,8 @@ class AccountControllerTest {
     }
 
     @Test
-    void isBlocked() throws Exception {
+    void blockeAccountTest() throws Exception {
+
         Long accountId = 3L;
         AccountBasicDto expectedAccount = new AccountBasicDto(accountId,
                 Status.BLOCKED,
@@ -363,7 +364,7 @@ class AccountControllerTest {
                 LocalDateTime.now());
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/accounts/{id}/blocked", accountId)
+                        .put("/accounts/{id}/block", accountId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -377,6 +378,34 @@ class AccountControllerTest {
 
         Assertions.assertEquals(expectedAccount, afterBlockedAccountJson);
     }
+
+    @Test
+    void unblockAccountTest() throws Exception {
+        Long accountId = 5L;
+        AccountBasicDto expectedAccount = new AccountBasicDto(accountId,
+                Status.ACTIVE,
+                7000.00,
+                "DE89370400440532013002",
+                "DEUTDEFF",
+                LocalDateTime.of(2024, 11, 21, 11, 15, 0),
+                LocalDateTime.now());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/accounts/{id}/unblock", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        MvcResult afterBlocked = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts/{id}", accountId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = afterBlocked.getResponse().getContentAsString();
+        AccountBasicDto afterUnblockAccountJson = objectMapper.readValue(jsonResponse, AccountBasicDto.class);
+
+        Assertions.assertEquals(expectedAccount, afterUnblockAccountJson);
+    }
+
 
     @Test
     public void generatePdfReportBetweenDates_ShouldReturnPdf() throws Exception {

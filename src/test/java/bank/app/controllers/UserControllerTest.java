@@ -146,6 +146,61 @@ class UserControllerTest {
     }
 
     @Test
+    void blockUserTest() throws Exception {
+        UserResponseDto expectedBlockUser = getBlockUserResponseDto();
+
+        Long userId = 2L;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/users/{id}/block", userId)
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+
+        MvcResult afterDelete = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = afterDelete.getResponse().getContentAsString();
+        UserResponseDto actualAfterBlockUserJson = objectMapper.readValue(jsonResponse, UserResponseDto.class);
+
+
+        Assertions.assertEquals(expectedBlockUser, actualAfterBlockUserJson);
+    }
+
+    @Test
+    void unblockUserTest() throws Exception {
+        UserResponseDto expectedUnblockUser = getUnblockUserResponseDto();
+
+        Long userId = 5L;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/users/{id}/unblock", userId)
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+
+        MvcResult afterDelete = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/users/{id}", userId)
+                        .header("Authorization", "Bearer " + validToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = afterDelete.getResponse().getContentAsString();
+        UserResponseDto actualAfterUnblockUserJson = objectMapper.readValue(jsonResponse, UserResponseDto.class);
+
+
+        Assertions.assertEquals(expectedUnblockUser, actualAfterUnblockUserJson);
+
+    }
+
+    @Test
     void createUserTest() throws Exception {
         UserResponseDto expectedUserDTO = new UserResponseDto(
                 6L,

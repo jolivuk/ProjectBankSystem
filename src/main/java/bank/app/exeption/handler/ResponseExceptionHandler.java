@@ -25,6 +25,26 @@ public class ResponseExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserAlreadyBlockedException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyBlocked(UserAlreadyBlockedException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.LOCKED.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.LOCKED);
+    }
+
+    @ExceptionHandler(UserWrongStatusException.class)
+    public ResponseEntity<ErrorResponse> handleUserWrongStatus(UserWrongStatusException exception) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UserRoleException.class)
     public ResponseEntity<ErrorResponse> handleUserRoleException(UserRoleException exception) {
         ErrorResponse error = new ErrorResponse(
